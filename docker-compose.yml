@@ -1,0 +1,17 @@
+version: '3.4'
+  
+networks:
+  web:
+    external:
+      name: web
+services:
+  api:
+    labels:
+      - 'traefik.backend=go-ui'
+      - 'traefik.port=8044'
+      - 'traefik.frontend.rule=Host:www.lifereferencemanual.org'
+    networks:
+      web:
+    image: wayimp/go-ui
+    ports:
+      - 8044:8044
