@@ -187,7 +187,7 @@ const Page = ({ dispatch, token }) => {
     if (token && token.length > 0 && roles && roles.includes('admin')) {
       getData()
     } else {
-      Router.push('/')
+      Router.push('/admin')
     }
   }, [])
 

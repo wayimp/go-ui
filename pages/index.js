@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Router from 'next/router'
 import { axiosClient } from '../src/axiosClient'
 import { useSnackbar } from 'notistack'
 import { connect } from 'react-redux'
@@ -239,29 +240,13 @@ const Form = ({ books, dispatch, token }) => {
     setForm(updated)
   }
 
-  const updateForm = async updateForm => {
-    await axiosClient
-      .post('/orders', updateForm)
-      .then(res => {
-        enqueueSnackbar('Form Updated', {
-          variant: 'success'
-        })
-        setForm(updateForm)
-      })
-      .catch(err => {
-        enqueueSnackbar('Update Error', {
-          variant: 'error'
-        })
-      })
-  }
-
   const addToCart = (book, quantity) => {
     let { cart } = form
 
     if (cart[book._id]) {
       cart[book._id].quantity += quantity
     } else {
-      cart[book._id] = { title: book.title, quantity }
+      cart[book._id] = { title: book.title, image: book.image, quantity }
     }
 
     if (cart[book._id].quantity <= 0) {
@@ -285,13 +270,12 @@ const Form = ({ books, dispatch, token }) => {
         enqueueSnackbar('Your order has been submitted', {
           variant: 'success'
         })
-        updateInfo('notes', '')
         setProgress(false)
         Router.push('/order/' + res.data.ops[0]._id)
       })
       .catch(err => {
         setProgress(false)
-        enqueueSnackbar('There was a problem submitting the order', {
+        enqueueSnackbar('There was a problem submitting the order' + err, {
           variant: 'error'
         })
       })
@@ -527,16 +511,26 @@ const Form = ({ books, dispatch, token }) => {
                   <TextField
                     className={classes.textField}
                     variant='outlined'
-                    name='donationAmount'
+                    name='donation'
                     label='Donation Amount'
-                    defaultValue={
-                      form.donationAmount ? form.donationAmount : ''
-                    }
+                    defaultValue={form.donation ? form.donation : ''}
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
                     helperText='Your donation helps us to distribute more Bibles'
                     type='number'
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    className={classes.textField}
+                    variant='outlined'
+                    name='notes'
+                    label='Additional Instructions'
+                    defaultValue={form.notes ? form.notes : ''}
+                    onChange={changeField}
+                    onBlur={blurField}
+                    disabled={readOnly}
                   />
                 </Grid>
                 <Grid item>

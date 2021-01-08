@@ -219,7 +219,7 @@ const Page = ({ dispatch, token }) => {
     if (token && token.length > 0) {
       getData(showInactive)
     } else {
-      Router.push('/')
+      Router.push('/admin')
     }
   }, [])
 

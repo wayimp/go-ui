@@ -74,7 +74,7 @@ const Login = ({ dispatch, lang, segment }) => {
           cookie.set('username', username)
           cookie.set('roles', roles)
           dispatch({ type: 'TOKEN', payload: accessToken })
-          Router.push('/books')
+          Router.push('/orders')
         } else {
           enqueueSnackbar('User Logon Failure', {
             variant: 'error'
