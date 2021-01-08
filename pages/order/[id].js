@@ -36,6 +36,13 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline'
+import Timeline from '@material-ui/lab/Timeline'
+import TimelineItem from '@material-ui/lab/TimelineItem'
+import TimelineSeparator from '@material-ui/lab/TimelineSeparator'
+import TimelineConnector from '@material-ui/lab/TimelineConnector'
+import TimelineContent from '@material-ui/lab/TimelineContent'
+import TimelineDot from '@material-ui/lab/TimelineDot'
+import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent'
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -164,100 +171,114 @@ const Order = ({ propsOrder, dispatch, token }) => {
   const [order, setOrder] = React.useState(propsOrder)
   const { enqueueSnackbar } = useSnackbar()
 
-  return (
-    <Grid>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label='simple table'>
-          <TableBody>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                Name:
-              </TableCell>
-              <TableCell align='left'>
-                {order.customerName ? order.customerName : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                Street Address:
-              </TableCell>
-              <TableCell align='left'>
-                {order.customerStreet ? order.customerStreet : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                City:
-              </TableCell>
-              <TableCell align='left'>
-                {order.customerCity ? order.customerCity : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                State:
-              </TableCell>
-              <TableCell align='left'>
-                {order.customerState ? order.customerState : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                Zip:
-              </TableCell>
-              <TableCell align='left'>
-                {order.customerZip ? order.customerZip : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                Phone:
-              </TableCell>
-              <TableCell align='left'>
-                {order.customerPhone ? order.customerPhone : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                Email:
-              </TableCell>
-              <TableCell align='left'>
-                {order.customerEmail ? order.customerEmail : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                Donation:
-              </TableCell>
-              <TableCell align='left'>
-                {order.donation ? numeral(order.donation).format('$0') : ''}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell align='right' component='th' scope='row'>
-                Additional Instructions:
-              </TableCell>
-              <TableCell align='left'>
-                {order.notes ? order.notes : ''}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+  useEffect(() => {
+    document.title = order.customerName
+  })
 
-      <Grid
-        container
-        direction='row'
-        justify='flex-start'
-        alignItems='flex-start'
-        alignContent='flex-start'
-        style={{margin:20}}
-      >
-        {Object.entries(order.cart).map(([k, v], i) => {
-          return <BookCard key={k} book={v} />
-        })}
+  return (
+    <Box width={1}>
+      <Grid container direction='row' alignItems='center'>
+        <Grid item xs={6}>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label='simple table'>
+              <TableBody>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Name:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.customerName ? order.customerName : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Address:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.customerStreet ? order.customerStreet : ''}
+                    <br />
+                    {order.customerCity ? order.customerCity : ''},&nbsp;
+                    {order.customerState ? order.customerState : ''}&nbsp;
+                    {order.customerZip ? order.customerZip : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Phone:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.customerPhone ? order.customerPhone : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Email:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.customerEmail ? order.customerEmail : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Donation:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.donation ? numeral(order.donation).format('$0') : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Additional Instructions:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.notes ? order.notes : ''}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+        <Grid item xs={6}>
+          <Timeline>
+            {order.timeline.map((timestamp, index) => (
+              <TimelineItem key={index}>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  {index < order.timeline.length - 1 ? (
+                    <TimelineConnector />
+                  ) : (
+                    ''
+                  )}
+                </TimelineSeparator>
+                <TimelineContent>
+                  <Typography>
+                    {timestamp.action}
+                    <p />
+                    {moment(timestamp.timestamp, dateFormat).format(
+                      dateDisplay
+                    )}
+                  </Typography>
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          container
+          direction='row'
+          justify='flex-start'
+          alignItems='flex-start'
+          alignContent='flex-start'
+          style={{ margin: 20 }}
+        >
+          {Object.entries(order.cart).map(([k, v], i) => {
+            return <BookCard key={k} book={v} />
+          })}
+        </Grid>
       </Grid>
-    </Grid>
+    </Box>
   )
 }
 

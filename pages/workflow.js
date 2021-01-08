@@ -7,44 +7,42 @@ import { wrapper } from '../components/store'
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../src/Link'
 import TopBar from '../components/AdminTopBar'
-import PersonIcon from '@material-ui/icons/Person'
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount'
 import DeleteIcon from '@material-ui/icons/Delete'
 import SaveIcon from '@material-ui/icons/Save'
 import CancelIcon from '@material-ui/icons/Cancel'
 import numeral from 'numeral'
 const priceFormat = '$0.00'
-import { flatten } from 'lodash'
 import moment from 'moment-timezone'
 const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
 const dateDisplay = 'dddd MMMM DD, YYYY'
-import Container from from '@material-ui/core/Container'
-import Card from from '@material-ui/core/Card'
-import Box from from '@material-ui/core/Box'
-import Grid from from '@material-ui/core/Grid'
-import Paper from from '@material-ui/core/Paper'
-import List from from '@material-ui/core/List'
-import ListItem from from '@material-ui/core/ListItem'
-import ListItemAvatar from from '@material-ui/core/ListItemAvatar'
-import ListItemSecondaryAction from from '@material-ui/core/ListItemSecondaryAction'
-import ListItemText from from '@material-ui/core/ListItemText'
-import Typography from from '@material-ui/core/Typography'
-import FormControl from from '@material-ui/core/FormControl'
-import InputLabel from from '@material-ui/core/InputLabel'
-import Input from from '@material-ui/core/Input'
-import FormHelperText from from '@material-ui/core/FormHelperText'
-import Button from from '@material-ui/core/Button'
-import Modal from from '@material-ui/core/Modal'
-import Backdrop from from '@material-ui/core/Backdrop'
-import Fade from from '@material-ui/core/Fade'
-import TextField from from '@material-ui/core/TextField'
-import IconButton from from '@material-ui/core/IconButton'
-import FormControlLabel from from '@material-ui/core/FormControlLabel'
-import Checkbox from from '@material-ui/core/Checkbox'
-import Dialog from from '@material-ui/core/Dialog'
-import DialogTitle from from '@material-ui/core/DialogTitle'
-import DialogActions from from '@material-ui/core/DialogActions'
+import Container from '@material-ui/core/Container'
+import Card from '@material-ui/core/Card'
+import Box from '@material-ui/core/Box'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import Input from '@material-ui/core/Input'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
+import Backdrop from '@material-ui/core/Backdrop'
+import Fade from '@material-ui/core/Fade'
+import TextField from '@material-ui/core/TextField'
+import IconButton from '@material-ui/core/IconButton'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd'
+
 import { useSnackbar } from 'notistack'
 import cookie from 'js-cookie'
 
@@ -140,21 +138,21 @@ const Page = ({ dispatch, token }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
-  const [user, setUser] = React.useState({})
-  const [userToDelete, setUserToDelete] = React.useState({})
-  const [users, setUsers] = React.useState([])
+  const [workflow, setWorkflow] = React.useState({})
+  const [workflowToDelete, setWorkflowToDelete] = React.useState({})
+  const [workflows, setWorkflows] = React.useState([])
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
   const getData = () => {
     axiosClient({
       method: 'get',
-      url: '/users',
+      url: '/workflows',
       headers: { Authorization: `Bearer ${token}` }
     }).then(response => {
       const result =
         response.data && Array.isArray(response.data) ? response.data : []
-      setUsers(result)
+      setWorkflows(result)
     })
   }
 
@@ -167,12 +165,12 @@ const Page = ({ dispatch, token }) => {
   }
 
   const handleConfirmDeleteClose = () => {
-    setUserToDelete({})
+    setWorkflowToDelete({})
     setConfirmDelete(false)
   }
 
-  const confirmUserToDelete = user => {
-    setUserToDelete(user)
+  const confirmWorkflowToDelete = workflow => {
+    setWorkflowToDelete(workflow)
     setConfirmDelete(true)
   }
 
@@ -187,10 +185,10 @@ const Page = ({ dispatch, token }) => {
 
   const changeValue = async (name, value) => {
     const updated = {
-      ...user,
+      ...workflow,
       [name]: value
     }
-    setUser(updated)
+    setWorkflow(updated)
   }
 
   const changeField = event => {
@@ -201,50 +199,50 @@ const Page = ({ dispatch, token }) => {
 
   const changeCheckbox = event => {
     const updated = {
-      ...user,
+      ...workflow,
       [event.target.name]: event.target.checked ? 'admin' : ''
     }
-    setUser(updated)
+    setWorkflow(updated)
   }
 
-  const createUser = async user => {
+  const createWorkflow = async workflow => {
     await axiosClient({
       method: 'post',
-      url: '/users',
-      data: user,
+      url: '/workflows',
+      data: workflow,
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => {
-        enqueueSnackbar('New User Created', {
+        enqueueSnackbar('New Workflow Created', {
           variant: 'success'
         })
         getData()
       })
       .catch(error => {
-        enqueueSnackbar('Error Creating User: ' + error, {
+        enqueueSnackbar('Error Creating Workflow: ' + error, {
           variant: 'error'
         })
       })
     handleClose()
   }
 
-  const deleteUser = async () => {
-    const user = userToDelete
-    if (user) {
+  const deleteWorkflow = async () => {
+    const workflow = workflowToDelete
+    if (workflow) {
       await axiosClient({
         method: 'delete',
-        url: `/users/${user._id}`,
-        data: user,
+        url: `/workflows/${workflow._id}`,
+        data: workflow,
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(response => {
-          enqueueSnackbar('User Deleted', {
+          enqueueSnackbar('Workflow Deleted', {
             variant: 'success'
           })
           getData()
         })
         .catch(error => {
-          enqueueSnackbar('Error Deleting User: ' + error, {
+          enqueueSnackbar('Error Deleting Workflow: ' + error, {
             variant: 'error'
           })
         })
@@ -263,29 +261,25 @@ const Page = ({ dispatch, token }) => {
             color='secondary'
             style={{ margin: 20 }}
             onClick={handleOpen}
-            startIcon={<PersonAddIcon />}
+            startIcon={<PlaylistAddIcon />}
           >
-            New User
+            New Workflow
           </Button>
 
           <Box width={1}>
             <Grid>
               <List>
-                {users.map((user, index) => (
-                  <ListItem key={'user' + index}>
+                {workflows.map((workflow, index) => (
+                  <ListItem key={'workflow' + index}>
                     <ListItemAvatar>
                       <Typography>
-                        {user.roles && user.roles.includes('admin') ? (
-                          <SupervisorAccountIcon />
-                        ) : (
-                          <PersonIcon />
-                        )}
+                        {workflow.order ? workflow.order : ''}
                       </Typography>
                     </ListItemAvatar>
-                    <ListItemText edge='begin' primary={`${user.username}`} />
+                    <ListItemText edge='begin' primary={`${workflow.action}`} />
                     <ListItemSecondaryAction>
                       <IconButton
-                        onClick={() => confirmUserToDelete(user)}
+                        onClick={() => confirmWorkflowToDelete(workflow)}
                         edge='end'
                       >
                         <DeleteIcon />
@@ -299,7 +293,7 @@ const Page = ({ dispatch, token }) => {
         </div>
       </main>
       <Modal
-        id='items'
+        id='edit'
         className={classes.modal}
         open={open}
         onClose={handleClose}
@@ -316,30 +310,18 @@ const Page = ({ dispatch, token }) => {
                 <TextField
                   className={classes.textField}
                   variant='outlined'
-                  name='username'
-                  label='User Name'
+                  name='order'
+                  label='Sort Order'
+                  type='number'
                   onChange={changeField}
                 />
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <TextField
                   className={classes.textField}
                   variant='outlined'
-                  name='password'
-                  label='Password'
+                  name='action'
+                  label='Action Word'
                   onChange={changeField}
-                />
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      className={classes.checkbox}
-                      checked={user.roles && user.roles.includes('admin')}
-                      onChange={changeCheckbox}
-                      name='roles'
-                      color='primary'
-                    />
-                  }
-                  label='Admin'
                 />
               </Grid>
               <Grid
@@ -361,7 +343,7 @@ const Page = ({ dispatch, token }) => {
                   variant='contained'
                   color='secondary'
                   style={{ margin: 10 }}
-                  onClick={() => createUser(user)}
+                  onClick={() => createWorkflow(workflow)}
                   startIcon={<SaveIcon />}
                 >
                   Create
@@ -372,12 +354,12 @@ const Page = ({ dispatch, token }) => {
         </Fade>
       </Modal>
       <Dialog open={confirmDelete} onClose={handleConfirmDeleteClose}>
-        <DialogTitle>{`Are you sure you want to delete ${user.username}?`}</DialogTitle>
+        <DialogTitle>{`Are you sure you want to delete ${workflow.action}?`}</DialogTitle>
         <DialogActions>
           <Button onClick={handleConfirmDeleteClose} color='primary'>
             Cancel
           </Button>
-          <Button onClick={deleteUser} color='secondary' autoFocus>
+          <Button onClick={deleteWorkflow} color='secondary' autoFocus>
             Yes
           </Button>
         </DialogActions>

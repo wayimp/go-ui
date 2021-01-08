@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { axiosClient } from '../src/axiosClient'
 import { makeStyles } from '@material-ui/core/styles'
+import { useSnackbar } from 'notistack'
 import clsx from 'clsx'
 import { red } from '@material-ui/core/colors'
 import Avatar from '@material-ui/core/Avatar'
@@ -29,6 +31,8 @@ const priceFormat = '$0.00'
 import BookCard from '../components/BookCardSummary'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
+import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked'
 
 Array.prototype.sum = function (prop) {
   let total = Number(0)
@@ -67,12 +71,60 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const OrderCard = ({ order }) => {
+const OrderCard = ({ propsOrder, workflows }) => {
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
+  const [order, setOrder] = React.useState(propsOrder)
   const [expanded, setExpanded] = React.useState(false)
 
   const handleExpandClick = () => {
     setExpanded(!expanded)
+  }
+
+  const addAction = action => {
+    let timeline = Array.from(order.timeline)
+
+    timeline = timeline.concat([
+      {
+        action,
+        timestamp: moment().tz('America/Chicago')
+      }
+    ])
+
+    const updated = {
+      ...order,
+      timeline
+    }
+
+    updateOrder(updated)
+  }
+
+  const removeAction = action => {
+    let timeline = Array.from(order.timeline)
+    timeline = timeline.filter(t => t.action !== action)
+
+    const updated = {
+      ...order,
+      timeline
+    }
+
+    updateOrder(updated)
+  }
+
+  const updateOrder = async updated => {
+    setOrder(updated)
+    axiosClient
+      .patch('/orders', updated)
+      .then(res => {
+        enqueueSnackbar('Timeline updated', {
+          variant: 'success'
+        })
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem updating the timeline' + err, {
+          variant: 'error'
+        })
+      })
   }
 
   return (
@@ -80,7 +132,7 @@ const OrderCard = ({ order }) => {
       <CardHeader
         action={
           <IconButton>
-            <Link href={``} target={order._id}>
+            <Link href={`/order/${order._id}`} target={order._id}>
               <LaunchIcon />
             </Link>
           </IconButton>
@@ -118,6 +170,8 @@ const OrderCard = ({ order }) => {
             label={order.customerPhone}
             labelPlacement='end'
           />
+        </Grid>
+        <Grid>
           <FormControlLabel
             control={
               <a
@@ -134,6 +188,25 @@ const OrderCard = ({ order }) => {
             labelPlacement='end'
           />
         </Grid>
+        {workflows.map(workflow => {
+          if (
+            order.timeline.map(step => step.action).includes(workflow.action)
+          ) {
+            return (
+              <IconButton onClick={() => removeAction(workflow.action)}>
+                <CheckCircleOutlineIcon />
+                {workflow.action}
+              </IconButton>
+            )
+          } else {
+            return (
+              <IconButton onClick={() => addAction(workflow.action)}>
+                <RadioButtonUncheckedIcon />
+                {workflow.action}
+              </IconButton>
+            )
+          }
+        })}
       </CardContent>
 
       <CardActions disableSpacing>

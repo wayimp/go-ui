@@ -64,24 +64,31 @@ export default function SearchAppBar () {
                   onClick={reset}
                 />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
                   <Link href='/orders' className={classes.title}>
                     Orders
                   </Link>
                 </Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
                   <Link href='/books' className={classes.title}>
                     Books
                   </Link>
                 </Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
                   <Link href='/users' className={classes.title}>
                     Users
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={1}>
+                <Typography variant='h6' noWrap>
+                  <Link href='/workflow' className={classes.title}>
+                    Workflow
                   </Link>
                 </Typography>
               </Grid>

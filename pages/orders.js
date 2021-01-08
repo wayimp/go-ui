@@ -92,7 +92,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Page = ({ dispatch, token }) => {
+const Page = ({ dispatch, token, workflows }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -165,7 +165,11 @@ const Page = ({ dispatch, token }) => {
                 {ordersSorted
                   .filter(order => order.daySubmitted === day)
                   .map(order => (
-                    <OrderCard key={order._id} order={order} />
+                    <OrderCard
+                      key={order._id}
+                      propsOrder={order}
+                      workflows={workflows}
+                    />
                   ))}
               </Grid>
             </Card>
@@ -174,6 +178,18 @@ const Page = ({ dispatch, token }) => {
       </main>
     </Container>
   )
+}
+
+export async function getServerSideProps (context) {
+  const workflows = await axiosClient
+    .get('/workflows')
+    .then(response => response.data)
+
+  return {
+    props: {
+      workflows
+    }
+  }
 }
 
 export default connect(state => state)(Page)
