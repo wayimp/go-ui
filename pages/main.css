@@ -1,7 +1,16 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  background-image: url(/images/background.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 @font-face {
-    font-family: "FFX Handwriting";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: local('FFX Handwriting'), url(/fonts/handwriting.woff2) format('woff2');
-  }
+  font-family: 'FFX Handwriting';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('FFX Handwriting'), url(/fonts/handwriting.woff2) format('woff2');
+}

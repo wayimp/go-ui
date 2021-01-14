@@ -5,10 +5,12 @@ import { red } from '@material-ui/core/colors';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#002868', // american flag blue
+      main: '#CB997E'
+      //main: '#002868', // american flag blue
     },
     secondary: {
-      main: '#BF0A30', // american flag red
+      main: '#A5A58D'
+      //main: '#BF0A30', // american flag red
     },
     action: {
       main: '#FFFFFF', 

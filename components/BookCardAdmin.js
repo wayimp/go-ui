@@ -94,7 +94,8 @@ const useStyles = makeStyles(theme => ({
     overflow: 'visible',
     height: '98%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    position: 'relative'
   },
   cardActions: {
     display: 'flex',
@@ -102,6 +103,18 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'row'
+  },
+  media: {
+    height: 300,
+    position: 'relative'
+  },
+  limitedIcon: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    display: 'block',
+    width: 'auto',
+    height: 'auto'
   }
 }))
 
@@ -212,6 +225,11 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
             image={book.image || ''}
             title={book.title || ''}
           />
+          {book.limited ? (
+            <img src={'/images/limited.png'} className={classes.limitedIcon} />
+          ) : (
+            ''
+          )}
           <CardContent>
             <Typography variant='h6' component='h3'>
               {book.title}
@@ -257,6 +275,19 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                       />
                     }
                     label='Active'
+                  />
+                  <FormControlLabel
+                    labelPlacement='top'
+                    control={
+                      <Switch
+                        className={classes.switch}
+                        checked={bookEdit.limited}
+                        onChange={handleSwitchChange}
+                        name='limited'
+                        color='primary'
+                      />
+                    }
+                    label='Limited'
                   />
                 </Grid>
                 <Grid item xs={9}>

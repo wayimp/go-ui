@@ -9,7 +9,7 @@ services:
     labels:
       - 'traefik.backend=go-ui'
       - 'traefik.port=8044'
-      - 'traefik.frontend.rule=Host:www.lifereferencemanual.org'
+      - 'traefik.frontend.rule=Host:lifereferencemanual.net'
     networks:
       web:
     image: wayimp/go-ui

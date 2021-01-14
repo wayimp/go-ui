@@ -13,6 +13,7 @@ const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
 const dateDisplay = 'dddd MMM DD hh:mm a'
 import BookCard from '../components/BookCardPublic'
 import Container from '@material-ui/core/Container'
+import Badge from '@material-ui/core/Badge'
 import Card from '@material-ui/core/Card'
 import Chip from '@material-ui/core/Chip'
 import Grid from '@material-ui/core/Grid'
@@ -47,6 +48,7 @@ import WarningIcon from '@material-ui/icons/Warning'
 import { red } from '@material-ui/core/colors'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import SendIcon from '@material-ui/icons/Send'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 
 Array.prototype.sum = function (prop) {
   var total = 0
@@ -144,7 +146,6 @@ const useStyles = makeStyles(theme => ({
   },
   tabPanel: {
     border: 1,
-    backgroundColor: theme.palette.background.paper,
     margin: 10
   },
   img: {
@@ -282,7 +283,8 @@ const Form = ({ books, dispatch, token }) => {
   }
 
   // Calculate current cases
-  let caseDisplay = []
+  let chips = []
+  let cartDisplay = []
   let quantity = 0
   let cases = 0
   let items = 0
@@ -296,13 +298,13 @@ const Form = ({ books, dispatch, token }) => {
   cases = Math.floor(quantity / 24)
   items = quantity % 24
   for (let c = 0; c < cases; c++) {
-    caseDisplay.push(
+    chips.push(
       <Chip key={keyIndex++} variant='outlined' label='24' color='primary' />
     )
   }
   if (items > 0) {
     if (cases > 0) {
-      caseDisplay.push(
+      chips.push(
         <Chip
           key={keyIndex++}
           variant='outlined'
@@ -310,13 +312,13 @@ const Form = ({ books, dispatch, token }) => {
           color='secondary'
         />
       )
-      caseDisplay.push(
+      chips.push(
         <Tooltip title='Add even case lots of 24'>
           <WarningIcon style={{ color: red[500] }} />
         </Tooltip>
       )
     } else {
-      caseDisplay.push(
+      chips.push(
         <Chip
           key={keyIndex++}
           variant='outlined'
@@ -326,15 +328,22 @@ const Form = ({ books, dispatch, token }) => {
       )
     }
   }
-  if (caseDisplay.length > 0) {
-    caseDisplay.unshift(
-      <Typography style={{ marginTop: 7 }}>Items in Cart:</Typography>
+  if (chips.length > 0) {
+    cartDisplay.push(
+      <IconButton aria-label='shopping-basket' color='inherit'>
+        <Badge badgeContent={quantity ? quantity : 0} color='error'>
+          <ShoppingCartIcon fontSize='large' />
+        </Badge>
+      </IconButton>
     )
-    caseDisplay.push(
-      <Typography style={{ marginTop: 7 }}>
-        &nbsp;Suggested Donation:&nbsp;
-        {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per book)
-      </Typography>
+    cartDisplay.push(<Grid>{chips}</Grid>)
+    cartDisplay.push(
+      <Grid>
+        <Typography style={{ marginTop: 7 }}>
+          Suggested Donation:&nbsp;
+          {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per book)
+        </Typography>
+      </Grid>
     )
   }
 
@@ -352,14 +361,13 @@ const Form = ({ books, dispatch, token }) => {
             variant='scrollable'
             scrollButtons='auto'
           >
-            <Tab label='Life Manuals' value={0} />
-            <Tab label='About Us' value={1} />
-            <Tab label='Testimonials' value={2} />
-            <Tab label='Shipping' value={3} />
+            <img src='/images/logo.png' style={{ maxHeight: 60, margin: 10 }} />
+            <Tab label='Catalog' value={0} />
+            <Tab label='Order' value={1} />
           </Tabs>
         </Grid>
-        <Grid className={classes.chips} onClick={() => setSelectedTab(3)}>
-          {caseDisplay}
+        <Grid className={classes.chips} onClick={() => setSelectedTab(1)}>
+          {cartDisplay}
         </Grid>
       </AppBar>
       <Box width={1}>
@@ -396,12 +404,6 @@ const Form = ({ books, dispatch, token }) => {
           </Grid>
         </TabPanel>
         <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
-          About Us
-        </TabPanel>
-        <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
-          Testimonials
-        </TabPanel>
-        <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
           {progress ? (
             <CircularProgress />
           ) : (
@@ -525,9 +527,9 @@ const Form = ({ books, dispatch, token }) => {
                   <TextField
                     className={classes.textField}
                     variant='outlined'
-                    name='notes'
+                    name='instructions'
                     label='Additional Instructions'
-                    defaultValue={form.notes ? form.notes : ''}
+                    defaultValue={form.instructions ? form.instructions : ''}
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}

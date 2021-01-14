@@ -21,7 +21,9 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     width: 'auto',
-    height: 'auto'
+    height: 'auto',
+    margin: 20,
+    maxHeight: 100
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -60,7 +62,6 @@ export default function SearchAppBar () {
                   src='/images/logo.png'
                   alt='Go Therefore Ministries'
                   className={classes.logo}
-                  style={{ marginTop: 3 }}
                   onClick={reset}
                 />
               </Grid>
@@ -87,7 +88,7 @@ export default function SearchAppBar () {
               </Grid>
               <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
-                  <Link href='/workflow' className={classes.title}>
+                  <Link href='/workflows' className={classes.title}>
                     Workflow
                   </Link>
                 </Typography>

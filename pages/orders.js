@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   section: {
-    backgroundColor: '#EEF',
+    backgroundColor: '#EDDCD2',
     border: '1px solid #AAA',
     margin: '5px',
     padding: '8px'

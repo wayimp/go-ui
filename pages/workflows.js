@@ -35,6 +35,7 @@ import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import TextField from '@material-ui/core/TextField'
+import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -42,6 +43,10 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline'
+import EditIcon from '@material-ui/icons/Edit'
+import Select from 'react-select'
 
 import { useSnackbar } from 'notistack'
 import cookie from 'js-cookie'
@@ -131,14 +136,29 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 6,
     marginLeft: 16,
     padding: 6
-  }
+  },
+  select: { minWidth: 150 }
 }))
+
+const typeOptions = [
+  { value: 'text', label: 'Text' },
+  { value: 'number', label: 'Number' },
+  { value: 'date', label: 'Date' },
+  { value: 'email', label: 'Email' },
+  { value: 'url', label: 'Url' },
+  { value: 'tel', label: 'Tel' }
+]
 
 const Page = ({ dispatch, token }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
-  const [workflow, setWorkflow] = React.useState({})
+  const [creating, setCreating] = React.useState(false)
+  const [workflow, setWorkflow] = React.useState({
+    order: 1,
+    action: '',
+    fields: []
+  })
   const [workflowToDelete, setWorkflowToDelete] = React.useState({})
   const [workflows, setWorkflows] = React.useState([])
   const [confirmDelete, setConfirmDelete] = React.useState(false)
@@ -157,6 +177,19 @@ const Page = ({ dispatch, token }) => {
   }
 
   const handleOpen = () => {
+    const workflow = {
+      order: 100,
+      action: '',
+      fields: []
+    }
+    setWorkflow(workflow)
+    setCreating(true)
+    setOpen(true)
+  }
+
+  const handleEdit = workflow => {
+    setWorkflow(workflow)
+    setCreating(false)
     setOpen(true)
   }
 
@@ -205,9 +238,9 @@ const Page = ({ dispatch, token }) => {
     setWorkflow(updated)
   }
 
-  const createWorkflow = async workflow => {
+  const saveWorkflow = async workflow => {
     await axiosClient({
-      method: 'post',
+      method: creating ? 'post' : 'patch',
       url: '/workflows',
       data: workflow,
       headers: { Authorization: `Bearer ${token}` }
@@ -227,11 +260,10 @@ const Page = ({ dispatch, token }) => {
   }
 
   const deleteWorkflow = async () => {
-    const workflow = workflowToDelete
-    if (workflow) {
+    if (workflowToDelete) {
       await axiosClient({
         method: 'delete',
-        url: `/workflows/${workflow._id}`,
+        url: `/workflows/${workflowToDelete._id}`,
         data: workflow,
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -247,7 +279,49 @@ const Page = ({ dispatch, token }) => {
           })
         })
     }
+    setWorkflowToDelete(null)
     handleConfirmDeleteClose()
+  }
+
+  const addField = () => {
+    const field = {
+      label: ''
+    }
+    const updated = {
+      ...workflow,
+      fields: workflow.fields.concat(field)
+    }
+    setWorkflow(updated)
+  }
+
+  const removeField = index => {
+    const updated = {
+      ...workflow,
+      fields: workflow.fields.filter((field, fi) => fi !== index)
+    }
+    setWorkflow(updated)
+  }
+
+  const changeFieldLabel = (index, text) => {
+    const updated = {
+      ...workflow,
+      fields: workflow.fields.map((field, i) => {
+        if (i === index) return { ...field, label: text }
+        else return field
+      })
+    }
+    setWorkflow(updated)
+  }
+
+  const selectInputType = (index, item) => {
+    const updated = {
+      ...workflow,
+      fields: workflow.fields.map((field, i) => {
+        if (i === index) return { ...field, inputType: item.value }
+        else return field
+      })
+    }
+    setWorkflow(updated)
   }
 
   return (
@@ -263,7 +337,7 @@ const Page = ({ dispatch, token }) => {
             onClick={handleOpen}
             startIcon={<PlaylistAddIcon />}
           >
-            New Workflow
+            New Action
           </Button>
 
           <Box width={1}>
@@ -278,12 +352,18 @@ const Page = ({ dispatch, token }) => {
                     </ListItemAvatar>
                     <ListItemText edge='begin' primary={`${workflow.action}`} />
                     <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => confirmWorkflowToDelete(workflow)}
-                        edge='end'
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <Tooltip title='Edit'>
+                        <IconButton onClick={() => handleEdit(workflow)}>
+                          <EditIcon color='secondary' />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title='Delete'>
+                        <IconButton
+                          onClick={() => confirmWorkflowToDelete(workflow)}
+                        >
+                          <DeleteIcon color='secondary' />
+                        </IconButton>
+                      </Tooltip>
                     </ListItemSecondaryAction>
                   </ListItem>
                 ))}
@@ -313,6 +393,7 @@ const Page = ({ dispatch, token }) => {
                   name='order'
                   label='Sort Order'
                   type='number'
+                  defaultValue={workflow.order}
                   onChange={changeField}
                 />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -321,8 +402,65 @@ const Page = ({ dispatch, token }) => {
                   variant='outlined'
                   name='action'
                   label='Action Word'
+                  defaultValue={workflow.action}
                   onChange={changeField}
                 />
+              </Grid>
+              <Grid direction='row' item xs={12}>
+                <Typography style={{ margin: 6 }}>
+                  Fields
+                  <IconButton onClick={() => addField()} edge='end'>
+                    <AddCircleOutlineIcon />
+                  </IconButton>
+                </Typography>
+              </Grid>
+              <Grid>
+                <List dense={true}>
+                  {workflow.fields.map((field, index) => (
+                    <ListItem key={'log' + index}>
+                      <ListItemText>
+                        <Grid
+                          container
+                          direction='row'
+                          spacing={2}
+                          justify='space-between'
+                          className={classes.formGroup}
+                        >
+                          <Grid item>
+                            <TextField
+                              label='Label'
+                              defaultValue={field.label}
+                              onChange={event =>
+                                changeFieldLabel(index, event.target.value)
+                              }
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Select
+                              id='inputType'
+                              defaultValue={typeOptions.find(
+                                option => option.value === field.inputType
+                              )}
+                              className={classes.select}
+                              classNamePrefix='select'
+                              onChange={item => selectInputType(index, item)}
+                              name='inputType'
+                              options={typeOptions}
+                            />
+                          </Grid>
+                        </Grid>
+                      </ListItemText>
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          onClick={() => removeField(index)}
+                          edge='end'
+                        >
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
+                </List>
               </Grid>
               <Grid
                 container
@@ -343,10 +481,10 @@ const Page = ({ dispatch, token }) => {
                   variant='contained'
                   color='secondary'
                   style={{ margin: 10 }}
-                  onClick={() => createWorkflow(workflow)}
+                  onClick={() => saveWorkflow(workflow)}
                   startIcon={<SaveIcon />}
                 >
-                  Create
+                  Save
                 </Button>
               </Grid>
             </Grid>

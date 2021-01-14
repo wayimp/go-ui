@@ -43,6 +43,7 @@ import TimelineConnector from '@material-ui/lab/TimelineConnector'
 import TimelineContent from '@material-ui/lab/TimelineContent'
 import TimelineDot from '@material-ui/lab/TimelineDot'
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent'
+import { green, yellow, orange } from '@material-ui/core/colors'
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -162,7 +163,17 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     color: 'white'
-  }
+  },
+  yellow: {
+    color: yellow[500]
+  },
+  green: {
+    color: green[500]
+  },
+  orange: {
+    color: orange[500]
+  },
+  logo: { height: 80, margin:20 }
 }))
 
 const Order = ({ propsOrder, dispatch, token }) => {
@@ -177,8 +188,13 @@ const Order = ({ propsOrder, dispatch, token }) => {
 
   return (
     <Box width={1}>
-      <Grid container direction='row' alignItems='center'>
-        <Grid item xs={6}>
+      <Grid container direction='row' alignItems='flex-start'>
+        <Grid item xs={4}>
+          <img
+            src='/images/logo.png'
+            alt='Go Therefore Ministries'
+            className={classes.logo}
+          />
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label='simple table'>
               <TableBody>
@@ -231,6 +247,14 @@ const Order = ({ propsOrder, dispatch, token }) => {
                     Additional Instructions:
                   </TableCell>
                   <TableCell align='left'>
+                    {order.instructions ? order.instructions : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Notes:
+                  </TableCell>
+                  <TableCell align='left'>
                     {order.notes ? order.notes : ''}
                   </TableCell>
                 </TableRow>
@@ -238,9 +262,22 @@ const Order = ({ propsOrder, dispatch, token }) => {
             </Table>
           </TableContainer>
         </Grid>
-        <Grid item xs={6}>
+        <Grid
+          item
+          xs={4}
+          container
+          direction='column'
+          justify='flex-start'
+          alignItems='flex-start'
+          alignContent='flex-start'
+        >
+          {Object.entries(order.cart).map(([k, v], i) => {
+            return <BookCard key={k} book={v} />
+          })}
+        </Grid>
+        <Grid item xs={4}>
           <Timeline>
-            {order.timeline.map((timestamp, index) => (
+            {order.timeline.map((workflow, index) => (
               <TimelineItem key={index}>
                 <TimelineSeparator>
                   <TimelineDot />
@@ -251,31 +288,32 @@ const Order = ({ propsOrder, dispatch, token }) => {
                   )}
                 </TimelineSeparator>
                 <TimelineContent>
-                  <Typography>
-                    {timestamp.action}
-                    <p />
-                    {moment(timestamp.timestamp, dateFormat).format(
-                      dateDisplay
-                    )}
+                  <Typography
+                    className={
+                      workflow.status === 1
+                        ? classes.green
+                        : workflow.status === 2
+                        ? classes.orange
+                        : classes.yellow
+                    }
+                  >
+                    {workflow.action}
+                    <br />
+                    {workflow.status === 1
+                      ? 'Completed'
+                      : workflow.status === 2
+                      ? 'Needs Attention'
+                      : ''}
                   </Typography>
                 </TimelineContent>
+                <TimelineOppositeContent>
+                  <Typography color='textSecondary'>
+                    {moment(workflow.timestamp, dateFormat).format(dateDisplay)}
+                  </Typography>
+                </TimelineOppositeContent>
               </TimelineItem>
             ))}
           </Timeline>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          container
-          direction='row'
-          justify='flex-start'
-          alignItems='flex-start'
-          alignContent='flex-start'
-          style={{ margin: 20 }}
-        >
-          {Object.entries(order.cart).map(([k, v], i) => {
-            return <BookCard key={k} book={v} />
-          })}
         </Grid>
       </Grid>
     </Box>

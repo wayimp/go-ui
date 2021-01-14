@@ -56,7 +56,8 @@ const useStyles = makeStyles(theme => ({
     overflow: 'visible',
     height: '98%',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    position: 'relative'
   },
   cardActions: {
     display: 'flex',
@@ -64,6 +65,18 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'row'
+  },
+  media: {
+    height: 300,
+    position: 'relative'
+  },
+  limitedIcon: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    display: 'block',
+    width: 'auto',
+    height: 'auto'
   },
   chips: {
     display: 'flex',
@@ -74,7 +87,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   root: {
-    display: 'flex'
+    display: 'flex',
+    margin: 10
   },
   details: {
     display: 'flex',
