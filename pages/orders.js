@@ -15,6 +15,7 @@ import { flatten } from 'lodash'
 import moment from 'moment'
 const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
 const dateDisplay = 'dddd MMMM DD'
+import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
@@ -152,15 +153,17 @@ const Page = ({ dispatch, token, workflows }) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div className={classes.root}>
+        <Box width={1}>
           {days.map(day => (
             <Card key={day} className={classes.section}>
               <h3>{day}</h3>
               <Grid
                 container
-                spacing={2}
+                spacing={1}
                 direction='row'
-                justify='flex-start'
+                justify='center'
                 alignItems='flex-start'
+
               >
                 {ordersSorted
                   .filter(order => order.daySubmitted === day)
@@ -174,6 +177,7 @@ const Page = ({ dispatch, token, workflows }) => {
               </Grid>
             </Card>
           ))}
+          </Box>
         </div>
       </main>
     </Container>

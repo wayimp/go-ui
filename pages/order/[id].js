@@ -20,6 +20,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import TableContainer from '@material-ui/core/TableContainer'
+import Tooltip from '@material-ui/core/Tooltip'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -44,6 +45,8 @@ import TimelineContent from '@material-ui/lab/TimelineContent'
 import TimelineDot from '@material-ui/lab/TimelineDot'
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent'
 import { green, yellow, orange } from '@material-ui/core/colors'
+import CallIcon from '@material-ui/icons/Call'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -165,15 +168,15 @@ const useStyles = makeStyles(theme => ({
     color: 'white'
   },
   yellow: {
-    color: yellow[500]
+    color: '#fff8b2'
   },
   green: {
-    color: green[500]
+    color: '#00de74'
   },
   orange: {
-    color: orange[500]
+    color: '#ffd55b'
   },
-  logo: { height: 80, margin:20 }
+  logo: { height: 80, margin: 20 }
 }))
 
 const Order = ({ propsOrder, dispatch, token }) => {
@@ -189,12 +192,27 @@ const Order = ({ propsOrder, dispatch, token }) => {
   return (
     <Box width={1}>
       <Grid container direction='row' alignItems='flex-start'>
-        <Grid item xs={4}>
-          <img
+        <Grid container direction='row' alignItems='center' item xs={12}>
+          <img 
             src='/images/logo.png'
             alt='Go Therefore Ministries'
             className={classes.logo}
           />
+          <Typography style={{marginTop:10}}>
+            <a target='_top' rel='noopener noreferrer' href='tel:615.773.1963'>
+              <IconButton color='primary'>
+                <CallIcon />
+              </IconButton>
+            </a>
+            615.773.1963
+          </Typography>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <Typography>
+            <MailOutlineIcon color='primary' style={{marginTop:10, marginLeft: 10, marginRight:10, marginBottom: -8}}/>
+            P.O. Box 2135 Mount Juliet, TN 37121
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
           <TableContainer component={Paper}>
             <Table className={classes.table} aria-label='simple table'>
               <TableBody>
@@ -244,7 +262,7 @@ const Order = ({ propsOrder, dispatch, token }) => {
                 </TableRow>
                 <TableRow>
                   <TableCell align='right' component='th' scope='row'>
-                    Additional Instructions:
+                    Order Note:
                   </TableCell>
                   <TableCell align='left'>
                     {order.instructions ? order.instructions : ''}
@@ -252,7 +270,7 @@ const Order = ({ propsOrder, dispatch, token }) => {
                 </TableRow>
                 <TableRow>
                   <TableCell align='right' component='th' scope='row'>
-                    Notes:
+                    Fulfillment Notes:
                   </TableCell>
                   <TableCell align='left'>
                     {order.notes ? order.notes : ''}
@@ -288,17 +306,16 @@ const Order = ({ propsOrder, dispatch, token }) => {
                   )}
                 </TimelineSeparator>
                 <TimelineContent>
+                  <Typography>{workflow.action}</Typography>
                   <Typography
                     className={
                       workflow.status === 1
                         ? classes.green
                         : workflow.status === 2
                         ? classes.orange
-                        : classes.yellow
+                        : ''
                     }
                   >
-                    {workflow.action}
-                    <br />
                     {workflow.status === 1
                       ? 'Completed'
                       : workflow.status === 2

@@ -24,6 +24,7 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import Link from '@material-ui/core/Link'
 import Paper from '@material-ui/core/Paper'
+import Tooltip from '@material-ui/core/Tooltip'
 import LaunchIcon from '@material-ui/icons/Launch'
 import CallIcon from '@material-ui/icons/Call'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
@@ -42,6 +43,7 @@ import SaveIcon from '@material-ui/icons/Save'
 import { green, yellow, orange } from '@material-ui/core/colors'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import CancelIcon from '@material-ui/icons/Cancel'
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
 
 Array.prototype.sum = function (prop) {
   let total = Number(0)
@@ -104,30 +106,33 @@ const useStyles = makeStyles(theme => ({
 
 const YellowButton = withStyles(theme => ({
   root: {
-    color: theme.palette.getContrastText(yellow[500]),
-    backgroundColor: yellow[500],
+    fontWeight: 'bold',
+    color: theme.palette.getContrastText('#fff8b2'),
+    backgroundColor: '#fff8b2',
     '&:hover': {
-      backgroundColor: yellow[700]
+      backgroundColor: '#fffdb7'
     }
   }
 }))(Button)
 
 const OrangeButton = withStyles(theme => ({
   root: {
-    color: theme.palette.getContrastText(orange[500]),
-    backgroundColor: orange[500],
+    fontWeight: 'bold',
+    color: theme.palette.getContrastText('#ffd55b'),
+    backgroundColor: '#ffd55b',
     '&:hover': {
-      backgroundColor: orange[700]
+      backgroundColor: '#ffda60'
     }
   }
 }))(Button)
 
 const GreenButton = withStyles(theme => ({
   root: {
-    color: theme.palette.getContrastText(green[500]),
-    backgroundColor: green[500],
+    fontWeight: 'bold',
+    color: theme.palette.getContrastText('#00de74'),
+    backgroundColor: '#00de74',
     '&:hover': {
-      backgroundColor: green[700]
+      backgroundColor: '#05fd79'
     }
   }
 }))(Button)
@@ -293,38 +298,26 @@ const OrderCard = ({ propsOrder, workflows }) => {
   return (
     <Card className={classes.root}>
       <CardHeader
+        style={{ textAlign: 'left' }}
         action={
           <>
-            <IconButton onClick={handleOpen}>
-              <AssignmentIcon />
-            </IconButton>
-            <IconButton>
-              <Link href={`/order/${order._id}`} target={order._id}>
-                <LaunchIcon />
-              </Link>
-            </IconButton>
-          </>
-        }
-        title={order.customerName}
-        subheader={
-          <>
-            <FormControlLabel
-              control={<MonetizationOnIcon />}
-              label={numeral(order.donation).format('0')}
-              labelPlacement='end'
-            />
-            {moment(
-              order.timeline ? order.timeline[0].timestamp : order.created
-            )
-              .tz('America/Chicago')
-              .format(dateDisplay)}
-          </>
-        }
-      />
-      <CardContent>
-        <Grid>
-          <FormControlLabel
-            control={
+            <Tooltip
+              title={moment(
+                order.timeline ? order.timeline[0].timestamp : order.created
+              )
+                .tz('America/Chicago')
+                .format('h:mma')}
+            >
+              <IconButton color='primary'>
+                <AccessTimeIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={numeral(order.donation).format('$0')}>
+              <IconButton color='primary'>
+                <MonetizationOnIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={order.customerPhone}>
               <a
                 target='_top'
                 rel='noopener noreferrer'
@@ -334,14 +327,8 @@ const OrderCard = ({ propsOrder, workflows }) => {
                   <CallIcon />
                 </IconButton>
               </a>
-            }
-            label={order.customerPhone}
-            labelPlacement='end'
-          />
-        </Grid>
-        <Grid>
-          <FormControlLabel
-            control={
+            </Tooltip>
+            <Tooltip title={order.customerEmail}>
               <a
                 target='_top'
                 rel='noopener noreferrer'
@@ -351,23 +338,24 @@ const OrderCard = ({ propsOrder, workflows }) => {
                   <MailOutlineIcon />
                 </IconButton>
               </a>
-            }
-            label={order.customerEmail}
-            labelPlacement='end'
-          />
-        </Grid>
-        <Grid>
-          <IconButton
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: details
-            })}
-            onClick={handleDetailsClick}
-            aria-expanded={details}
-            aria-label='show details'
-          >
-            <ExpandMoreIcon />
-          </IconButton>
-        </Grid>
+            </Tooltip>
+            <Tooltip title='Notes'>
+              <IconButton onClick={handleOpen} color='primary'>
+                <AssignmentIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Order Page'>
+              <IconButton color='primary'>
+                <Link href={`/order/${order._id}`} target={order._id}>
+                  <LaunchIcon />
+                </Link>
+              </IconButton>
+            </Tooltip>
+          </>
+        }
+      />
+      <CardContent>
+        <Typography variant='h5'>{order.customerName}</Typography>
         {workflows.map(workflow => {
           const section = []
           let workflowExisting = JSON.parse(JSON.stringify(workflow))
@@ -448,20 +436,20 @@ const OrderCard = ({ propsOrder, workflows }) => {
           return section
         })}
       </CardContent>
-
-      <CardActions disableSpacing>
+      <CardActions>
         <IconButton
           className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded
+            [classes.expandOpen]: details
           })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label='show more'
+          onClick={handleDetailsClick}
+          aria-expanded={details}
+          aria-label='show details'
         >
           <ExpandMoreIcon />
         </IconButton>
       </CardActions>
-      <Collapse in={expanded} timeout='auto' unmountOnExit>
+
+      <Collapse in={details} timeout='auto' unmountOnExit>
         <CardContent>
           {Object.values(order.cart).map(book => (
             <BookCard key={book.title} book={book} />

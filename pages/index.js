@@ -49,6 +49,7 @@ import { red } from '@material-ui/core/colors'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import SendIcon from '@material-ui/icons/Send'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import Fab from '@material-ui/core/Fab'
 
 Array.prototype.sum = function (prop) {
   var total = 0
@@ -126,13 +127,14 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1)
   },
   textField: {
-    margin: 2,
+    margin: theme.spacing(1),
     padding: 2
   },
   textFieldWide: {
     width: '100%',
-    margin: 2,
-    padding: 2
+    margin: theme.spacing(1),
+    padding: 2,
+    minWidth: 400
   },
   checkbox: {
     marginTop: 6,
@@ -178,6 +180,22 @@ const useStyles = makeStyles(theme => ({
     '& > *': {
       margin: theme.spacing(0.5)
     }
+  },
+  fab1: {
+    margin: 0,
+    top: 'auto',
+    right: theme.spacing(4),
+    top: theme.spacing(4),
+    left: 'auto',
+    position: 'fixed'
+  },
+  fab2: {
+    margin: 0,
+    top: 'auto',
+    right: theme.spacing(4),
+    bottom: theme.spacing(4),
+    left: 'auto',
+    position: 'fixed'
   }
 }))
 
@@ -261,25 +279,90 @@ const Form = ({ books, dispatch, token }) => {
     setForm(updated)
   }
 
-  const handleSubmit = async () => {
-    setProgress(true)
-
-    await axiosClient
-      .post('/orders', form)
-      .then(res => {
-        dispatch({ type: 'FORM_CLEAR', payload: '' })
-        enqueueSnackbar('Your order has been submitted', {
-          variant: 'success'
-        })
-        setProgress(false)
-        Router.push('/order/' + res.data.ops[0]._id)
+  const formIsValid = () => {
+    let valid = true
+    if (!form.customerName || form.customerName.length === 0) {
+      valid = false
+      enqueueSnackbar('Name is required', {
+        variant: 'error'
       })
-      .catch(err => {
-        setProgress(false)
-        enqueueSnackbar('There was a problem submitting the order' + err, {
+    }
+    if (!form.customerStreet || form.customerStreet.length === 0) {
+      valid = false
+      enqueueSnackbar('Street is required', {
+        variant: 'error'
+      })
+    }
+    if (!form.customerCity || form.customerCity.length === 0) {
+      valid = false
+      enqueueSnackbar('City is required', {
+        variant: 'error'
+      })
+    }
+    if (!form.customerState || form.customerState.length === 0) {
+      valid = false
+      enqueueSnackbar('State is required', {
+        variant: 'error'
+      })
+    }
+    if (!form.customerZip || form.customerZip.length === 0) {
+      valid = false
+      enqueueSnackbar('Zip is required', {
+        variant: 'error'
+      })
+    }
+    if (!form.customerPhone || form.customerPhone.length === 0) {
+      valid = false
+      enqueueSnackbar('Phone is required', {
+        variant: 'error'
+      })
+    }
+    if (!form.customerEmail || form.customerEmail.length === 0) {
+      valid = false
+      enqueueSnackbar('Email is required', {
+        variant: 'error'
+      })
+    }
+    if (!form.donation || form.donation.length === 0) {
+      valid = false
+      enqueueSnackbar(
+        'Please indicate a donation amount, or enter zero for none',
+        {
           variant: 'error'
-        })
+        }
+      )
+    }
+    if (!form.cart || Object.keys(form.cart).length === 0) {
+      valid = false
+      enqueueSnackbar('There is nothing in the order', {
+        variant: 'error'
       })
+    }
+    return valid
+  }
+
+  const handleSubmit = async () => {
+    const isValid = formIsValid()
+    if (isValid) {
+      setProgress(true)
+
+      await axiosClient
+        .post('/orders', form)
+        .then(res => {
+          dispatch({ type: 'FORM_CLEAR', payload: '' })
+          enqueueSnackbar('Your order has been submitted', {
+            variant: 'success'
+          })
+          setProgress(false)
+          Router.push('/order/' + res.data.ops[0]._id)
+        })
+        .catch(err => {
+          setProgress(false)
+          enqueueSnackbar('There was a problem submitting the order' + err, {
+            variant: 'error'
+          })
+        })
+    }
   }
 
   // Calculate current cases
@@ -303,19 +386,9 @@ const Form = ({ books, dispatch, token }) => {
     )
   }
   if (items > 0) {
-    if (cases > 0) {
+    if (cases > 1) {
       chips.push(
-        <Chip
-          key={keyIndex++}
-          variant='outlined'
-          label={items}
-          color='secondary'
-        />
-      )
-      chips.push(
-        <Tooltip title='Add even case lots of 24'>
-          <WarningIcon style={{ color: red[500] }} />
-        </Tooltip>
+        <Chip key={keyIndex++} variant='outlined' label={items} style={{ backgroundColor: red[500] }}/>
       )
     } else {
       chips.push(
@@ -329,22 +402,44 @@ const Form = ({ books, dispatch, token }) => {
     }
   }
   if (chips.length > 0) {
-    cartDisplay.push(
-      <IconButton aria-label='shopping-basket' color='inherit'>
-        <Badge badgeContent={quantity ? quantity : 0} color='error'>
-          <ShoppingCartIcon fontSize='large' />
-        </Badge>
-      </IconButton>
-    )
+    if (selectedTab !== 1) {
+      cartDisplay.push(
+        <Fab id='fab1' key='fab1' className={classes.fab1} color='primary'>
+          <Tooltip title='Complete Order'>
+            <Badge badgeContent={quantity ? quantity : 0} color='error'>
+              <ShoppingCartIcon fontSize='large' />
+            </Badge>
+          </Tooltip>
+        </Fab>
+      )
+      cartDisplay.push(
+        <Fab id='fab2' key='fab2' className={classes.fab2} color='primary'>
+          <Tooltip title='Complete Order'>
+            <Badge badgeContent={quantity ? quantity : 0} color='error'>
+              <ShoppingCartIcon fontSize='large' />
+            </Badge>
+          </Tooltip>
+        </Fab>
+      )
+    }
     cartDisplay.push(<Grid>{chips}</Grid>)
     cartDisplay.push(
-      <Grid>
+      <Grid key='donation'>
         <Typography style={{ marginTop: 7 }}>
           Suggested Donation:&nbsp;
           {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per book)
         </Typography>
       </Grid>
     )
+    if (items > 0 && cases > 1) {
+      cartDisplay.push(<br />)
+      cartDisplay.push(
+        <Typography style={{ color: red[500] }}>
+          <WarningIcon style={{ color: red[500] }} />
+          Please order an even number of cases (multiples of 48)
+        </Typography>
+      )
+    }
   }
 
   return (
@@ -361,7 +456,11 @@ const Form = ({ books, dispatch, token }) => {
             variant='scrollable'
             scrollButtons='auto'
           >
-            <img src='/images/logo.png' style={{ maxHeight: 60, margin: 10 }} />
+            <img
+              src='/images/logo.png'
+              style={{ maxHeight: 60, margin: 10 }}
+              indicator='false'
+            />
             <Tab label='Catalog' value={0} />
             <Tab label='Order' value={1} />
           </Tabs>
@@ -417,6 +516,7 @@ const Form = ({ books, dispatch, token }) => {
               >
                 <Grid item>
                   <TextField
+                    required
                     className={classes.textField}
                     variant='outlined'
                     name='customerName'
@@ -425,10 +525,12 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
+                    error={form.customerName ? '' : 'Required'}
                   />
                 </Grid>
                 <Grid item>
                   <TextField
+                    required
                     className={classes.textField}
                     variant='outlined'
                     name='customerStreet'
@@ -439,10 +541,12 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
+                    error={form.customerStreet ? '' : 'Required'}
                   />
                 </Grid>
                 <Grid item>
                   <TextField
+                    required
                     className={classes.textField}
                     variant='outlined'
                     name='customerCity'
@@ -451,6 +555,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
+                    error={form.customerCity ? '' : 'Required'}
                   />
                 </Grid>
                 <Grid item>
@@ -463,10 +568,12 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
+                    error={form.customerState ? '' : 'Required'}
                   />
                 </Grid>
                 <Grid item>
                   <TextField
+                    required
                     className={classes.textField}
                     variant='outlined'
                     name='customerZip'
@@ -475,10 +582,12 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
+                    error={form.customerZip ? '' : 'Required'}
                   />
                 </Grid>
                 <Grid item>
                   <TextField
+                    required
                     className={classes.textField}
                     variant='outlined'
                     name='customerPhone'
@@ -487,10 +596,12 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
+                    error={form.customerPhone ? '' : 'Required'}
                   />
                 </Grid>
                 <Grid item>
                   <TextField
+                    required
                     className={classes.textField}
                     variant='outlined'
                     name='customerEmail'
@@ -499,6 +610,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
+                    error={form.customerEmail ? '' : 'Required'}
                   />
                 </Grid>
               </Grid>
@@ -510,26 +622,40 @@ const Form = ({ books, dispatch, token }) => {
                 className={classes.formGroup}
               >
                 <Grid item>
-                  <TextField
-                    className={classes.textField}
-                    variant='outlined'
-                    name='donation'
-                    label='Donation Amount'
-                    defaultValue={form.donation ? form.donation : ''}
-                    onChange={changeField}
-                    onBlur={blurField}
-                    disabled={readOnly}
-                    helperText='Your donation helps us to distribute more Bibles'
-                    type='number'
-                  />
+                  <FormControl>
+                    <InputLabel htmlFor='donation'>
+                      Donation Amount (enter 0 for none)
+                    </InputLabel>
+                    <Input
+                      required
+                      error={form.donation ? '' : 'Required'}
+                      id='donation'
+                      className={classes.textField}
+                      variant='outlined'
+                      name='donation'
+                      label='Donation Amount'
+                      defaultValue={form.donation ? form.donation : ''}
+                      onChange={changeField}
+                      onBlur={blurField}
+                      disabled={readOnly}
+                      type='number'
+                      startAdornment={
+                        <InputAdornment position='start'>$</InputAdornment>
+                      }
+                    />
+                    <FormHelperText>
+                      Your donation helps us to distribute more Bibles
+                    </FormHelperText>
+                  </FormControl>
                 </Grid>
                 <Grid item>
                   <TextField
-                    className={classes.textField}
+                    className={classes.textFieldWide}
                     variant='outlined'
                     name='instructions'
-                    label='Additional Instructions'
+                    label='Leave us a note'
                     defaultValue={form.instructions ? form.instructions : ''}
+                    multiline={true}
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
@@ -539,10 +665,10 @@ const Form = ({ books, dispatch, token }) => {
                   <Button
                     variant='contained'
                     color='primary'
-                    disabled={!form.cart || Object.keys(form.cart).length === 0}
                     style={{ margin: 20 }}
                     onClick={handleSubmit}
                     startIcon={<SendIcon />}
+                    disabled={progress}
                   >
                     Request Shipment
                   </Button>

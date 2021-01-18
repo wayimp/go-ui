@@ -171,17 +171,24 @@ const BookDisplay = ({ book, addToCart, inCart }) => {
             <div className={classes.chips}>{caseDisplay}</div>
           </CardContent>
           <CardActions className={classes.cardActions}>
-            <Tooltip title={quantity >= 24 ? 'Add even case lots' : ''}>
+            <Tooltip
+              title={
+                quantity >= 48
+                  ? 'Please order an even number of cases (multiples of 48)'
+                  : ''
+              }
+            >
               <span>
                 <Button
                   size='large'
+                  style={{marginTop:6}}
                   variant='outlined'
                   color='primary'
                   onClick={e => {
                     e.preventDefault
                     addToCart(book, 1)
                   }}
-                  disabled={quantity >= 24 ? true : false}
+                  disabled={quantity >= 48 ? true : false}
                 >
                   Add One
                 </Button>

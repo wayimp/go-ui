@@ -39,8 +39,8 @@ class goApp extends App {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <SnackbarProvider
-            maxSnack={3}
-            autoHideDuration={2000}
+            maxSnack={9}
+            autoHideDuration={3000}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right'
