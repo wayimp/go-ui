@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto',
     margin: 20,
-    maxHeight: 100
+    maxWidth: 200
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -57,7 +57,7 @@ export default function SearchAppBar () {
         <Toolbar>
           <Box width={1}>
             <Grid container direction='row' alignItems='center'>
-              <Grid item xs={5}>
+              <Grid item xs={4}>
                 <img
                   src='/images/logo.png'
                   alt='Go Therefore Ministries'
@@ -97,6 +97,13 @@ export default function SearchAppBar () {
                 <Typography variant='h6' noWrap>
                   <Link href='/settings' className={classes.title}>
                     Settings
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={1}>
+                <Typography variant='h6' noWrap>
+                  <Link href='/quotes' className={classes.title}>
+                    Quotes
                   </Link>
                 </Typography>
               </Grid>

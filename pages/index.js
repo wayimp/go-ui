@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../src/Link'
 import TabPanel from '../components/TabPanel'
+import Quote from '../components/Quote'
 import numeral from 'numeral'
 const priceFormat = '$0'
 import moment from 'moment-timezone'
@@ -50,6 +51,9 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import SendIcon from '@material-ui/icons/Send'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Fab from '@material-ui/core/Fab'
+import CallIcon from '@material-ui/icons/Call'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import ReactPlayer from 'react-player'
 
 Array.prototype.sum = function (prop) {
   var total = 0
@@ -199,7 +203,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Form = ({ books, dispatch, token }) => {
+const Form = ({ books, quotes, dispatch, token }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [form, setForm] = React.useState({ cart: {} })
@@ -468,6 +472,8 @@ const Form = ({ books, dispatch, token }) => {
             />
             <Tab label='Catalog' value={0} />
             <Tab label='Order' value={1} />
+            <Tab label='About Us' value={2} />
+            <Tab label='Testimonials' value={3} />
           </Tabs>
         </Grid>
         <Grid className={classes.chips} onClick={() => setSelectedTab(1)}>
@@ -700,6 +706,83 @@ const Form = ({ books, dispatch, token }) => {
             </>
           )}
         </TabPanel>
+        <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
+          <ReactPlayer
+            style={{ margin: 30 }}
+            url='/images/gtf-promo-4_dvd.mp4'
+            width='100%'
+            height='100%'
+            controls={true}
+          />
+          <Typography component='subtitle1'>
+            In 2004, a vision to reach physicians, staff, and patients with the
+            Word of God soon became a reality when the first edition of
+            “Physician’s Life Reference” was printed and distributed throughout
+            the United States.
+          </Typography>
+          <br />
+          <br />
+          <Typography component='subtitle1'>
+            More than six years and 400,000 copies later, “Go Therefore”, a
+            non-profit 501(c)(3), was established for the sole purpose of
+            distributing Life Reference Manuals throughout our community and the
+            world.
+          </Typography>
+          <br />
+          <br />
+          <Typography component='subtitle1'>
+            Our prayer is that all who receive a copy may be encouraged and gain
+            understanding and perspective in life’s daily issues. Fourteen
+            additional titles have been released to help meet the growing need
+            for real answers from God’s Word for people from all walks of life.
+          </Typography>
+          <br />
+          <br />
+          <Typography component='subtitle1'>
+            100% of all contributions to “Go Therefore” are used for the
+            distribution of Life Reference Manuals to individuals and
+            organizations in need. All one-time and monthly gifts, as well as
+            those gifts given in excess of the fair market value of the Life
+            Reference Manuals, are tax deductible and greatly appreciated.
+          </Typography>
+          <br />
+          <img
+            src='/images/unloading250k_bibles.jpg'
+            style={{ margin: 10 }}
+            indicator='false'
+          />
+          <Typography>
+            Please feel free to contact our office if you have any additional
+            questions.
+          </Typography>
+          <br />
+          <Typography style={{ marginTop: 10 }}>
+            <a target='_top' rel='noopener noreferrer' href='tel:615.773.1963'>
+              <IconButton color='primary'>
+                <CallIcon />
+              </IconButton>
+            </a>
+            615.773.1963
+          </Typography>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <Typography>
+            <MailOutlineIcon
+              color='primary'
+              style={{
+                marginTop: 10,
+                marginLeft: 10,
+                marginRight: 10,
+                marginBottom: -8
+              }}
+            />
+            P.O. Box 2135 Mount Juliet, TN 37121
+          </Typography>
+        </TabPanel>
+        <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
+          {quotes.map(quote => (
+            <Quote key={quote._id} quote={quote} />
+          ))}
+        </TabPanel>
       </Box>
     </Container>
   )
@@ -707,10 +790,14 @@ const Form = ({ books, dispatch, token }) => {
 
 export async function getServerSideProps (context) {
   const books = await axiosClient.get('/books').then(response => response.data)
+  const quotes = await axiosClient
+    .get('/quotes')
+    .then(response => response.data)
 
   return {
     props: {
-      books
+      books,
+      quotes
     }
   }
 }
