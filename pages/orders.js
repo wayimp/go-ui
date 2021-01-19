@@ -36,6 +36,11 @@ import Fade from '@material-ui/core/Fade'
 import TextField from '@material-ui/core/TextField'
 import { useSnackbar } from 'notistack'
 import cookie from 'js-cookie'
+import SearchIcon from '@material-ui/icons/Search'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -99,11 +104,40 @@ const Page = ({ dispatch, token, workflows }) => {
   const [open, setOpen] = React.useState(false)
   const [orders, setOrders] = React.useState([])
   const { enqueueSnackbar } = useSnackbar()
+  const [showInactive, setShowInactive] = React.useState(false)
+  const [search, setSearch] = React.useState('')
 
-  const getData = () => {
+  const changeShowInactive = event => {
+    if (event && event.target) {
+      const { checked } = event.target
+      getData(checked)
+      setShowInactive(checked)
+    }
+  }
+
+  const getData = inactive => {
+    let url = inactive ? '/orders?showInactive=true' : '/orders'
+    if (search && search.length > 0) {
+      url += inactive ? `&search=${search}` : `?search=${search}`
+    }
+
     axiosClient({
       method: 'get',
-      url: '/orders',
+      url,
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(response => {
+      setOrders(Array.isArray(response.data) ? response.data : [])
+    })
+  }
+
+  const searchOrders = () => {
+    const url = showInactive
+      ? `/orders?showInactive=true&search=${search}`
+      : `/orders?search=${search}`
+
+    axiosClient({
+      method: 'get',
+      url,
       headers: { Authorization: `Bearer ${token}` }
     }).then(response => {
       setOrders(Array.isArray(response.data) ? response.data : [])
@@ -153,30 +187,66 @@ const Page = ({ dispatch, token, workflows }) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div className={classes.root}>
-        <Box width={1}>
-          {days.map(day => (
-            <Card key={day} className={classes.section}>
-              <h3>{day}</h3>
-              <Grid
-                container
-                spacing={1}
-                direction='row'
-                justify='center'
-                alignItems='flex-start'
-
-              >
-                {ordersSorted
-                  .filter(order => order.daySubmitted === day)
-                  .map(order => (
-                    <OrderCard
-                      key={order._id}
-                      propsOrder={order}
-                      workflows={workflows}
-                    />
-                  ))}
-              </Grid>
-            </Card>
-          ))}
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <FormControl variant='outlined'>
+              <InputLabel>Name</InputLabel>
+              <OutlinedInput
+                id='search'
+                value={search}
+                onChange={event => setSearch(event.target.value)}
+                startAdornment={
+                  <InputAdornment position='start'></InputAdornment>
+                }
+                labelWidth={70}
+              />
+            </FormControl>
+            <Button
+              variant='contained'
+              color='secondary'
+              style={{ margin: 20 }}
+              onClick={searchOrders}
+              startIcon={<SearchIcon />}
+            >
+              Search
+            </Button>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  className={classes.checkbox}
+                  checked={showInactive}
+                  onChange={changeShowInactive}
+                  name='showInactive'
+                  color='secondary'
+                />
+              }
+              label='Show Archived'
+            />
+          </Grid>
+          <Box width={1}>
+            {days.map(day => (
+              <Card key={day} className={classes.section}>
+                <h3>{day}</h3>
+                <Grid
+                  container
+                  spacing={1}
+                  direction='row'
+                  justify='center'
+                  alignItems='flex-start'
+                >
+                  {ordersSorted
+                    .filter(order => order.daySubmitted === day)
+                    .map(order => (
+                      <OrderCard
+                        key={order._id}
+                        propsOrder={order}
+                        workflows={workflows}
+                        getData={getData}
+                        showInactive={showInactive}
+                      />
+                    ))}
+                </Grid>
+              </Card>
+            ))}
           </Box>
         </div>
       </main>

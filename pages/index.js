@@ -388,7 +388,12 @@ const Form = ({ books, dispatch, token }) => {
   if (items > 0) {
     if (cases > 1) {
       chips.push(
-        <Chip key={keyIndex++} variant='outlined' label={items} style={{ backgroundColor: red[500] }}/>
+        <Chip
+          key={keyIndex++}
+          variant='outlined'
+          label={items}
+          style={{ backgroundColor: red[500] }}
+        />
       )
     } else {
       chips.push(
@@ -525,7 +530,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
-                    error={form.customerName ? '' : 'Required'}
+                    error={form.customerName ? false : true}
                   />
                 </Grid>
                 <Grid item>
@@ -541,7 +546,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
-                    error={form.customerStreet ? '' : 'Required'}
+                    error={form.customerStreet ? false : true}
                   />
                 </Grid>
                 <Grid item>
@@ -555,7 +560,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
-                    error={form.customerCity ? '' : 'Required'}
+                    error={form.customerCity ? false : true}
                   />
                 </Grid>
                 <Grid item>
@@ -568,7 +573,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
-                    error={form.customerState ? '' : 'Required'}
+                    error={form.customerState ? false : true}
                   />
                 </Grid>
                 <Grid item>
@@ -582,7 +587,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
-                    error={form.customerZip ? '' : 'Required'}
+                    error={form.customerZip ? false : true}
                   />
                 </Grid>
                 <Grid item>
@@ -596,7 +601,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
-                    error={form.customerPhone ? '' : 'Required'}
+                    error={form.customerPhone ? false : true}
                   />
                 </Grid>
                 <Grid item>
@@ -610,7 +615,7 @@ const Form = ({ books, dispatch, token }) => {
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
-                    error={form.customerEmail ? '' : 'Required'}
+                    error={form.customerEmail ? false : true}
                   />
                 </Grid>
               </Grid>
@@ -628,7 +633,7 @@ const Form = ({ books, dispatch, token }) => {
                     </InputLabel>
                     <Input
                       required
-                      error={form.donation ? '' : 'Required'}
+                      error={form.donation ? false : true}
                       id='donation'
                       className={classes.textField}
                       variant='outlined'

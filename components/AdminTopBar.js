@@ -93,6 +93,13 @@ export default function SearchAppBar () {
                   </Link>
                 </Typography>
               </Grid>
+              <Grid item xs={1}>
+                <Typography variant='h6' noWrap>
+                  <Link href='/settings' className={classes.title}>
+                    Settings
+                  </Link>
+                </Typography>
+              </Grid>
             </Grid>
           </Box>
         </Toolbar>

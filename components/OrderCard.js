@@ -21,6 +21,9 @@ import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
 import Fade from '@material-ui/core/Fade'
 import Link from '@material-ui/core/Link'
 import Paper from '@material-ui/core/Paper'
@@ -44,6 +47,9 @@ import { green, yellow, orange } from '@material-ui/core/colors'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import CancelIcon from '@material-ui/icons/Cancel'
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
+import DeleteIcon from '@material-ui/icons/Delete'
+import ArchiveIcon from '@material-ui/icons/Archive'
+import UnarchiveIcon from '@material-ui/icons/Unarchive'
 
 Array.prototype.sum = function (prop) {
   let total = Number(0)
@@ -137,13 +143,22 @@ const GreenButton = withStyles(theme => ({
   }
 }))(Button)
 
-const OrderCard = ({ propsOrder, workflows }) => {
+const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const [order, setOrder] = React.useState(propsOrder)
   const [expanded, setExpanded] = React.useState(false)
   const [details, setDetails] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const [confirmDelete, setConfirmDelete] = React.useState(false)
+
+  const handleConfirmDeleteOpen = () => {
+    setConfirmDelete(true)
+  }
+
+  const handleConfirmDeleteClose = () => {
+    setConfirmDelete(false)
+  }
 
   const handleOpen = () => {
     setOpen(true)
@@ -279,6 +294,15 @@ const OrderCard = ({ propsOrder, workflows }) => {
     setOrder(updated)
   }
 
+  const handleArchive = archived => {
+    changeValue('archived', archived)
+    const updated = {
+      ...order,
+      archived
+    }
+    updateOrder(updated)
+  }
+
   const changeField = event => {
     const fieldName = event.target.name
     const fieldValue = event.target.value
@@ -295,12 +319,55 @@ const OrderCard = ({ propsOrder, workflows }) => {
     handleClose()
   }
 
+  const handleDelete = async () => {
+    setConfirmDelete(false)
+    await axiosClient({
+      method: 'delete',
+      url: '/orders/' + order._id,
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(response => {
+        enqueueSnackbar('Order Deleted', {
+          variant: 'success'
+        })
+        getData(showInactive)
+      })
+      .catch(error => {
+        enqueueSnackbar('Error Deleting Order: ' + error, {
+          variant: 'error'
+        })
+      })
+  }
+
   return (
     <Card className={classes.root}>
       <CardHeader
         style={{ textAlign: 'left' }}
         action={
           <>
+            {order.archived ? (
+              <>
+                <Tooltip title='Delete Permanently'>
+                  <IconButton onClick={handleConfirmDeleteOpen} color='primary'>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title='Unarchive'>
+                  <IconButton
+                    onClick={() => handleArchive(false)}
+                    color='primary'
+                  >
+                    <UnarchiveIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
+            ) : (
+              <Tooltip title='Archive'>
+                <IconButton onClick={() => handleArchive(true)} color='primary'>
+                  <UnarchiveIcon />
+                </IconButton>
+              </Tooltip>
+            )}
             <Tooltip
               title={moment(
                 order.timeline ? order.timeline[0].timestamp : order.created
@@ -356,7 +423,7 @@ const OrderCard = ({ propsOrder, workflows }) => {
       />
       <CardContent>
         <Typography variant='h5'>{order.customerName}</Typography>
-        {workflows.map(workflow => {
+        {workflows.map((workflow, wi) => {
           const section = []
           let workflowExisting = JSON.parse(JSON.stringify(workflow))
           const existing = order.timeline.find(
@@ -368,8 +435,9 @@ const OrderCard = ({ propsOrder, workflows }) => {
           switch (workflowExisting.status) {
             case 1:
               section.push(
-                <Grid>
+                <Grid key={'gg' + wi}>
                   <GreenButton
+                    key={'gb' + wi}
                     variant='contained'
                     color='primary'
                     className={classes.step}
@@ -382,8 +450,9 @@ const OrderCard = ({ propsOrder, workflows }) => {
               break
             case 2:
               section.push(
-                <Grid>
+                <Grid key={'og' + wi}>
                   <OrangeButton
+                    key={'ob' + wi}
                     variant='contained'
                     color='primary'
                     className={classes.step}
@@ -396,8 +465,9 @@ const OrderCard = ({ propsOrder, workflows }) => {
               break
             default:
               section.push(
-                <Grid>
+                <Grid key={'yg' + wi}>
                   <YellowButton
+                    key={'yb' + wi}
                     variant='contained'
                     color='primary'
                     className={classes.step}
@@ -510,6 +580,19 @@ const OrderCard = ({ propsOrder, workflows }) => {
           </div>
         </Fade>
       </Modal>
+      <Dialog open={confirmDelete} onClose={handleConfirmDeleteClose}>
+        <DialogTitle id='alert-dialog-title'>
+          Are you sure you want to delete this order?
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleConfirmDeleteClose} color='secondary'>
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color='primary' autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   )
 }

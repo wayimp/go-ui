@@ -193,12 +193,14 @@ const Order = ({ propsOrder, dispatch, token }) => {
     <Box width={1}>
       <Grid container direction='row' alignItems='flex-start'>
         <Grid container direction='row' alignItems='center' item xs={12}>
-          <img 
-            src='/images/logo.png'
-            alt='Go Therefore Ministries'
-            className={classes.logo}
-          />
-          <Typography style={{marginTop:10}}>
+          <Link href='/' className={classes.title}>
+            <img
+              src='/images/logo.png'
+              alt='Go Therefore Ministries'
+              className={classes.logo}
+            />
+          </Link>
+          <Typography style={{ marginTop: 10 }}>
             <a target='_top' rel='noopener noreferrer' href='tel:615.773.1963'>
               <IconButton color='primary'>
                 <CallIcon />
@@ -208,7 +210,15 @@ const Order = ({ propsOrder, dispatch, token }) => {
           </Typography>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <Typography>
-            <MailOutlineIcon color='primary' style={{marginTop:10, marginLeft: 10, marginRight:10, marginBottom: -8}}/>
+            <MailOutlineIcon
+              color='primary'
+              style={{
+                marginTop: 10,
+                marginLeft: 10,
+                marginRight: 10,
+                marginBottom: -8
+              }}
+            />
             P.O. Box 2135 Mount Juliet, TN 37121
           </Typography>
         </Grid>
