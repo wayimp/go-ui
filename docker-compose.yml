@@ -5,7 +5,7 @@ networks:
     external:
       name: web
 services:
-  api:
+  ui:
     labels:
       - 'traefik.backend=go-ui'
       - 'traefik.port=8044'

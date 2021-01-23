@@ -330,7 +330,7 @@ const Page = ({ dispatch, token }) => {
             onClick={handleOpen}
             startIcon={<FormatQuoteIcon />}
           >
-            New Quote
+            New Testimonial
           </Button>
 
           <Box width={1}>
@@ -341,7 +341,11 @@ const Page = ({ dispatch, token }) => {
                     <ListItemAvatar>
                       <Typography>{quote.order ? quote.order : ''}</Typography>
                     </ListItemAvatar>
-                    <ListItemText edge='begin' primary={`${quote.author}`} secondary={`${quote.location}`} />
+                    <ListItemText
+                      edge='begin'
+                      primary={`${quote.author}`}
+                      secondary={`${quote.location}`}
+                    />
                     <ListItemSecondaryAction>
                       <Tooltip title='Edit'>
                         <IconButton onClick={() => handleEdit(quote)}>
@@ -374,10 +378,10 @@ const Page = ({ dispatch, token }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <Grid container spacing={1} justify='space-between'>
-              <Grid item xs={12}>
+            <Box width={1}>
+              <Grid>
                 <TextField
-                  className={classes.textField}
+                  className={classes.textFieldWide}
                   variant='outlined'
                   name='order'
                   label='Sort Order'
@@ -387,16 +391,17 @@ const Page = ({ dispatch, token }) => {
                 />
                 <br />
                 <TextField
-                  className={classes.textField}
+                  className={classes.textFieldWide}
                   variant='outlined'
                   name='text'
                   label='Text'
+                  multiline={true}
                   defaultValue={quote.text}
                   onChange={changeField}
                 />
                 <br />
                 <TextField
-                  className={classes.textField}
+                  className={classes.textFieldWide}
                   variant='outlined'
                   name='author'
                   label='Author'
@@ -405,7 +410,7 @@ const Page = ({ dispatch, token }) => {
                 />
                 <br />
                 <TextField
-                  className={classes.textField}
+                  className={classes.textFieldWide}
                   variant='outlined'
                   name='location'
                   label='Location'
@@ -438,7 +443,7 @@ const Page = ({ dispatch, token }) => {
                   Save
                 </Button>
               </Grid>
-            </Grid>
+            </Box>
           </div>
         </Fade>
       </Modal>

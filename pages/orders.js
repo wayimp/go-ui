@@ -195,7 +195,7 @@ const Page = ({ dispatch, token, workflows }) => {
                 value={search}
                 onChange={event => setSearch(event.target.value)}
                 startAdornment={
-                  <InputAdornment position='start'></InputAdornment>
+                  <InputAdornment position='start'><SearchIcon/></InputAdornment>
                 }
                 labelWidth={70}
               />
@@ -229,7 +229,6 @@ const Page = ({ dispatch, token, workflows }) => {
                 <Grid
                   container
                   spacing={1}
-                  direction='row'
                   justify='center'
                   alignItems='flex-start'
                 >

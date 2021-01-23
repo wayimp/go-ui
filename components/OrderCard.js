@@ -50,6 +50,9 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ArchiveIcon from '@material-ui/icons/Archive'
 import UnarchiveIcon from '@material-ui/icons/Unarchive'
+import MuiAccordion from '@material-ui/core/Accordion'
+import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
+import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 
 Array.prototype.sum = function (prop) {
   let total = Number(0)
@@ -59,10 +62,58 @@ Array.prototype.sum = function (prop) {
   return total
 }
 
+const Accordion = withStyles({
+  root: {
+    border: '1px solid rgba(0, 0, 0, .125)',
+    boxShadow: 'none',
+    '&:not(:last-child)': {
+      borderBottom: 0
+    },
+    '&:before': {
+      display: 'none'
+    },
+    '&$expanded': {
+      margin: 'auto'
+    }
+  },
+  expanded: {}
+})(MuiAccordion)
+
+const AccordionSummary = withStyles({
+  root: {
+    fontSize: 'x-large',
+    fontWeight: 'bold',
+    border: '2px solid rgba(0, 0, 0, 1)',
+    marginBottom: -2,
+    minHeight: 48,
+    maxHeight: 48,
+    '&$expanded': {
+      minHeight: 48,
+      maxHeight: 48
+    }
+  },
+  content: {
+    '&$expanded': {
+      margin: '12px 0'
+    }
+  },
+  expanded: {}
+})(MuiAccordionSummary)
+
+const AccordionDetails = withStyles(theme => ({
+  root: {
+    border: '2px solid rgba(0, 0, 0, 1)',
+    marginBottom: -2,
+    padding: theme.spacing(2)
+  }
+}))(MuiAccordionDetails)
+
 const useStyles = makeStyles(theme => ({
   root: {
     maxWidth: 345,
-    margin: 6
+    margin: 6,
+    border: '2px solid rgba(0, 0, 0, 1)',
+    borderRadius: 20
   },
   grid: {
     marginTop: -30,
@@ -109,39 +160,6 @@ const useStyles = makeStyles(theme => ({
     padding: 2
   }
 }))
-
-const YellowButton = withStyles(theme => ({
-  root: {
-    fontWeight: 'bold',
-    color: theme.palette.getContrastText('#fff8b2'),
-    backgroundColor: '#fff8b2',
-    '&:hover': {
-      backgroundColor: '#fffdb7'
-    }
-  }
-}))(Button)
-
-const OrangeButton = withStyles(theme => ({
-  root: {
-    fontWeight: 'bold',
-    color: theme.palette.getContrastText('#ffd55b'),
-    backgroundColor: '#ffd55b',
-    '&:hover': {
-      backgroundColor: '#ffda60'
-    }
-  }
-}))(Button)
-
-const GreenButton = withStyles(theme => ({
-  root: {
-    fontWeight: 'bold',
-    color: theme.palette.getContrastText('#00de74'),
-    backgroundColor: '#00de74',
-    '&:hover': {
-      backgroundColor: '#05fd79'
-    }
-  }
-}))(Button)
 
 const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
   const classes = useStyles()
@@ -341,71 +359,19 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
 
   return (
     <Card className={classes.root}>
+      {moment(order.timeline ? order.timeline[0].timestamp : order.created)
+        .tz('America/Chicago')
+        .format('h:mm a')}
       <CardHeader
         style={{ textAlign: 'left' }}
+        title={
+          <IconButton color='primary'>
+            <MonetizationOnIcon />
+            {numeral(order.donation).format('0')}
+          </IconButton>
+        }
         action={
           <>
-            {order.archived ? (
-              <>
-                <Tooltip title='Delete Permanently'>
-                  <IconButton onClick={handleConfirmDeleteOpen} color='primary'>
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title='Unarchive'>
-                  <IconButton
-                    onClick={() => handleArchive(false)}
-                    color='primary'
-                  >
-                    <UnarchiveIcon />
-                  </IconButton>
-                </Tooltip>
-              </>
-            ) : (
-              <Tooltip title='Archive'>
-                <IconButton onClick={() => handleArchive(true)} color='primary'>
-                  <UnarchiveIcon />
-                </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip
-              title={moment(
-                order.timeline ? order.timeline[0].timestamp : order.created
-              )
-                .tz('America/Chicago')
-                .format('h:mma')}
-            >
-              <IconButton color='primary'>
-                <AccessTimeIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={numeral(order.donation).format('$0')}>
-              <IconButton color='primary'>
-                <MonetizationOnIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={order.customerPhone}>
-              <a
-                target='_top'
-                rel='noopener noreferrer'
-                href={`tel:${order.customerPhone}`}
-              >
-                <IconButton color='primary'>
-                  <CallIcon />
-                </IconButton>
-              </a>
-            </Tooltip>
-            <Tooltip title={order.customerEmail}>
-              <a
-                target='_top'
-                rel='noopener noreferrer'
-                href={`mailto:${order.customerEmail}`}
-              >
-                <IconButton color='primary'>
-                  <MailOutlineIcon />
-                </IconButton>
-              </a>
-            </Tooltip>
             <Tooltip title='Notes'>
               <IconButton onClick={handleOpen} color='primary'>
                 <AssignmentIcon />
@@ -418,11 +384,41 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
                 </Link>
               </IconButton>
             </Tooltip>
+            <IconButton
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: details
+              })}
+              onClick={handleDetailsClick}
+              aria-expanded={details}
+              aria-label='show details'
+            >
+              <ExpandMoreIcon />
+            </IconButton>
           </>
         }
-      />
-      <CardContent>
+      ></CardHeader>
+      <CardContent style={{marginTop:-40}}>
         <Typography variant='h5'>{order.customerName}</Typography>
+        <Grid direction='row'>
+          <Link href={`tel:${order.customerPhone}`}>
+            <IconButton color='primary'>
+              <CallIcon />
+              {order.customerPhone}
+            </IconButton>
+          </Link>
+
+          <Tooltip title={order.customerEmail}>
+            <a
+              target='_top'
+              rel='noopener noreferrer'
+              href={`mailto:${order.customerEmail}`}
+            >
+              <IconButton color='primary'>
+                <MailOutlineIcon />
+              </IconButton>
+            </a>
+          </Tooltip>
+        </Grid>
         {workflows.map((workflow, wi) => {
           const section = []
           let workflowExisting = JSON.parse(JSON.stringify(workflow))
@@ -432,57 +428,36 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
           if (existing) {
             workflowExisting = { ...workflowExisting, ...existing }
           }
-          switch (workflowExisting.status) {
-            case 1:
-              section.push(
-                <Grid key={'gg' + wi}>
-                  <GreenButton
-                    key={'gb' + wi}
-                    variant='contained'
-                    color='primary'
-                    className={classes.step}
-                    onClick={() => changeStatus(workflowExisting, 2)}
-                  >
-                    {workflowExisting.action}
-                  </GreenButton>
-                </Grid>
-              )
-              break
-            case 2:
-              section.push(
-                <Grid key={'og' + wi}>
-                  <OrangeButton
-                    key={'ob' + wi}
-                    variant='contained'
-                    color='primary'
-                    className={classes.step}
-                    onClick={() => changeStatus(workflowExisting, 0)}
-                  >
-                    {workflowExisting.action}
-                  </OrangeButton>
-                </Grid>
-              )
-              break
-            default:
-              section.push(
-                <Grid key={'yg' + wi}>
-                  <YellowButton
-                    key={'yb' + wi}
-                    variant='contained'
-                    color='primary'
-                    className={classes.step}
-                    onClick={() => changeStatus(workflowExisting, 1)}
-                  >
-                    {workflowExisting.action}
-                  </YellowButton>
-                </Grid>
-              )
-              break
-          }
 
-          section.push(
-            <Grid>
-              <Collapse in={details} timeout='auto' unmountOnExit>
+          return (
+            <Accordion
+              square
+              expanded={details}
+              onChange={() =>
+                changeStatus(
+                  workflowExisting,
+                  workflowExisting.status === 1
+                    ? 2
+                    : workflowExisting.status === 2
+                    ? 0
+                    : 1
+                )
+              }
+              key={wi}
+            >
+              <AccordionSummary
+                style={{
+                  background:
+                    workflowExisting.status === 1
+                      ? '#00de74'
+                      : workflowExisting.status === 2
+                      ? '#ffd55b'
+                      : '#fff8b2'
+                }}
+              >
+                {workflowExisting.action}
+              </AccordionSummary>
+              <AccordionDetails>
                 {workflowExisting.fields.map((field, fi) => {
                   return (
                     <TextField
@@ -499,32 +474,36 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
                     />
                   )
                 })}
-              </Collapse>
-            </Grid>
+              </AccordionDetails>
+            </Accordion>
           )
-
-          return section
         })}
       </CardContent>
       <CardActions>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: details
-          })}
-          onClick={handleDetailsClick}
-          aria-expanded={details}
-          aria-label='show details'
-        >
-          <ExpandMoreIcon />
-        </IconButton>
+        {order.archived ? (
+          <>
+            <Tooltip title='Delete Permanently'>
+              <IconButton onClick={handleConfirmDeleteOpen} color='primary'>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+            <IconButton onClick={() => handleArchive(false)} color='primary'>
+              <UnarchiveIcon />
+              &nbsp;Unarchive
+            </IconButton>
+          </>
+        ) : (
+          <IconButton onClick={() => handleArchive(true)} color='primary'>
+            <ArchiveIcon />
+            &nbsp;Archive
+          </IconButton>
+        )}
       </CardActions>
 
       <Collapse in={details} timeout='auto' unmountOnExit>
-        <CardContent>
-          {Object.values(order.cart).map(book => (
-            <BookCard key={book.title} book={book} />
-          ))}
-        </CardContent>
+        {Object.values(order.cart).map((book, bi) => (
+          <BookCard key={'b' + bi} book={book} />
+        ))}
       </Collapse>
       <Modal
         id='edit'

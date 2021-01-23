@@ -191,15 +191,8 @@ const useStyles = makeStyles(theme => ({
     right: theme.spacing(4),
     top: theme.spacing(4),
     left: 'auto',
-    position: 'fixed'
-  },
-  fab2: {
-    margin: 0,
-    top: 'auto',
-    right: theme.spacing(4),
-    bottom: theme.spacing(4),
-    left: 'auto',
-    position: 'fixed'
+    position: 'fixed',
+    alignItems: 'left'
   }
 }))
 
@@ -381,12 +374,12 @@ const Form = ({ books, quotes, dispatch, token }) => {
       quantity += v.quantity
     }
   })
-  const modulo = quantity % 24
-  cases = Math.floor(quantity / 24)
-  items = quantity % 24
+  const modulo = quantity % 48
+  cases = Math.floor(quantity / 48)
+  items = quantity % 48
   for (let c = 0; c < cases; c++) {
     chips.push(
-      <Chip key={keyIndex++} variant='outlined' label='24' color='primary' />
+      <Chip key={keyIndex++} variant='outlined' label='48' color='primary' />
     )
   }
   if (items > 0) {
@@ -413,21 +406,17 @@ const Form = ({ books, quotes, dispatch, token }) => {
   if (chips.length > 0) {
     if (selectedTab !== 1) {
       cartDisplay.push(
-        <Fab id='fab1' key='fab1' className={classes.fab1} color='primary'>
-          <Tooltip title='Complete Order'>
-            <Badge badgeContent={quantity ? quantity : 0} color='error'>
-              <ShoppingCartIcon fontSize='large' />
-            </Badge>
-          </Tooltip>
-        </Fab>
-      )
-      cartDisplay.push(
-        <Fab id='fab2' key='fab2' className={classes.fab2} color='primary'>
-          <Tooltip title='Complete Order'>
-            <Badge badgeContent={quantity ? quantity : 0} color='error'>
-              <ShoppingCartIcon fontSize='large' />
-            </Badge>
-          </Tooltip>
+        <Fab
+          id='fab1'
+          key='fab1'
+          className={classes.fab1}
+          variant='extended'
+          color='primary'
+        >
+          Confirm Order&nbsp;&nbsp;
+          <Badge badgeContent={quantity ? quantity : 0} color='error'>
+            <ShoppingCartIcon fontSize='large' />
+          </Badge>
         </Fab>
       )
     }
@@ -440,12 +429,12 @@ const Form = ({ books, quotes, dispatch, token }) => {
         </Typography>
       </Grid>
     )
-    if (items > 0 && cases > 1) {
+    if (items > 0 && cases > 0) {
       cartDisplay.push(<br />)
       cartDisplay.push(
         <Typography style={{ color: red[500] }}>
           <WarningIcon style={{ color: red[500] }} />
-          Please order an even number of cases (multiples of 48)
+          Please order an even number of boxes (multiples of 48)
         </Typography>
       )
     }
@@ -461,18 +450,19 @@ const Form = ({ books, quotes, dispatch, token }) => {
               setSelectedTab(newValue)
             }}
             indicatorColor='primary'
-            textColor='primary'
+            textcolor='primary'
             variant='scrollable'
             scrollButtons='auto'
           >
             <img
               src='/images/logo.png'
               style={{ maxHeight: 60, margin: 10 }}
-              indicator='false'
+              indicator={false}
             />
+            <Tab label='About' value={2} />
             <Tab label='Catalog' value={0} />
             <Tab label='Order' value={1} />
-            <Tab label='About Us' value={2} />
+
             <Tab label='Testimonials' value={3} />
           </Tabs>
         </Grid>
@@ -714,7 +704,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
             height='100%'
             controls={true}
           />
-          <Typography component='subtitle1'>
+          <Typography component='h6'>
             In 2004, a vision to reach physicians, staff, and patients with the
             Word of God soon became a reality when the first edition of
             “Physician’s Life Reference” was printed and distributed throughout
@@ -722,15 +712,13 @@ const Form = ({ books, quotes, dispatch, token }) => {
           </Typography>
           <br />
           <br />
-          <Typography component='subtitle1'>
-            More than six years and 400,000 copies later, “Go Therefore”, a
-            non-profit 501(c)(3), was established for the sole purpose of
-            distributing Life Reference Manuals throughout our community and the
-            world.
+          <Typography component='h6'>
+            The Holman Christian Standard Bible is an easy-to-read modern
+            English translation, great for evangelistic distribution.
           </Typography>
           <br />
           <br />
-          <Typography component='subtitle1'>
+          <Typography component='h6'>
             Our prayer is that all who receive a copy may be encouraged and gain
             understanding and perspective in life’s daily issues. Fourteen
             additional titles have been released to help meet the growing need
@@ -738,7 +726,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
           </Typography>
           <br />
           <br />
-          <Typography component='subtitle1'>
+          <Typography component='h6'>
             100% of all contributions to “Go Therefore” are used for the
             distribution of Life Reference Manuals to individuals and
             organizations in need. All one-time and monthly gifts, as well as
@@ -749,7 +737,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
           <img
             src='/images/unloading250k_bibles.jpg'
             style={{ margin: 10 }}
-            indicator='false'
+            indicator={false}
           />
           <Typography>
             Please feel free to contact our office if you have any additional
@@ -777,6 +765,11 @@ const Form = ({ books, quotes, dispatch, token }) => {
             />
             P.O. Box 2135 Mount Juliet, TN 37121
           </Typography>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
           {quotes.map(quote => (
