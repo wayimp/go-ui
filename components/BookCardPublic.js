@@ -91,13 +91,12 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row'
   },
   media: {
-    height: 300,
     position: 'relative'
   },
   limitedIcon: {
     position: 'absolute',
     top: 6,
-    left: 6,
+    left: 0,
     display: 'block',
     width: 'auto',
     height: 'auto'
@@ -112,7 +111,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const BookDisplay = ({ book, addToCart, inCart }) => {
+const BookDisplay = ({ book, addToCart, inCart, small }) => {
   {
     const classes = useStyles()
     const { enqueueSnackbar } = useSnackbar()
@@ -122,6 +121,7 @@ const BookDisplay = ({ book, addToCart, inCart }) => {
     let items = 0
     let modulo = 0
     let keyIndex = 0
+
     if (inCart) {
       quantity = inCart.quantity
       modulo = quantity % 24
@@ -152,62 +152,64 @@ const BookDisplay = ({ book, addToCart, inCart }) => {
     }
 
     return (
-      <Grid item lg={3} md={4} sm={5} xs={12} key={book._id}>
-        <Card className={classes.card}>
-          <CardMedia
-            className={classes.media}
-            image={book.image || ''}
-            title={book.title || ''}
+      <Card className={classes.card} key={book._id}>
+        <CardMedia
+          className={classes.media}
+          image={book.image || ''}
+          title={book.title || ''}
+          style={{ height: small ? 100 : 300 }}
+        />
+        {book.limited ? (
+          <img
+            src={'/images/LimitedStock.png'}
+            className={classes.limitedIcon}
           />
-          {book.limited ? (
-            <img src={'/images/limited.png'} className={classes.limitedIcon} />
-          ) : (
-            ''
-          )}
-          <CardContent>
-            <Typography variant='h6' component='span'>
-              {book.title}
-            </Typography>
-            <div className={classes.chips}>{caseDisplay}</div>
-          </CardContent>
-          <CardActions className={classes.cardActions}>
-            <Tooltip
-              title={
-                quantity >= 48
-                  ? 'Please order an even number of cases (multiples of 48)'
-                  : ''
-              }
-            >
-              <span>
-                <Button
-                  size='large'
-                  style={{marginTop:6}}
-                  variant='outlined'
-                  color='primary'
-                  onClick={e => {
-                    e.preventDefault
-                    addToCart(book, 1)
-                  }}
-                  disabled={quantity >= 48 ? true : false}
-                >
-                  Add One
-                </Button>
-              </span>
-            </Tooltip>
-            <Button
-              size='large'
-              variant='outlined'
-              color='primary'
-              onClick={e => {
-                e.preventDefault
-                addToCart(book, 24 - modulo)
-              }}
-            >
-              Add Case of 24
-            </Button>
-          </CardActions>
-        </Card>
-      </Grid>
+        ) : (
+          ''
+        )}
+        <CardContent>
+          <Typography variant='h6' component='span'>
+            {book.title}
+          </Typography>
+          <div className={classes.chips}>{caseDisplay}</div>
+        </CardContent>
+        <CardActions className={classes.cardActions}>
+          <Tooltip
+            title={
+              quantity >= 48
+                ? 'Please order an even number of cases (multiples of 48)'
+                : ''
+            }
+          >
+            <span>
+              <Button
+                size='large'
+                style={{ marginTop: 6 }}
+                variant='outlined'
+                color='primary'
+                onClick={e => {
+                  e.preventDefault
+                  addToCart(book, 1)
+                }}
+                disabled={quantity >= 48 ? true : false}
+              >
+                Add One
+              </Button>
+            </span>
+          </Tooltip>
+          <Button
+            size='large'
+            variant='outlined'
+            color='primary'
+            onClick={e => {
+              e.preventDefault
+              addToCart(book, 24 - modulo)
+            }}
+          >
+            Add Case of 24
+          </Button>
+        </CardActions>
+      </Card>
     )
   }
 }

@@ -201,7 +201,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
   const theme = useTheme()
   const [form, setForm] = React.useState({ cart: {} })
   const { enqueueSnackbar } = useSnackbar()
-  const [selectedTab, setSelectedTab] = React.useState(0)
+  const [selectedTab, setSelectedTab] = React.useState(2)
   const [readOnly, setReadOnly] = React.useState(false)
   const [filtered, setFiltered] = React.useState(books)
   const [search, setSearch] = React.useState('')
@@ -289,6 +289,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
       enqueueSnackbar('Street is required', {
         variant: 'error'
       })
+    
     }
     if (!form.customerCity || form.customerCity.length === 0) {
       valid = false
@@ -296,24 +297,28 @@ const Form = ({ books, quotes, dispatch, token }) => {
         variant: 'error'
       })
     }
+
     if (!form.customerState || form.customerState.length === 0) {
       valid = false
       enqueueSnackbar('State is required', {
         variant: 'error'
       })
     }
+
     if (!form.customerZip || form.customerZip.length === 0) {
       valid = false
       enqueueSnackbar('Zip is required', {
         variant: 'error'
       })
     }
+
     if (!form.customerPhone || form.customerPhone.length === 0) {
       valid = false
       enqueueSnackbar('Phone is required', {
         variant: 'error'
       })
     }
+
     if (!form.customerEmail || form.customerEmail.length === 0) {
       valid = false
       enqueueSnackbar('Email is required', {
@@ -425,7 +430,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
       <Grid key='donation'>
         <Typography style={{ marginTop: 7 }}>
           Suggested Donation:&nbsp;
-          {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per book)
+          {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per Bible)
         </Typography>
       </Grid>
     )
@@ -450,15 +455,10 @@ const Form = ({ books, quotes, dispatch, token }) => {
               setSelectedTab(newValue)
             }}
             indicatorColor='primary'
-            textcolor='primary'
             variant='scrollable'
             scrollButtons='auto'
           >
-            <img
-              src='/images/logo.png'
-              style={{ maxHeight: 60, margin: 10 }}
-              indicator={false}
-            />
+            <img src='/images/logo.png' style={{ maxHeight: 60, margin: 10 }} />
             <Tab label='About' value={2} />
             <Tab label='Catalog' value={0} />
             <Tab label='Order' value={1} />
@@ -494,12 +494,14 @@ const Form = ({ books, quotes, dispatch, token }) => {
             alignContent='flex-start'
           >
             {filtered.map(book => (
-              <BookCard
-                key={book._id}
-                book={book}
-                addToCart={addToCart}
-                inCart={form.cart[book._id]}
-              />
+              <Grid item lg={3} md={4} sm={5} xs={12}>
+                <BookCard
+                  key={book._id}
+                  book={book}
+                  addToCart={addToCart}
+                  inCart={form.cart[book._id]}
+                />
+              </Grid>
             ))}
           </Grid>
         </TabPanel>
@@ -685,12 +687,14 @@ const Form = ({ books, quotes, dispatch, token }) => {
                 {filtered
                   .filter(book => Object.keys(form.cart).includes(book._id))
                   .map(book => (
-                    <BookCard
-                      key={book._id}
-                      book={book}
-                      addToCart={addToCart}
-                      inCart={form.cart[book._id]}
-                    />
+                    <Grid item lg={3} md={4} sm={5} xs={12}>
+                      <BookCard
+                        key={book._id}
+                        book={book}
+                        addToCart={addToCart}
+                        inCart={form.cart[book._id]}
+                      />
+                    </Grid>
                   ))}
               </Grid>
             </>
@@ -734,11 +738,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
             Reference Manuals, are tax deductible and greatly appreciated.
           </Typography>
           <br />
-          <img
-            src='/images/unloading250k_bibles.jpg'
-            style={{ margin: 10 }}
-            indicator={false}
-          />
+          <img src='/images/unloading250k_bibles.jpg' style={{ margin: 10 }} />
           <Typography>
             Please feel free to contact our office if you have any additional
             questions.

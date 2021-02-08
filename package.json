@@ -25,6 +25,7 @@
     "numeral": "^2.0.6",
     "prop-types": "latest",
     "react": "latest",
+    "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "latest",
     "react-player": "^2.7.2",
     "react-redux": "^7.2.0",

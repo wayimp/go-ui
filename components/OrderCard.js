@@ -37,7 +37,7 @@ const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
 const dateDisplay = 'dddd h:mm a'
 import numeral from 'numeral'
 const priceFormat = '$0.00'
-import BookCard from '../components/BookCardSummary'
+import BookCard from '../components/BookCardPublic'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
@@ -53,6 +53,8 @@ import UnarchiveIcon from '@material-ui/icons/Unarchive'
 import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 
 Array.prototype.sum = function (prop) {
   let total = Number(0)
@@ -60,6 +62,15 @@ Array.prototype.sum = function (prop) {
     total += Number(this && this[i] && this[i][prop] ? this[i][prop] : 0)
   }
   return total
+}
+
+const formatPhoneNumber = phoneNumberString => {
+  var cleaned = ('' + phoneNumberString).replace(/\D/g, '')
+  var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+  if (match) {
+    return '(' + match[1] + ') ' + match[2] + '-' + match[3]
+  }
+  return phoneNumberString
 }
 
 const Accordion = withStyles({
@@ -148,6 +159,14 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2),
     padding: theme.spacing(2)
   },
+  modalScroll: {
+    position: 'absolute',
+    top: '10%',
+    left: '10%',
+    overflow: 'scroll',
+    height: '100%',
+    display: 'block'
+  },
   paper: {
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
@@ -161,7 +180,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
+const OrderCard = ({
+  propsOrder,
+  workflows,
+  books,
+  token,
+  getData,
+  showInactive
+}) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const [order, setOrder] = React.useState(propsOrder)
@@ -169,6 +195,20 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
   const [details, setDetails] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
+  const [openBooks, setOpenBooks] = React.useState(false)
+
+  const handleOpenBooks = () => {
+    setOpenBooks(true)
+  }
+
+  const handleCloseBooks = () => {
+    setOpenBooks(false)
+  }
+
+  const cart = []
+  Object.entries(order.cart).forEach(([key, value]) => {
+    cart.push({ ...value, _id: key })
+  })
 
   const handleConfirmDeleteOpen = () => {
     setConfirmDelete(true)
@@ -229,12 +269,12 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
     axiosClient
       .patch('/orders', updated)
       .then(res => {
-        enqueueSnackbar('Timeline updated', {
+        enqueueSnackbar('Order updated', {
           variant: 'success'
         })
       })
       .catch(err => {
-        enqueueSnackbar('There was a problem updating the timeline' + err, {
+        enqueueSnackbar('There was a problem updating the order' + err, {
           variant: 'error'
         })
       })
@@ -357,6 +397,28 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
       })
   }
 
+  const addToCart = (book, quantity) => {
+    let { cart } = order
+
+    if (cart[book._id]) {
+      cart[book._id].quantity += quantity
+    } else {
+      cart[book._id] = { title: book.title, image: book.image, quantity }
+    }
+
+    if (cart[book._id].quantity <= 0) {
+      delete cart[book._id]
+    }
+
+    const updated = {
+      ...order,
+      cart
+    }
+
+    updateOrder(updated)
+    handleCloseBooks()
+  }
+
   return (
     <Card className={classes.root}>
       {moment(order.timeline ? order.timeline[0].timestamp : order.created)
@@ -397,27 +459,30 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
           </>
         }
       ></CardHeader>
-      <CardContent style={{marginTop:-40}}>
+      <CardContent style={{ marginTop: -40 }}>
         <Typography variant='h5'>{order.customerName}</Typography>
         <Grid direction='row'>
           <Link href={`tel:${order.customerPhone}`}>
             <IconButton color='primary'>
               <CallIcon />
-              {order.customerPhone}
+              {formatPhoneNumber(order.customerPhone)}
             </IconButton>
           </Link>
 
-          <Tooltip title={order.customerEmail}>
-            <a
-              target='_top'
-              rel='noopener noreferrer'
-              href={`mailto:${order.customerEmail}`}
-            >
+          <CopyToClipboard
+            text={order.customerEmail}
+            onCopy={() =>
+              enqueueSnackbar('Email Copied', {
+                variant: 'success'
+              })
+            }
+          >
+            <Tooltip title={order.customerEmail}>
               <IconButton color='primary'>
                 <MailOutlineIcon />
               </IconButton>
-            </a>
-          </Tooltip>
+            </Tooltip>
+          </CopyToClipboard>
         </Grid>
         {workflows.map((workflow, wi) => {
           const section = []
@@ -461,6 +526,7 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
                 {workflowExisting.fields.map((field, fi) => {
                   return (
                     <TextField
+                      key={'field' + fi}
                       label={field.label}
                       defaultValue={field.value}
                       type={field.inputType}
@@ -498,13 +564,31 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
             &nbsp;Archive
           </IconButton>
         )}
+        <IconButton onClick={handleOpenBooks} color='primary'>
+          <AddCircleOutlineIcon />
+          &nbsp;New Title
+        </IconButton>
       </CardActions>
 
-      <Collapse in={details} timeout='auto' unmountOnExit>
-        {Object.values(order.cart).map((book, bi) => (
-          <BookCard key={'b' + bi} book={book} />
-        ))}
-      </Collapse>
+      <Box width={1}>
+        <Collapse in={details} timeout='auto' unmountOnExit>
+          <Grid
+            container
+            justify='flex-start'
+            alignItems='flex-start'
+            alignContent='flex-start'
+          >
+            {cart.map(book => (
+              <BookCard
+                key={book._id}
+                book={book}
+                addToCart={addToCart}
+                inCart={book}
+              />
+            ))}
+          </Grid>
+        </Collapse>
+      </Box>
       <Modal
         id='edit'
         className={classes.modal}
@@ -519,6 +603,17 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
         <Fade in={open}>
           <div className={classes.paper}>
             <Box width={1}>
+              <Grid>
+                <TextField
+                  className={classes.textFieldWide}
+                  multiline={true}
+                  variant='outlined'
+                  name='instructions'
+                  label='Customer Message'
+                  defaultValue={order.instructions ? order.instructions : ''}
+                  onBlur={changeField}
+                />
+              </Grid>
               <Grid>
                 <TextField
                   className={classes.textFieldWide}
@@ -555,6 +650,41 @@ const OrderCard = ({ propsOrder, workflows, token, getData, showInactive }) => {
               >
                 Save
               </Button>
+            </Grid>
+          </div>
+        </Fade>
+      </Modal>
+      <Modal
+        id='items'
+        className={classes.modalScroll}
+        open={openBooks}
+        onClose={handleCloseBooks}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500
+        }}
+      >
+        <Fade in={openBooks}>
+          <div className={classes.paper}>
+            <Grid
+              container
+              direction='row'
+              justify='flex-start'
+              alignItems='flex-start'
+              alignContent='flex-start'
+            >
+              {books.map(book => (
+                <Grid item lg={3} md={4} sm={5} xs={12}>
+                  <BookCard
+                    key={book._id}
+                    book={book}
+                    addToCart={addToCart}
+                    inCart={cart[book._id]}
+                    small={true}
+                  />
+                </Grid>
+              ))}
             </Grid>
           </div>
         </Fade>

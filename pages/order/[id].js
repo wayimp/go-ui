@@ -294,7 +294,6 @@ const Order = ({ propsOrder, dispatch, token }) => {
           item
           xs={4}
           container
-          direction='column'
           justify='flex-start'
           alignItems='flex-start'
           alignContent='flex-start'

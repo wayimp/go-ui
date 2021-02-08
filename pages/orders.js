@@ -88,7 +88,16 @@ const useStyles = makeStyles(theme => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    margin: theme.spacing(2),
+    padding: theme.spacing(2),
+    width: '80%'
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3)
   },
   section: {
     backgroundColor: '#EDDCD2',
@@ -98,7 +107,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Page = ({ dispatch, token, workflows }) => {
+const Page = ({ dispatch, token, workflows, books }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -195,7 +204,9 @@ const Page = ({ dispatch, token, workflows }) => {
                 value={search}
                 onChange={event => setSearch(event.target.value)}
                 startAdornment={
-                  <InputAdornment position='start'><SearchIcon/></InputAdornment>
+                  <InputAdornment position='start'>
+                    <SearchIcon />
+                  </InputAdornment>
                 }
                 labelWidth={70}
               />
@@ -239,6 +250,7 @@ const Page = ({ dispatch, token, workflows }) => {
                         key={order._id}
                         propsOrder={order}
                         workflows={workflows}
+                        books={books}
                         getData={getData}
                         showInactive={showInactive}
                       />
@@ -257,10 +269,12 @@ export async function getServerSideProps (context) {
   const workflows = await axiosClient
     .get('/workflows')
     .then(response => response.data)
+  const books = await axiosClient.get('/books').then(response => response.data)
 
   return {
     props: {
-      workflows
+      workflows,
+      books
     }
   }
 }

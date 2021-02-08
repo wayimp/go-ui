@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
   limitedIcon: {
     position: 'absolute',
     top: 6,
-    left: 6,
+    left: 0,
     display: 'block',
     width: 'auto',
     height: 'auto'
@@ -226,7 +226,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
             title={book.title || ''}
           />
           {book.limited ? (
-            <img src={'/images/limited.png'} className={classes.limitedIcon} />
+            <img src={'/images/LimitedStock.png'} className={classes.limitedIcon} />
           ) : (
             ''
           )}
@@ -291,7 +291,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                   />
                 </Grid>
                 <Grid item xs={9}>
-                  <FormControl fullWidth>
+                  <FormControl>
                     <TextField
                       className={classes.field}
                       variant='outlined'
@@ -305,7 +305,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={9}>
-                  <FormControl fullWidth>
+                  <FormControl>
                     <TextField
                       className={classes.field}
                       variant='outlined'
@@ -319,7 +319,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={3}>
-                  <FormControl fullWidth>
+                  <FormControl>
                     <TextField
                       className={classes.field}
                       variant='outlined'

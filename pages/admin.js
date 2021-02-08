@@ -108,7 +108,6 @@ const Login = ({ dispatch, lang, segment }) => {
                 variant='outlined'
                 margin='normal'
                 required
-                fullWidth
                 id='user'
                 name='user'
                 autoFocus
@@ -122,7 +121,6 @@ const Login = ({ dispatch, lang, segment }) => {
                 variant='outlined'
                 margin='normal'
                 required
-                fullWidth
                 name='password'
                 type='password'
                 id='password'
@@ -134,7 +132,6 @@ const Login = ({ dispatch, lang, segment }) => {
               />
               <Button
                 type='submit'
-                fullWidth
                 variant='contained'
                 color='primary'
                 className={classes.submit}

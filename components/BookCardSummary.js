@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
   limitedIcon: {
     position: 'absolute',
     top: 6,
-    left: 6,
+    left: 0,
     display: 'block',
     width: 'auto',
     height: 'auto'
