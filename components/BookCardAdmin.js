@@ -226,7 +226,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
             title={book.title || ''}
           />
           {book.limited ? (
-            <img src={'/images/LimitedStock.png'} className={classes.limitedIcon} />
+            <img src={'https://files.lifereferencemanual.net/go/LimitedStock.png'} className={classes.limitedIcon} />
           ) : (
             ''
           )}

@@ -161,7 +161,7 @@ const BookDisplay = ({ book, addToCart, inCart, small }) => {
         />
         {book.limited ? (
           <img
-            src={'/images/LimitedStock.png'}
+            src={'https://files.lifereferencemanual.net/go/LimitedStock.png'}
             className={classes.limitedIcon}
           />
         ) : (

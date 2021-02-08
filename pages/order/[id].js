@@ -184,6 +184,16 @@ const Order = ({ propsOrder, dispatch, token }) => {
   const theme = useTheme()
   const [order, setOrder] = React.useState(propsOrder)
   const { enqueueSnackbar } = useSnackbar()
+  let quantity = 0
+  let cases = 0
+  let items = 0
+  Object.entries(order.cart).map(([k, v], i) => {
+    if (v && v.quantity) {
+      quantity += v.quantity
+    }
+  })
+  cases = Math.floor(quantity / 24)
+  items = quantity % 24
 
   useEffect(() => {
     document.title = order.customerName
@@ -195,7 +205,7 @@ const Order = ({ propsOrder, dispatch, token }) => {
         <Grid container direction='row' alignItems='center' item xs={12}>
           <Link href='/' className={classes.title}>
             <img
-              src='/images/logo.png'
+              src='https://files.lifereferencemanual.net/go/logo.png'
               alt='Go Therefore Ministries'
               className={classes.logo}
             />
@@ -269,6 +279,24 @@ const Order = ({ propsOrder, dispatch, token }) => {
                   <TableCell align='left'>
                     {order.donation ? numeral(order.donation).format('$0') : ''}
                   </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Total Bibles:
+                  </TableCell>
+                  <TableCell align='left'>{quantity}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Total Cases:
+                  </TableCell>
+                  <TableCell align='left'>{cases}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Remainder:
+                  </TableCell>
+                  <TableCell align='left'>{items}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell align='right' component='th' scope='row'>

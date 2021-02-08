@@ -59,7 +59,7 @@ export default function SearchAppBar () {
             <Grid container direction='row' alignItems='center'>
               <Grid item xs={4}>
                 <img
-                  src='/images/logo.png'
+                  src='https://files.lifereferencemanual.net/go/logo.png'
                   alt='Go Therefore Ministries'
                   className={classes.logo}
                   onClick={reset}

@@ -458,7 +458,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
             variant='scrollable'
             scrollButtons='auto'
           >
-            <img src='/images/logo.png' style={{ maxHeight: 60, margin: 10 }} />
+            <img src='https://files.lifereferencemanual.net/go/logo.png' style={{ maxHeight: 60, margin: 10 }} />
             <Tab label='About' value={2} />
             <Tab label='Catalog' value={0} />
             <Tab label='Order' value={1} />
@@ -703,7 +703,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
         <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
           <ReactPlayer
             style={{ margin: 30 }}
-            url='/images/gtf-promo-4_dvd.mp4'
+            url='https://files.lifereferencemanual.net/go/gtf-promo-4_dvd.mp4'
             width='100%'
             height='100%'
             controls={true}
@@ -738,7 +738,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
             Reference Manuals, are tax deductible and greatly appreciated.
           </Typography>
           <br />
-          <img src='/images/unloading250k_bibles.jpg' style={{ margin: 10 }} />
+          <img src='https://files.lifereferencemanual.net/go/unloading250k_bibles.jpg' style={{ margin: 10 }} />
           <Typography>
             Please feel free to contact our office if you have any additional
             questions.
