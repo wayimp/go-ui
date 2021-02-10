@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography'
 import FormatQuoteIcon from '@material-ui/icons/FormatQuote'
 import RemoveIcon from '@material-ui/icons/Remove'
 import MinimizeIcon from '@material-ui/icons/Minimize'
+import parse from 'html-react-parser'
 
 import { useSnackbar } from 'notistack'
 
@@ -52,19 +53,7 @@ const QuoteDisplay = ({ quote }) => {
               justify='center'
               alignItems='center'
             >
-              <Typography component='h5'
-                variant='h5' >
-                <FormatQuoteIcon className={classes.mirror} />
-                {quote.text}
-                <FormatQuoteIcon />
-              </Typography>
-              <Typography
-                component='h5'
-                variant='h5'
-                style={{ marginLeft: 200 }}
-              >
-                <i><RemoveIcon /> {quote.author}<br/>{quote.location}</i>
-              </Typography>
+              {parse(quote.text)}
             </Grid>
           </CardContent>
         </div>

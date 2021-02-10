@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import SunEditor, { buttonList } from 'suneditor-react'
 import Router from 'next/router'
 import { axiosClient } from '../src/axiosClient'
 import { connect } from 'react-redux'
@@ -101,7 +102,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     margin: theme.spacing(2),
     padding: theme.spacing(2),
-    width: '80%'
+    width: '80%',
+    minWidth: 400
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -146,16 +148,15 @@ const Page = ({ dispatch, token }) => {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [creating, setCreating] = React.useState(false)
-  const [quote, setQuote] = React.useState({
-    order: 100,
-    text: '',
-    author: '',
-    location: ''
-  })
+  const [quote, setQuote] = React.useState({})
   const [quoteToDelete, setQuoteToDelete] = React.useState({})
   const [quotes, setQuotes] = React.useState([])
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const { enqueueSnackbar } = useSnackbar()
+
+  const handleEditorChange = content => {
+    changeValue('text', content)
+  }
 
   const getData = () => {
     axiosClient({
@@ -172,8 +173,7 @@ const Page = ({ dispatch, token }) => {
   const handleOpen = () => {
     const quote = {
       order: 100,
-      action: '',
-      fields: []
+      text: ''
     }
     setQuote(quote)
     setCreating(true)
@@ -209,7 +209,7 @@ const Page = ({ dispatch, token }) => {
     }
   }, [])
 
-  const changeValue = async (name, value) => {
+  const changeValue = (name, value) => {
     const updated = {
       ...quote,
       [name]: value
@@ -231,7 +231,7 @@ const Page = ({ dispatch, token }) => {
     setQuote(updated)
   }
 
-  const saveQuote = async quote => {
+  const saveQuote = async () => {
     await axiosClient({
       method: creating ? 'post' : 'patch',
       url: '/quotes',
@@ -276,45 +276,57 @@ const Page = ({ dispatch, token }) => {
     handleConfirmDeleteClose()
   }
 
-  const addField = () => {
-    const field = {
-      label: ''
-    }
-    const updated = {
-      ...quote,
-      fields: quote.fields.concat(field)
-    }
-    setQuote(updated)
+  const handleImageUploadBefore = (files, info, uploadHandler) => {
+    // uploadHandler is a function
+    resizeImage(files, uploadHandler)
   }
 
-  const removeField = index => {
-    const updated = {
-      ...quote,
-      fields: quote.fields.filter((field, fi) => fi !== index)
-    }
-    setQuote(updated)
-  }
+  const resizeImage = (files, uploadHandler) => {
+    const uploadFile = files[0]
+    const img = document.createElement('img')
+    const canvas = document.createElement('canvas')
+    const reader = new FileReader()
 
-  const changeFieldLabel = (index, text) => {
-    const updated = {
-      ...quote,
-      fields: quote.fields.map((field, i) => {
-        if (i === index) return { ...field, label: text }
-        else return field
-      })
-    }
-    setQuote(updated)
-  }
+    reader.onload = function (e) {
+      img.src = e.target.result
+      img.onload = function () {
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0)
 
-  const selectInputType = (index, item) => {
-    const updated = {
-      ...quote,
-      fields: quote.fields.map((field, i) => {
-        if (i === index) return { ...field, inputType: item.value }
-        else return field
-      })
+        const MAX_WIDTH = 800
+        const MAX_HEIGHT = 800
+        let width = img.width
+        let height = img.height
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width
+            width = MAX_WIDTH
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height
+            height = MAX_HEIGHT
+          }
+        }
+
+        canvas.width = width
+        canvas.height = height
+
+        ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, width, height)
+
+        canvas.toBlob(
+          async function (blob) {
+            uploadHandler([new File([blob], uploadFile.name)])
+          },
+          uploadFile.type,
+          1
+        )
+      }
     }
-    setQuote(updated)
+
+    reader.readAsDataURL(uploadFile)
   }
 
   return (
@@ -390,32 +402,24 @@ const Page = ({ dispatch, token }) => {
                   onChange={changeField}
                 />
                 <br />
-                <TextField
-                  className={classes.textFieldWide}
-                  variant='outlined'
-                  name='text'
-                  label='Text'
-                  multiline={true}
-                  defaultValue={quote.text}
-                  onChange={changeField}
-                />
-                <br />
-                <TextField
-                  className={classes.textFieldWide}
-                  variant='outlined'
-                  name='author'
-                  label='Author'
-                  defaultValue={quote.author}
-                  onChange={changeField}
-                />
-                <br />
-                <TextField
-                  className={classes.textFieldWide}
-                  variant='outlined'
-                  name='location'
-                  label='Location'
-                  defaultValue={quote.location}
-                  onChange={changeField}
+                <SunEditor
+                  setOptions={{
+                    minHeight: 300,
+                    minWidth: 300,
+                    imageUrlInput: true,
+                    imageUploadHeader: { Authorization: `Bearer ${token}` },
+                    imageUploadUrl: 'http://localhost:8040/images',
+                    buttonList: [
+                      ['undo', 'redo'],
+                      ['bold', 'italic', 'underline'],
+                      ['font', 'fontColor', 'fontSize', 'align', 'blockquote'],
+                      ['image', 'imageGallery', 'video', 'link']
+                    ],
+                    imageGalleryUrl: 'http://localhost:8040/images'
+                  }}
+                  onImageUploadBefore={handleImageUploadBefore}
+                  onChange={handleEditorChange}
+                  setContents={quote.text}
                 />
               </Grid>
               <Grid
@@ -437,7 +441,7 @@ const Page = ({ dispatch, token }) => {
                   variant='contained'
                   color='secondary'
                   style={{ margin: 10 }}
-                  onClick={() => saveQuote(quote)}
+                  onClick={saveQuote}
                   startIcon={<SaveIcon />}
                 >
                   Save

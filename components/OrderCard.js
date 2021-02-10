@@ -461,7 +461,7 @@ const OrderCard = ({
       ></CardHeader>
       <CardContent style={{ marginTop: -40 }}>
         <Typography variant='h5'>{order.customerName}</Typography>
-        <Grid direction='row'>
+        <Grid>
           <Link href={`tel:${order.customerPhone}`}>
             <IconButton color='primary'>
               <CallIcon />
@@ -675,7 +675,7 @@ const OrderCard = ({
               alignContent='flex-start'
             >
               {books.map(book => (
-                <Grid item lg={3} md={4} sm={5} xs={12}>
+                <Grid item lg={3} md={4} sm={5} xs={12} key={book._id}>
                   <BookCard
                     key={book._id}
                     book={book}

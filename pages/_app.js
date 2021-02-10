@@ -7,7 +7,7 @@ import theme from '../src/theme'
 import App from 'next/app'
 import { wrapper } from '../components/store'
 import { SnackbarProvider } from 'notistack'
-
+import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 import './main.css'
 
 class goApp extends App {
