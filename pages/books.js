@@ -237,7 +237,7 @@ const Page = ({ dispatch, token }) => {
     const newBook = {
       active: true,
       order: 100,
-      title: 'new book',
+      title: '',
       image: ''
     }
     createBook(newBook)
@@ -277,7 +277,7 @@ const Page = ({ dispatch, token }) => {
               onClick={createNew}
               startIcon={<AddCircleOutlineIcon />}
             >
-              New Book
+              New Product
             </Button>
             <FormControl variant='outlined'>
               <InputLabel>Search</InputLabel>

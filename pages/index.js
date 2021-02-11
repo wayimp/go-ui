@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../src/Link'
 import TabPanel from '../components/TabPanel'
-import Quote from '../components/Quote'
+import BlockList from '../components/BlockList'
 import numeral from 'numeral'
 const priceFormat = '$0'
 import moment from 'moment-timezone'
@@ -53,7 +53,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Fab from '@material-ui/core/Fab'
 import CallIcon from '@material-ui/icons/Call'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
-import ReactPlayer from 'react-player'
 
 Array.prototype.sum = function (prop) {
   var total = 0
@@ -196,7 +195,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Form = ({ books, quotes, dispatch, token }) => {
+const Form = ({ books, blocks, settings, dispatch, token }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [form, setForm] = React.useState({ cart: {} })
@@ -289,7 +288,6 @@ const Form = ({ books, quotes, dispatch, token }) => {
       enqueueSnackbar('Street is required', {
         variant: 'error'
       })
-    
     }
     if (!form.customerCity || form.customerCity.length === 0) {
       valid = false
@@ -458,12 +456,39 @@ const Form = ({ books, quotes, dispatch, token }) => {
             variant='scrollable'
             scrollButtons='auto'
           >
-            <img src='https://files.lifereferencemanual.net/go/logo.png' style={{ maxHeight: 60, margin: 10 }} />
+            <img
+              src='https://files.lifereferencemanual.net/go/logo.png'
+              style={{ maxHeight: 60, margin: 10 }}
+            />
             <Tab label='About' value={2} />
             <Tab label='Catalog' value={0} />
             <Tab label='Order' value={1} />
-
-            <Tab label='Testimonials' value={3} />
+            <Tab label='Stories' value={3} />
+            <Grid>
+              <Typography style={{ margin: 10 }}>
+                <CallIcon
+                  color='primary'
+                  style={{
+                    marginTop: 10,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginBottom: -8
+                  }}
+                />
+                {settings.business_phone}
+                <br />
+                <MailOutlineIcon
+                  color='primary'
+                  style={{
+                    marginTop: 10,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginBottom: -8
+                  }}
+                />
+                {settings.business_address}
+              </Typography>
+            </Grid>
           </Tabs>
         </Grid>
         <Grid className={classes.chips} onClick={() => setSelectedTab(1)}>
@@ -494,7 +519,7 @@ const Form = ({ books, quotes, dispatch, token }) => {
             alignContent='flex-start'
           >
             {filtered.map(book => (
-              <Grid item lg={3} md={4} sm={5} xs={12}>
+              <Grid item lg={3} md={4} sm={5} xs={12} key={book._id}>
                 <BookCard
                   key={book._id}
                   book={book}
@@ -701,80 +726,10 @@ const Form = ({ books, quotes, dispatch, token }) => {
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
-          <ReactPlayer
-            style={{ margin: 30 }}
-            url='https://files.lifereferencemanual.net/go/gtf-promo-4_dvd.mp4'
-            width='100%'
-            height='100%'
-            controls={true}
-          />
-          <Typography component='h6'>
-            In 2004, a vision to reach physicians, staff, and patients with the
-            Word of God soon became a reality when the first edition of
-            “Physician’s Life Reference” was printed and distributed throughout
-            the United States.
-          </Typography>
-          <br />
-          <br />
-          <Typography component='h6'>
-            The Holman Christian Standard Bible is an easy-to-read modern
-            English translation, great for evangelistic distribution.
-          </Typography>
-          <br />
-          <br />
-          <Typography component='h6'>
-            Our prayer is that all who receive a copy may be encouraged and gain
-            understanding and perspective in life’s daily issues. Fourteen
-            additional titles have been released to help meet the growing need
-            for real answers from God’s Word for people from all walks of life.
-          </Typography>
-          <br />
-          <br />
-          <Typography component='h6'>
-            100% of all contributions to “Go Therefore” are used for the
-            distribution of Life Reference Manuals to individuals and
-            organizations in need. All one-time and monthly gifts, as well as
-            those gifts given in excess of the fair market value of the Life
-            Reference Manuals, are tax deductible and greatly appreciated.
-          </Typography>
-          <br />
-          <img src='https://files.lifereferencemanual.net/go/unloading250k_bibles.jpg' style={{ margin: 10 }} />
-          <Typography>
-            Please feel free to contact our office if you have any additional
-            questions.
-          </Typography>
-          <br />
-          <Typography style={{ marginTop: 10 }}>
-            <a target='_top' rel='noopener noreferrer' href='tel:615.773.1963'>
-              <IconButton color='primary'>
-                <CallIcon />
-              </IconButton>
-            </a>
-            615.773.1963
-          </Typography>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <Typography>
-            <MailOutlineIcon
-              color='primary'
-              style={{
-                marginTop: 10,
-                marginLeft: 10,
-                marginRight: 10,
-                marginBottom: -8
-              }}
-            />
-            P.O. Box 2135 Mount Juliet, TN 37121
-          </Typography>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
+          <BlockList blocks={blocks} category='frontPage' />
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
-          {quotes.map(quote => (
-            <Quote key={quote._id} quote={quote} />
-          ))}
+          <BlockList blocks={blocks} category='stories' />
         </TabPanel>
       </Box>
     </Container>
@@ -783,14 +738,22 @@ const Form = ({ books, quotes, dispatch, token }) => {
 
 export async function getServerSideProps (context) {
   const books = await axiosClient.get('/books').then(response => response.data)
-  const quotes = await axiosClient
-    .get('/quotes')
+  const blocks = await axiosClient
+    .get('/blocks')
     .then(response => response.data)
+  const settings = {}
+  const settingsArray = await axiosClient
+    .get('/settingsPublic')
+    .then(response => response.data)
+  settingsArray.map(setting => {
+    settings[setting.name] = setting.value
+  })
 
   return {
     props: {
       books,
-      quotes
+      blocks,
+      settings
     }
   }
 }

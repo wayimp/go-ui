@@ -75,7 +75,7 @@ export default function SearchAppBar () {
               <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
                   <Link href='/books' className={classes.title}>
-                    Books
+                    Products
                   </Link>
                 </Typography>
               </Grid>
@@ -102,8 +102,8 @@ export default function SearchAppBar () {
               </Grid>
               <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
-                  <Link href='/quotes' className={classes.title}>
-                    Quotes
+                  <Link href='/blocks' className={classes.title}>
+                    Blocks
                   </Link>
                 </Typography>
               </Grid>

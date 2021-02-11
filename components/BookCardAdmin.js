@@ -7,30 +7,28 @@ import numeral from 'numeral'
 import { flatten } from 'lodash'
 import { LabelDivider } from 'mui-label-divider'
 import { getLangString } from './Lang'
-import {
-  Grid,
-  Collapse,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  Button,
-  IconButton,
-  Typography,
-  Modal,
-  Backdrop,
-  Fade,
-  FormControl,
-  FormControlLabel,
-  TextField,
-  Switch,
-  Tooltip,
-  Checkbox
-} from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
+import Collapse from '@material-ui/core/Collapse'
+import Card from '@material-ui/core/Card'
+import CardActionArea from '@material-ui/core/CardActionArea'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import Modal from '@material-ui/core/Modal'
+import Backdrop from '@material-ui/core/Backdrop'
+import Fade from '@material-ui/core/Fade'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import TextField from '@material-ui/core/TextField'
+import Switch from '@material-ui/core/Switch'
+import Tooltip from '@material-ui/core/Tooltip'
+import Checkbox from '@material-ui/core/Checkbox'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import EditIcon from '@material-ui/icons/Edit'
@@ -40,6 +38,8 @@ import FileCopyIcon from '@material-ui/icons/FileCopy'
 import DeleteIcon from '@material-ui/icons/Delete'
 import ListAltIcon from '@material-ui/icons/ListAlt'
 import { useSnackbar } from 'notistack'
+import imageCompression from 'browser-image-compression'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
 const useStyles = makeStyles(theme => ({
   segmentSelect: {
@@ -84,8 +84,8 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1)
   },
   thumb: {
-    maxWidth: 200,
-    maxHeight: 200,
+    maxWidth: 300,
+    maxHeight: 300,
     margin: 20
   },
   card: {
@@ -217,6 +217,72 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
       setSelectedVariant(sv)
     }
 
+    const handleImageUpload = async event => {
+      const imageFile = event.target.files[0]
+      console.log('originalFile instanceof Blob', imageFile instanceof Blob) // true
+      console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`)
+
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      }
+      try {
+        const compressedFile = await imageCompression(imageFile, options)
+        console.log(
+          'compressedFile instanceof Blob',
+          compressedFile instanceof Blob
+        ) // true
+        console.log(
+          `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+        ) // smaller than maxSizeMB
+        await uploadToServer(compressedFile, imageFile.name)
+      } catch (error) {
+        enqueueSnackbar('Error Compressing Image ' + error, {
+          variant: 'error'
+        })
+      }
+    }
+
+    const uploadToServer = async (compressedFile, fileName) => {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 512,
+        useWebWorker: true
+      }
+      try {
+        const formData = new FormData()
+        formData.append('file-0', new File([compressedFile], fileName))
+        await axiosClient({
+          method: 'post',
+          url: '/images',
+          data: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+          .then(response => {
+            enqueueSnackbar('Image Uploaded', {
+              variant: 'success'
+            })
+            changeField(
+              'image',
+              `https://tanque.nyc3.digitaloceanspaces.com/up/${fileName}`
+            )
+          })
+          .catch(error => {
+            enqueueSnackbar('Error Uploading Image ' + error, {
+              variant: 'error'
+            })
+          })
+      } catch (error) {
+        enqueueSnackbar('Error Compressing Image ' + error, {
+          variant: 'error'
+        })
+      }
+    }
+
     return (
       <Grid item lg={3} md={4} sm={5} xs={12} key={book._id}>
         <Card className={classes.card}>
@@ -226,7 +292,10 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
             title={book.title || ''}
           />
           {book.limited ? (
-            <img src={'https://files.lifereferencemanual.net/go/LimitedStock.png'} className={classes.limitedIcon} />
+            <img
+              src={'https://files.lifereferencemanual.net/go/LimitedStock.png'}
+              className={classes.limitedIcon}
+            />
           ) : (
             ''
           )}
@@ -261,82 +330,84 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
         >
           <Fade in={open}>
             <div className={classes.paper}>
-              <Grid container spacing={1} justify='space-between'>
-                <Grid item xs={3}>
-                  <FormControlLabel
-                    labelPlacement='top'
-                    control={
-                      <Switch
-                        className={classes.switch}
-                        checked={bookEdit.active}
-                        onChange={handleSwitchChange}
-                        name='active'
-                        color='primary'
-                      />
-                    }
-                    label='Active'
+              <Grid
+                container
+                direction='row'
+                justify='flex-start'
+                alignItems='center'
+              >
+                <FormControlLabel
+                  labelPlacement='top'
+                  control={
+                    <Switch
+                      className={classes.switch}
+                      checked={bookEdit.active}
+                      onChange={handleSwitchChange}
+                      name='active'
+                      color='primary'
+                    />
+                  }
+                  label='Active'
+                />
+                <FormControlLabel
+                  labelPlacement='top'
+                  control={
+                    <Switch
+                      className={classes.switch}
+                      checked={bookEdit.limited}
+                      onChange={handleSwitchChange}
+                      name='limited'
+                      color='primary'
+                    />
+                  }
+                  label='Limited'
+                />
+                <FormControl>
+                  <TextField
+                    className={classes.field}
+                    variant='outlined'
+                    id='title'
+                    label='Title'
+                    defaultValue={bookEdit.title ? bookEdit.title : ''}
+                    onChange={event => changeField('title', event.target.value)}
                   />
-                  <FormControlLabel
-                    labelPlacement='top'
-                    control={
-                      <Switch
-                        className={classes.switch}
-                        checked={bookEdit.limited}
-                        onChange={handleSwitchChange}
-                        name='limited'
-                        color='primary'
-                      />
-                    }
-                    label='Limited'
+                </FormControl>
+                <FormControl>
+                  <TextField
+                    className={classes.field}
+                    variant='outlined'
+                    id='order'
+                    label='Order'
+                    type='number'
+                    defaultValue={bookEdit.order ? bookEdit.order : ''}
+                    onChange={event => changeField('order', event.target.value)}
                   />
-                </Grid>
-                <Grid item xs={9}>
-                  <FormControl>
-                    <TextField
-                      className={classes.field}
-                      variant='outlined'
-                      id='title'
-                      label='Title'
-                      defaultValue={bookEdit.title ? bookEdit.title : ''}
-                      onChange={event =>
-                        changeField('title', event.target.value)
-                      }
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={9}>
-                  <FormControl>
-                    <TextField
-                      className={classes.field}
-                      variant='outlined'
-                      id='image'
-                      label='Image'
-                      defaultValue={bookEdit.image ? bookEdit.image : ''}
-                      onChange={event =>
-                        changeField('image', event.target.value)
-                      }
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={3}>
-                  <FormControl>
-                    <TextField
-                      className={classes.field}
-                      variant='outlined'
-                      id='order'
-                      label='Order'
-                      type='number'
-                      defaultValue={bookEdit.order ? bookEdit.order : ''}
-                      onChange={event =>
-                        changeField('order', event.target.value)
-                      }
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <img src={bookEdit.image || ''} className={classes.thumb} />
-                </Grid>
+                </FormControl>
               </Grid>
+
+              <Grid
+                container
+                direction='row'
+                justify='flex-start'
+                alignItems='center'
+              >
+                <FormControl>
+                  <TextField
+                    className={classes.field}
+                    variant='outlined'
+                    id='image'
+                    label='Image'
+                    value={bookEdit.image ? bookEdit.image : ''}
+                    onChange={event => changeField('image', event.target.value)}
+                  />
+                </FormControl>
+                <input
+                  type='file'
+                  accept='image/*'
+                  onChange={handleImageUpload}
+                />
+              </Grid>
+              <img src={bookEdit.image || ''} className={classes.thumb} />
               <Grid
                 container
                 direction='row'
@@ -367,7 +438,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
         </Modal>
         <Dialog open={confirmDelete} onClose={handleConfirmDeleteClose}>
           <DialogTitle id='alert-dialog-title'>
-            Are you sure you want to delete this book?
+            Are you sure you want to delete this product?
           </DialogTitle>
           <DialogActions>
             <Button onClick={handleConfirmDeleteClose} color='secondary'>
