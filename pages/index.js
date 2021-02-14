@@ -6,7 +6,8 @@ import { connect } from 'react-redux'
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../src/Link'
 import TabPanel from '../components/TabPanel'
-import BlockList from '../components/BlockList'
+import BlockListJoined from '../components/BlockListJoined'
+import BlockListSegmented from '../components/BlockListSegmented'
 import numeral from 'numeral'
 const priceFormat = '$0'
 import moment from 'moment-timezone'
@@ -726,10 +727,10 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
-          <BlockList blocks={blocks} category='frontPage' />
+          <BlockListJoined blocks={blocks} category='frontPage' />
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
-          <BlockList blocks={blocks} category='stories' />
+          <BlockListSegmented blocks={blocks} category='stories' />
         </TabPanel>
       </Box>
     </Container>
