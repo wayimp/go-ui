@@ -41,6 +41,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
 import Checkbox from '@material-ui/core/Checkbox'
 import SyncIcon from '@material-ui/icons/Sync'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -59,6 +61,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 import MenuOpenIcon from '@material-ui/icons/MenuOpen'
+import AccountBoxIcon from '@material-ui/icons/AccountBox'
 
 const formatDate = date => {
   var d = new Date(date),
@@ -694,6 +697,16 @@ const Page = ({ dispatch, token, workflows, products }) => {
                     {customer.GivenName && customer.FamilyName
                       ? customer.GivenName + ' ' + customer.FamilyName
                       : ''}
+                    <Tooltip title='Open in QuickBooks'>
+                      <IconButton color='primary'>
+                        <Link
+                          href={`https://c72.qbo.intuit.com/app/customerdetail?nameId=${customer.Id}`}
+                          target={customer.Id}
+                        >
+                          <AccountBoxIcon />
+                        </Link>
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                   <TableCell align='left'>
                     {orderInfo.customerName ? orderInfo.customerName : ''}

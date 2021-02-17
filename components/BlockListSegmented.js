@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import BlockVideo from './BlockVideo'
-import parse from 'html-react-parser'
+import BlockText from './BlockText'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,15 +26,6 @@ const useStyles = makeStyles(theme => ({
   mirror: {
     transform: [{ scaleX: -1 }]
   },
-  playerWrapper: {
-    position: 'relative',
-    paddingTop: '56.25%' /* Player ratio: 100 / (1280 / 720) */
-  },
-  reactPlayer: {
-    position: 'absolute',
-    top: 0,
-    left: 0
-  }
 }))
 
 const BlockDisplay = ({ blocks, category }) => {
@@ -47,11 +38,11 @@ const BlockDisplay = ({ blocks, category }) => {
           <Card className={classes.root}>
             <div className={classes.details}>
               <CardContent className={classes.content}>
-                <Grid container direction='column'>
+                <Grid>
                   {block.type === 'video' ? (
                     <BlockVideo key={block._id} block={block} />
                   ) : (
-                    parse(block.html)
+                    <BlockText key={block._id} block={block} />
                   )}
                 </Grid>
               </CardContent>

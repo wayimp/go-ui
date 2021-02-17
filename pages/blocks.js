@@ -580,7 +580,7 @@ const Page = ({ dispatch, token }) => {
                     label='Sort Order'
                     type='number'
                     defaultValue={block.order}
-                    onChange={changeField}
+                    onBlur={changeField}
                   />
                 </Grid>
                 <Grid item xs={3}>
@@ -590,7 +590,7 @@ const Page = ({ dispatch, token }) => {
                     name='description'
                     label='Description'
                     defaultValue={block.description}
-                    onChange={changeField}
+                    onBlur={changeField}
                   />
                 </Grid>
                 <Grid item xs={12}>

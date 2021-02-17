@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import BlockVideo from './BlockVideo'
-import parse from 'html-react-parser'
+import BlockText from './BlockText'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,12 +45,12 @@ const BlockDisplay = ({ blocks, category }) => {
       <Card className={classes.root}>
         <div className={classes.details}>
           <CardContent className={classes.content}>
-            <Grid container direction='column'>
+            <Grid>
               {blocks.map(block => {
                 if (block.category === category) {
                   if (block.type === 'video')
                     return <BlockVideo key={block._id} block={block} />
-                  else return parse(block.html)
+                  else return <BlockText key={block._id} block={block} />
                 } else return ''
               })}
             </Grid>

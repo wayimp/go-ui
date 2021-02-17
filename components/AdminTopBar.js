@@ -5,15 +5,13 @@ import Link from '../src/Link'
 import cookie from 'js-cookie'
 import MenuIcon from '@material-ui/icons/Menu'
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount'
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Grid,
-  Box,
-  Tooltip
-} from '@material-ui/core'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
+import Tooltip from '@material-ui/core/Tooltip'
 
 const useStyles = makeStyles(theme => ({
   root: {
