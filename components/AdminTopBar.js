@@ -74,7 +74,7 @@ export default function SearchAppBar () {
               </Grid>
               <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
-                  <Link href='/books' className={classes.title}>
+                  <Link href='/products' className={classes.title}>
                     Products
                   </Link>
                 </Typography>

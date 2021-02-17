@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import clsx from 'clsx'
 import Router from 'next/router'
 import { axiosClient } from '../src/axiosClient'
 import { connect } from 'react-redux'
@@ -41,6 +42,42 @@ import OutlinedInput from '@material-ui/core/OutlinedInput'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
+import SyncIcon from '@material-ui/icons/Sync'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { green } from '@material-ui/core/colors'
+import CheckIcon from '@material-ui/icons/Check'
+import Select from 'react-select'
+import CancelIcon from '@material-ui/icons/Cancel'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableRow from '@material-ui/core/TableRow'
+import MenuOpenIcon from '@material-ui/icons/MenuOpen'
+
+const formatDate = date => {
+  var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear()
+
+  if (month.length < 2) month = '0' + month
+  if (day.length < 2) day = '0' + day
+
+  return [year, month, day].join('-')
+}
+
+const selectStyles = {
+  menu: base => ({
+    ...base,
+    zIndex: 100
+  })
+}
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -104,27 +141,82 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid #AAA',
     margin: '5px',
     padding: '8px'
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700]
+    }
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
+  },
+  backgroundModal: {
+    backgroundColor: '#EEF',
+    border: '1px solid #AAA',
+    minWidth: 600
+  },
+  dialogPaper: {
+    overflowY: 'visible'
   }
 }))
 
-const Page = ({ dispatch, token, workflows, books }) => {
+const Page = ({ dispatch, token, workflows, products }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [orders, setOrders] = React.useState([])
+  const [customers, setCustomers] = React.useState([])
+  const [loading, setLoading] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
+  const [customerDialog, setCustomerDialog] = React.useState(false)
+  const [customer, setCustomer] = React.useState({})
+  const [orderInfo, setOrderInfo] = React.useState({})
   const { enqueueSnackbar } = useSnackbar()
   const [showInactive, setShowInactive] = React.useState(false)
   const [search, setSearch] = React.useState('')
+  const [confirmUseQuickBooks, setConfirmUseQuickBooks] = React.useState(false)
+  const [confirmUseOrder, setConfirmUseOrder] = React.useState(false)
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success
+  })
 
   const changeShowInactive = event => {
     if (event && event.target) {
       const { checked } = event.target
-      getData(checked)
+      getOrders(checked)
       setShowInactive(checked)
     }
   }
 
-  const getData = inactive => {
+  const handleOpenDialog = order => {
+    setOrderInfo(order)
+    setCustomer({})
+    setCustomerDialog(true)
+  }
+
+  const handleCloseDialog = () => {
+    setOrderInfo({})
+    setCustomer({})
+    setCustomerDialog(false)
+  }
+
+  const selectCustomer = customer => {
+    setCustomer(customer)
+  }
+
+  const getData = () => {
+    getOrders()
+    getCustomers()
+  }
+
+  const getOrders = inactive => {
     let url = inactive ? '/orders?showInactive=true' : '/orders'
     if (search && search.length > 0) {
       url += inactive ? `&search=${search}` : `?search=${search}`
@@ -136,6 +228,22 @@ const Page = ({ dispatch, token, workflows, books }) => {
       headers: { Authorization: `Bearer ${token}` }
     }).then(response => {
       setOrders(Array.isArray(response.data) ? response.data : [])
+    })
+  }
+
+  const getCustomers = () => {
+    axiosClient({
+      method: 'get',
+      url: '/customers',
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(response => {
+      let result =
+        response.data && Array.isArray(response.data) ? response.data : []
+      result = result.map(customer => ({
+        ...customer,
+        label: customer.FamilyName + ', ' + customer.GivenName
+      }))
+      setCustomers(result)
     })
   }
 
@@ -153,6 +261,7 @@ const Page = ({ dispatch, token, workflows, books }) => {
     })
   }
 
+  /*
   const onFocus = () => {
     getData()
   }
@@ -163,7 +272,7 @@ const Page = ({ dispatch, token, workflows, books }) => {
       window.removeEventListener('focus', onFocus)
     }
   })
-
+*/
   const ordersSorted = orders
     .map(order => ({
       ...order,
@@ -189,6 +298,241 @@ const Page = ({ dispatch, token, workflows, books }) => {
       Router.push('/admin')
     }
   }, [token])
+
+  const syncCustomers = async () => {
+    if (!loading) {
+      setSuccess(false)
+      setLoading(true)
+
+      await axiosClient({
+        method: 'delete',
+        url: '/customers',
+        data: {},
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(response => {
+          setSuccess(true)
+          setLoading(false)
+          getCustomers()
+        })
+        .catch(error => {
+          enqueueSnackbar('Sync Error:' + error, {
+            variant: 'error'
+          })
+          setLoading(false)
+        })
+    }
+  }
+
+  const updateOrderInfo = () => {
+    const updated = {
+      ...orderInfo,
+      customerName: customer.GivenName + ' ' + customer.FamilyName,
+      customerStreet: customer.ShipAddr.Line1,
+      customerCity: customer.ShipAddr.City,
+      customerState: customer.ShipAddr.CountrySubDivisionCode,
+      customerZip: customer.ShipAddr.PostalCode,
+      customerPhone: customer.PrimaryPhone.FreeFormNumber,
+      customerEmail: customer.PrimaryEmailAddr.Address
+    }
+
+    setOrderInfo(updated)
+
+    setConfirmUseQuickBooks(false)
+
+    axiosClient
+      .patch('/orders', updated)
+      .then(res => {
+        enqueueSnackbar('Order updated', {
+          variant: 'success'
+        })
+        getOrders()
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem updating the order' + err, {
+          variant: 'error'
+        })
+      })
+  }
+
+  const updateQuickBooks = () => {
+    const splitName = orderInfo.customerName.split(' ')
+    const firstName = splitName[0]
+    const lastName = splitName[splitName.length - 1]
+    const updated = {
+      ...customer,
+      GivenName: firstName,
+      FamilyName: lastName,
+      ShipAddr: {
+        Line1: orderInfo.customerStreet,
+        City: orderInfo.customerCity,
+        CountrySubDivisionCode: orderInfo.customerState,
+        PostalCode: orderInfo.customerZip
+      },
+      PrimaryPhone: { FreeFormNumber: orderInfo.customerPhone },
+      PrimaryEmailAddr: { Address: orderInfo.customerEmail }
+    }
+
+    delete updated.label // Quickbooks chokes if you give it extra properties
+
+    setCustomer(updated)
+
+    setConfirmUseOrder(false)
+
+    axiosClient({
+      method: 'patch',
+      url: '/customers',
+      data: updated,
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => {
+        enqueueSnackbar('QuickBooks updated', {
+          variant: 'success'
+        })
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem updating QuickBooks ' + err, {
+          variant: 'error'
+        })
+      })
+  }
+
+  const createQuickBooksCustomer = () => {
+    const splitName = orderInfo.customerName.split(' ')
+    const firstName = splitName[0]
+    const lastName = splitName[splitName.length - 1]
+    const newCustomer = {
+      Taxable: false,
+      GivenName: firstName,
+      FamilyName: lastName,
+      Notes: 'Created from web order',
+      DisplayName: orderInfo.customerName,
+      PrintOnCheckName: orderInfo.customerName,
+      Active: true,
+      BillAddr: {
+        Line1: orderInfo.customerStreet,
+        City: orderInfo.customerCity,
+        CountrySubDivisionCode: orderInfo.customerState,
+        PostalCode: orderInfo.customerZip
+      },
+      ShipAddr: {
+        Line1: orderInfo.customerStreet,
+        City: orderInfo.customerCity,
+        CountrySubDivisionCode: orderInfo.customerState,
+        PostalCode: orderInfo.customerZip
+      },
+      PrimaryPhone: { FreeFormNumber: orderInfo.customerPhone },
+      PrimaryEmailAddr: { Address: orderInfo.customerEmail },
+      Job: false,
+      BillWithParent: false,
+      Balance: orderInfo.donation,
+      BalanceWithJobs: orderInfo.donation,
+      CurrencyRef: {
+        value: 'USD',
+        name: 'United States Dollar'
+      },
+      PreferredDeliveryMethod: 'Print'
+    }
+
+    axiosClient({
+      method: 'patch',
+      url: '/customers',
+      data: newCustomer,
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => {
+        enqueueSnackbar('QuickBooks updated', {
+          variant: 'success'
+        })
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem updating QuickBooks ' + err, {
+          variant: 'error'
+        })
+      })
+  }
+
+  const createQuickBooksInvoice = () => {
+    const splitName = orderInfo.customerName.split(' ')
+    const firstName = splitName[0]
+    const lastName = splitName[splitName.length - 1]
+    const date = new Date()
+    const dueDate = new Date(date.setMonth(date.getMonth() + 1))
+
+    const newInvoice = {
+      AllowIPNPayment: true,
+      AllowOnlinePayment: true,
+      AllowOnlineCreditCardPayment: true,
+      AllowOnlineACHPayment: true,
+      TxnDate: formatDate(date),
+      DueDate: formatDate(dueDate),
+      TotalAmt: Number(orderInfo.donation),
+      ApplyTaxAfterDiscount: false,
+      CustomerRef: {
+        value: customer.Id,
+        name: customer.DisplayName
+      },
+      CustomerMemo: {
+        value: 'Thank you for your web order.'
+      },
+      Balance: Number(orderInfo.donation),
+      BillAddr: {
+        Line1: orderInfo.customerName,
+        Line2: orderInfo.customerStreet,
+        Line3:
+          orderInfo.customerCity +
+          ', ' +
+          orderInfo.customerState +
+          ' ' +
+          orderInfo.customerZip,
+        Line4: ''
+      },
+      ShipAddr: {
+        Line1: orderInfo.customerStreet,
+        City: orderInfo.customerCity,
+        CountrySubDivisionCode: orderInfo.customerState,
+        PostalCode: orderInfo.customerZip
+      },
+      BillEmail: { Address: orderInfo.customerEmail },
+      CurrencyRef: {
+        value: 'USD',
+        name: 'United States Dollar'
+      },
+      Line: []
+    }
+
+    Object.entries(orderInfo.cart).forEach(([key, value]) =>
+      newInvoice.Line.push({
+        Description: value.title,
+        Amount: 0.0,
+        DetailType: 'SalesItemLineDetail',
+        SalesItemLineDetail: {
+          ItemRef: {
+            value: '2',
+            name: value.title
+          },
+          Qty: value.quantity
+        }
+      })
+    )
+
+    axiosClient({
+      method: 'patch',
+      url: '/invoice',
+      data: newInvoice,
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => {
+        enqueueSnackbar('QuickBooks invoice created', {
+          variant: 'success'
+        })
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem updating QuickBooks ' + err, {
+          variant: 'error'
+        })
+      })
+  }
 
   return (
     <Container>
@@ -250,9 +594,10 @@ const Page = ({ dispatch, token, workflows, books }) => {
                         key={order._id}
                         propsOrder={order}
                         workflows={workflows}
-                        books={books}
-                        getData={getData}
+                        products={products}
+                        getData={getOrders}
                         showInactive={showInactive}
+                        handleOpenDialog={handleOpenDialog}
                       />
                     ))}
                 </Grid>
@@ -261,6 +606,232 @@ const Page = ({ dispatch, token, workflows, books }) => {
           </Box>
         </div>
       </main>
+      <Dialog
+        id='selectCustomer'
+        fullWidth={true}
+        maxWidth={'md'}
+        fullHeight={true}
+        maxHeight={'md'}
+        open={customerDialog}
+        onClose={handleCloseDialog}
+        classes={{
+          paperFullWidth: classes.dialogPaper
+        }}
+      >
+        <DialogTitle>
+          Select Customer from QuickBooks{' '}
+          {orderInfo.customerName ? 'to Match: ' + orderInfo.customerName : ''}
+        </DialogTitle>
+        <DialogContent
+          classes={{
+            root: classes.dialogPaper
+          }}
+        >
+          <div className={classes.buttonWrapper}>
+            <Button
+              variant='contained'
+              color='secondary'
+              className={buttonClassname}
+              disabled={loading}
+              onClick={syncCustomers}
+              startIcon={success ? <CheckIcon /> : <SyncIcon />}
+            >
+              Sync QuickBooks
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
+
+          <Select
+            id='customers'
+            instanceId='customers'
+            styles={selectStyles}
+            className='customersSelect'
+            classNamePrefix='select'
+            isClearable={true}
+            isSearchable={true}
+            name='customers'
+            options={customers}
+            onChange={selectCustomer}
+          />
+
+          {customer && customer.GivenName ? (
+            <Table className={classes.table}>
+              <TableBody>
+                <TableRow>
+                  <TableCell />
+                  <TableCell align='left' component='th' scope='row'>
+                    <Button
+                      variant='contained'
+                      color='secondary'
+                      style={{ margin: 10 }}
+                      onClick={() => setConfirmUseQuickBooks(true)}
+                      startIcon={
+                        <MenuOpenIcon style={{ transform: 'rotate(180deg)' }} />
+                      }
+                    >
+                      Use QuickBooks Info
+                    </Button>
+                  </TableCell>
+                  <TableCell align='left' component='th' scope='row'>
+                    <Button
+                      variant='contained'
+                      color='secondary'
+                      style={{ margin: 10 }}
+                      onClick={() => setConfirmUseOrder(true)}
+                      startIcon={<MenuOpenIcon />}
+                    >
+                      Use Order Info
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Name:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {customer.GivenName && customer.FamilyName
+                      ? customer.GivenName + ' ' + customer.FamilyName
+                      : ''}
+                  </TableCell>
+                  <TableCell align='left'>
+                    {orderInfo.customerName ? orderInfo.customerName : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Address:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {customer && customer.ShipAddr && customer.ShipAddr.Line1
+                      ? customer.ShipAddr.Line1
+                      : ''}
+                    <br />
+                    {customer && customer.ShipAddr && customer.ShipAddr.City
+                      ? customer.ShipAddr.City
+                      : ''}
+                    ,&nbsp;
+                    {customer &&
+                    customer.ShipAddr &&
+                    customer.ShipAddr.CountrySubDivisionCode
+                      ? customer.ShipAddr.CountrySubDivisionCode
+                      : ''}
+                    &nbsp;
+                    {customer &&
+                    customer.ShipAddr &&
+                    customer.ShipAddr.PostalCode
+                      ? customer.ShipAddr.PostalCode
+                      : ''}
+                  </TableCell>
+                  <TableCell align='left'>
+                    {orderInfo.customerStreet ? orderInfo.customerStreet : ''}
+                    <br />
+                    {orderInfo.customerCity ? orderInfo.customerCity : ''}
+                    ,&nbsp;
+                    {orderInfo.customerState ? orderInfo.customerState : ''}
+                    &nbsp;
+                    {orderInfo.customerZip ? orderInfo.customerZip : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Phone:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {customer &&
+                    customer.PrimaryPhone &&
+                    customer.PrimaryPhone.FreeFormNumber
+                      ? customer.PrimaryPhone.FreeFormNumber
+                      : ''}
+                  </TableCell>
+                  <TableCell align='left'>
+                    {orderInfo.customerPhone ? orderInfo.customerPhone : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
+                    Email:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {customer &&
+                    customer.PrimaryEmailAddr &&
+                    customer.PrimaryEmailAddr.Address
+                      ? customer.PrimaryEmailAddr.Address
+                      : ''}
+                  </TableCell>
+                  <TableCell align='left'>
+                    {orderInfo.customerEmail ? orderInfo.customerEmail : ''}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          ) : (
+            ''
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant='contained'
+            color='secondary'
+            style={{ margin: 10 }}
+            onClick={() => createQuickBooksCustomer()}
+            startIcon={<AddCircleOutlineIcon />}
+          >
+            Create New Customer
+          </Button>
+          <Button
+            variant='contained'
+            color='secondary'
+            style={{ margin: 10 }}
+            onClick={() => createQuickBooksInvoice()}
+            startIcon={<AddCircleOutlineIcon />}
+          >
+            Create New Invoice
+          </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            style={{ margin: 10 }}
+            onClick={handleCloseDialog}
+            startIcon={<CancelIcon />}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={confirmUseQuickBooks}
+        onClose={() => setConfirmUseQuickBooks(false)}
+      >
+        <DialogTitle>
+          This will replace the Order info with QuickBooks info.
+        </DialogTitle>
+        <DialogActions>
+          <Button
+            onClick={() => setConfirmUseQuickBooks(false)}
+            color='secondary'
+          >
+            Cancel
+          </Button>
+          <Button color='primary' autoFocus onClick={updateOrderInfo}>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={confirmUseOrder} onClose={() => setConfirmUseOrder(false)}>
+        <DialogTitle>
+          This will update the QuickBooks info with the Order info.
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setConfirmUseOrder(false)} color='secondary'>
+            Cancel
+          </Button>
+          <Button color='primary' autoFocus onClick={updateQuickBooks}>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   )
 }
@@ -269,12 +840,14 @@ export async function getServerSideProps (context) {
   const workflows = await axiosClient
     .get('/workflows')
     .then(response => response.data)
-  const books = await axiosClient.get('/books').then(response => response.data)
+  const products = await axiosClient
+    .get('/products')
+    .then(response => response.data)
 
   return {
     props: {
       workflows,
-      books
+      products
     }
   }
 }

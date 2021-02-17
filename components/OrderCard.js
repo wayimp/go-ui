@@ -37,7 +37,7 @@ const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
 const dateDisplay = 'dddd h:mm a'
 import numeral from 'numeral'
 const priceFormat = '$0.00'
-import BookCard from '../components/BookCardPublic'
+import ProductCard from '../components/ProductCardPublic'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
@@ -55,6 +55,7 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
 import MuiAccordionDetails from '@material-ui/core/AccordionDetails'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import SearchIcon from '@material-ui/icons/Search'
 
 Array.prototype.sum = function (prop) {
   let total = Number(0)
@@ -183,10 +184,11 @@ const useStyles = makeStyles(theme => ({
 const OrderCard = ({
   propsOrder,
   workflows,
-  books,
+  products,
   token,
   getData,
-  showInactive
+  showInactive,
+  handleOpenDialog
 }) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -195,14 +197,14 @@ const OrderCard = ({
   const [details, setDetails] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
-  const [openBooks, setOpenBooks] = React.useState(false)
+  const [openProducts, setOpenProducts] = React.useState(false)
 
-  const handleOpenBooks = () => {
-    setOpenBooks(true)
+  const handleOpenProducts = () => {
+    setOpenProducts(true)
   }
 
-  const handleCloseBooks = () => {
-    setOpenBooks(false)
+  const handleCloseProducts = () => {
+    setOpenProducts(false)
   }
 
   const cart = []
@@ -397,17 +399,21 @@ const OrderCard = ({
       })
   }
 
-  const addToCart = (book, quantity) => {
+  const addToCart = (product, quantity) => {
     let { cart } = order
 
-    if (cart[book._id]) {
-      cart[book._id].quantity += quantity
+    if (cart[product._id]) {
+      cart[product._id].quantity += quantity
     } else {
-      cart[book._id] = { title: book.title, image: book.image, quantity }
+      cart[product._id] = {
+        title: product.title,
+        image: product.image,
+        quantity
+      }
     }
 
-    if (cart[book._id].quantity <= 0) {
-      delete cart[book._id]
+    if (cart[product._id].quantity <= 0) {
+      delete cart[product._id]
     }
 
     const updated = {
@@ -416,7 +422,7 @@ const OrderCard = ({
     }
 
     updateOrder(updated)
-    handleCloseBooks()
+    handleCloseProducts()
   }
 
   return (
@@ -460,7 +466,18 @@ const OrderCard = ({
         }
       ></CardHeader>
       <CardContent style={{ marginTop: -40 }}>
-        <Typography variant='h5'>{order.customerName}</Typography>
+        <Typography variant='h5'>
+          {order.customerName}
+          <Tooltip title='Search QuickBooks'>
+            <IconButton
+              onClick={() =>
+                handleOpenDialog(JSON.parse(JSON.stringify(order)))
+              }
+            >
+              <SearchIcon />
+            </IconButton>
+          </Tooltip>
+        </Typography>
         <Grid>
           <Link href={`tel:${order.customerPhone}`}>
             <IconButton color='primary'>
@@ -564,7 +581,7 @@ const OrderCard = ({
             &nbsp;Archive
           </IconButton>
         )}
-        <IconButton onClick={handleOpenBooks} color='primary'>
+        <IconButton onClick={handleOpenProducts} color='primary'>
           <AddCircleOutlineIcon />
           &nbsp;New Title
         </IconButton>
@@ -578,12 +595,12 @@ const OrderCard = ({
             alignItems='flex-start'
             alignContent='flex-start'
           >
-            {cart.map(book => (
-              <BookCard
-                key={book._id}
-                book={book}
+            {cart.map(product => (
+              <ProductCard
+                key={product._id}
+                product={product}
                 addToCart={addToCart}
-                inCart={book}
+                inCart={product}
               />
             ))}
           </Grid>
@@ -657,15 +674,15 @@ const OrderCard = ({
       <Modal
         id='items'
         className={classes.modalScroll}
-        open={openBooks}
-        onClose={handleCloseBooks}
+        open={openProducts}
+        onClose={handleCloseProducts}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500
         }}
       >
-        <Fade in={openBooks}>
+        <Fade in={openProducts}>
           <div className={classes.paper}>
             <Grid
               container
@@ -674,13 +691,13 @@ const OrderCard = ({
               alignItems='flex-start'
               alignContent='flex-start'
             >
-              {books.map(book => (
-                <Grid item lg={3} md={4} sm={5} xs={12} key={book._id}>
-                  <BookCard
-                    key={book._id}
-                    book={book}
+              {products.map(product => (
+                <Grid item lg={3} md={4} sm={5} xs={12} key={product._id}>
+                  <ProductCard
+                    key={product._id}
+                    product={product}
                     addToCart={addToCart}
-                    inCart={cart[book._id]}
+                    inCart={cart[product._id]}
                     small={true}
                   />
                 </Grid>

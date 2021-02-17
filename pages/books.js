@@ -15,7 +15,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import SendIcon from '@material-ui/icons/Send'
 import numeral from 'numeral'
 const priceFormat = '$0.00'
-import BookCard from '../components/BookCardAdmin'
+import ProductCard from '../components/ProductCardAdmin'
 import { flatten } from 'lodash'
 import moment from 'moment-timezone'
 const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
@@ -159,9 +159,9 @@ const useStyles = makeStyles(theme => ({
 const Page = ({ dispatch, token }) => {
   const classes = useStyles()
   const theme = useTheme()
-  const [books, setBooks] = React.useState([])
+  const [products, setProducts] = React.useState([])
   const [filtered, setFiltered] = React.useState([])
-  const [bookToDelete, setBookToDelete] = React.useState({})
+  const [productToDelete, setProductToDelete] = React.useState({})
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const [showInactive, setShowInactive] = React.useState(false)
@@ -173,7 +173,7 @@ const Page = ({ dispatch, token }) => {
   })
 
   const getData = inactive => {
-    const url = inactive ? '/books?showInactive=true' : '/books'
+    const url = inactive ? '/products?showInactive=true' : '/products'
     axiosClient({
       method: 'get',
       url,
@@ -181,8 +181,8 @@ const Page = ({ dispatch, token }) => {
     }).then(response => {
       const result =
         response.data && Array.isArray(response.data) ? response.data : []
-      setBooks(result)
-      filterBooks(result, search)
+      setProducts(result)
+      filterProducts(result, search)
     })
   }
 
@@ -194,22 +194,22 @@ const Page = ({ dispatch, token }) => {
     }
   }
 
-  const searchBooks = event => {
+  const searchProducts = event => {
     const searchString = event.target.value
     setSearch(searchString)
-    filterBooks(books, searchString)
+    filterProducts(products, searchString)
   }
 
-  const filterBooks = (unfiltered, searchString) => {
+  const filterProducts = (unfiltered, searchString) => {
     if (searchString && searchString.length > 0) {
-      let booksSorted = unfiltered
-        .map(book => {
-          if (book.title.toLowerCase().includes(searchString.toLowerCase()))
-            return book
+      let productsSorted = unfiltered
+        .map(product => {
+          if (product.title.toLowerCase().includes(searchString.toLowerCase()))
+            return product
           else return null
         })
         .filter(noNull => noNull)
-      setFiltered(booksSorted)
+      setFiltered(productsSorted)
     } else {
       setFiltered(unfiltered)
     }
@@ -224,40 +224,40 @@ const Page = ({ dispatch, token }) => {
   }, [])
 
   const handleConfirmDeleteClose = () => {
-    setBookToDelete({})
+    setProductToDelete({})
     setConfirmDelete(false)
   }
 
-  const confirmDeleteBook = book => {
-    setBookToDelete(book)
+  const confirmDeleteProduct = product => {
+    setProductToDelete(product)
     setConfirmDelete(true)
   }
 
   const createNew = async () => {
-    const newBook = {
+    const newProduct = {
       active: true,
       order: 100,
       title: '',
       image: ''
     }
-    createBook(newBook)
+    createProduct(newProduct)
   }
 
-  const createBook = async book => {
+  const createProduct = async product => {
     await axiosClient({
       method: 'post',
-      url: '/books',
-      data: book,
+      url: '/products',
+      data: product,
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => {
-        enqueueSnackbar('New Book Created', {
+        enqueueSnackbar('New Product Created', {
           variant: 'success'
         })
         getData(showInactive)
       })
       .catch(error => {
-        enqueueSnackbar('Error Creating Book: ' + error, {
+        enqueueSnackbar('Error Creating Product: ' + error, {
           variant: 'error'
         })
       })
@@ -284,7 +284,7 @@ const Page = ({ dispatch, token }) => {
               <OutlinedInput
                 id='search'
                 value={search}
-                onChange={searchBooks}
+                onChange={searchProducts}
                 startAdornment={
                   <InputAdornment position='start'>
                     <SearchIcon />
@@ -313,10 +313,10 @@ const Page = ({ dispatch, token }) => {
             alignItems='flex-start'
             alignContent='flex-start'
           >
-            {filtered.map(book => (
-              <BookCard
-                key={book._id}
-                book={book}
+            {filtered.map(product => (
+              <ProductCard
+                key={product._id}
+                product={product}
                 getData={getData}
                 showInactive={showInactive}
               />

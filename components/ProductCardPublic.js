@@ -15,7 +15,6 @@ import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
-import BookIcon from '@material-ui/icons/Book'
 import ViewComfyIcon from '@material-ui/icons/ViewComfy'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
@@ -28,13 +27,37 @@ import ListAltIcon from '@material-ui/icons/ListAlt'
 import { useSnackbar } from 'notistack'
 
 const useStyles = makeStyles(theme => ({
+  segmentSelect: {
+    minWidth: 200
+  },
+  smallField: {
+    maxWidth: 140,
+    padding: theme.spacing(1)
+  },
   root: {
-    maxWidth: 100,
+    maxWidth: 400,
     margin: 10,
     overflow: 'visible'
   },
   media: {
-    height: 150
+    height: 300
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest
+    })
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)'
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: theme.spacing(2),
+    padding: theme.spacing(2)
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -67,7 +90,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row'
   },
   media: {
-    height: 300,
     position: 'relative'
   },
   limitedIcon: {
@@ -85,46 +107,35 @@ const useStyles = makeStyles(theme => ({
     '& > *': {
       margin: theme.spacing(0.5)
     }
-  },
-  root: {
-    display: 'flex',
-    margin: 10
-  },
-  details: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  content: {
-    flex: '1 0 auto'
-  },
-  cover: {
-    width: 151
-  },
-  controls: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing(1),
-    paddingBottom: theme.spacing(1)
-  },
-  playIcon: {
-    height: 38,
-    width: 38
   }
 }))
 
-const BookDisplay = ({ book }) => {
+const ProductDisplay = ({ product, addToCart, inCart, small }) => {
   {
     const classes = useStyles()
     const { enqueueSnackbar } = useSnackbar()
     let caseDisplay = []
-    let { quantity } = book
-    let cases = Math.floor(quantity / 24)
-    let items = quantity % 24
-    let modulo = quantity % 24
+    let quantity = 0
+    let cases = 0
+    let items = 0
+    let modulo = 0
     let keyIndex = 0
+
+    if (inCart) {
+      quantity = inCart.quantity
+      modulo = quantity % 24
+      cases = Math.floor(quantity / 24)
+      items = quantity % 24
+    }
     for (let c = 0; c < cases; c++) {
       caseDisplay.push(
-        <Chip key={keyIndex++} variant='outlined' label='24' color='primary' />
+        <Chip
+          key={keyIndex++}
+          variant='outlined'
+          label='24'
+          onDelete={() => addToCart(product, -24)}
+          color='primary'
+        />
       )
     }
     if (items > 0) {
@@ -133,29 +144,73 @@ const BookDisplay = ({ book }) => {
           key={keyIndex++}
           variant='outlined'
           label={items}
+          onDelete={() => addToCart(product, -items)}
           color='primary'
         />
       )
     }
 
     return (
-      <Card className={classes.root}>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography component='h5' variant='h5'>
-              {book.title}
-            </Typography>
-            <div className={classes.chips}>{caseDisplay}</div>
-          </CardContent>
-        </div>
+      <Card className={classes.card} key={product._id}>
         <CardMedia
-          className={classes.cover}
-          image={book.image || ''}
-          title={book.title || ''}
+          className={classes.media}
+          image={product.image || ''}
+          title={product.title || ''}
+          style={{ height: small ? 100 : 300 }}
         />
+        {product.limited ? (
+          <img
+            src={'https://files.lifereferencemanual.net/go/LimitedStock.png'}
+            className={classes.limitedIcon}
+          />
+        ) : (
+          ''
+        )}
+        <CardContent>
+          <Typography variant='h6' component='span'>
+            {product.title}
+          </Typography>
+          <div className={classes.chips}>{caseDisplay}</div>
+        </CardContent>
+        <CardActions className={classes.cardActions}>
+          <Tooltip
+            title={
+              quantity >= 48
+                ? 'Please order an even number of cases (multiples of 48)'
+                : ''
+            }
+          >
+            <span>
+              <Button
+                size='large'
+                style={{ marginTop: 6 }}
+                variant='outlined'
+                color='primary'
+                onClick={e => {
+                  e.preventDefault
+                  addToCart(product, 1)
+                }}
+                disabled={quantity >= 48 ? true : false}
+              >
+                Add One
+              </Button>
+            </span>
+          </Tooltip>
+          <Button
+            size='large'
+            variant='outlined'
+            color='primary'
+            onClick={e => {
+              e.preventDefault
+              addToCart(product, 24 - modulo)
+            }}
+          >
+            Add Case of 24
+          </Button>
+        </CardActions>
       </Card>
     )
   }
 }
 
-export default BookDisplay
+export default ProductDisplay

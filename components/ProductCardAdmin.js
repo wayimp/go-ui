@@ -118,13 +118,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const BookDisplay = ({ book, token, getData, showInactive }) => {
+const ProductDisplay = ({ product, token, getData, showInactive }) => {
   {
     const classes = useStyles()
     const [expanded, setExpanded] = useState(false)
     const { enqueueSnackbar } = useSnackbar()
     const [open, setOpen] = React.useState(false)
-    const [bookEdit, setBookEdit] = useState({})
+    const [productEdit, setProductEdit] = useState({})
     const [confirmDelete, setConfirmDelete] = React.useState(false)
 
     const handleConfirmDeleteOpen = () => {
@@ -137,10 +137,10 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
 
     const changeField = (name, value) => {
       const updated = {
-        ...bookEdit,
+        ...productEdit,
         [name]: value
       }
-      setBookEdit(updated)
+      setProductEdit(updated)
     }
 
     const handleSwitchChange = event => {
@@ -156,32 +156,32 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
     }
 
     const handleEdit = () => {
-      const edit = JSON.parse(JSON.stringify(book))
-      setBookEdit(edit)
+      const edit = JSON.parse(JSON.stringify(product))
+      setProductEdit(edit)
       setOpen(true)
     }
 
     const handleSubmit = async () => {
-      handleSave(bookEdit)
+      handleSave(productEdit)
       handleClose()
     }
 
-    const handleSave = async bookSave => {
+    const handleSave = async productSave => {
       // If it has an ID aleady, then post it, or else update it.
       await axiosClient({
-        method: bookSave._id ? 'patch' : 'post',
-        url: '/books',
-        data: bookSave,
+        method: productSave._id ? 'patch' : 'post',
+        url: '/products',
+        data: productSave,
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(response => {
-          enqueueSnackbar('Book Saved', {
+          enqueueSnackbar('Product Saved', {
             variant: 'success'
           })
           getData()
         })
         .catch(error => {
-          enqueueSnackbar('Error Saving Book ' + error, {
+          enqueueSnackbar('Error Saving Product ' + error, {
             variant: 'error'
           })
         })
@@ -191,17 +191,17 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
       setConfirmDelete(false)
       await axiosClient({
         method: 'delete',
-        url: '/books/' + book._id,
+        url: '/products/' + product._id,
         headers: { Authorization: `Bearer ${token}` }
       })
         .then(response => {
-          enqueueSnackbar('Book Deleted', {
+          enqueueSnackbar('Product Deleted', {
             variant: 'success'
           })
           getData(showInactive)
         })
         .catch(error => {
-          enqueueSnackbar('Error Deleting Book: ' + error, {
+          enqueueSnackbar('Error Deleting Product: ' + error, {
             variant: 'error'
           })
         })
@@ -284,14 +284,14 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
     }
 
     return (
-      <Grid item lg={3} md={4} sm={5} xs={12} key={book._id}>
+      <Grid item lg={3} md={4} sm={5} xs={12} key={product._id}>
         <Card className={classes.card}>
           <CardMedia
             className={classes.media}
-            image={book.image || ''}
-            title={book.title || ''}
+            image={product.image || ''}
+            title={product.title || ''}
           />
-          {book.limited ? (
+          {product.limited ? (
             <img
               src={'https://files.lifereferencemanual.net/go/LimitedStock.png'}
               className={classes.limitedIcon}
@@ -301,7 +301,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
           )}
           <CardContent>
             <Typography variant='h6' component='h3'>
-              {book.title}
+              {product.title}
             </Typography>
           </CardContent>
           <CardActions className={classes.cardActions}>
@@ -341,7 +341,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                   control={
                     <Switch
                       className={classes.switch}
-                      checked={bookEdit.active}
+                      checked={productEdit.active}
                       onChange={handleSwitchChange}
                       name='active'
                       color='primary'
@@ -354,7 +354,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                   control={
                     <Switch
                       className={classes.switch}
-                      checked={bookEdit.limited}
+                      checked={productEdit.limited}
                       onChange={handleSwitchChange}
                       name='limited'
                       color='primary'
@@ -368,7 +368,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                     variant='outlined'
                     id='title'
                     label='Title'
-                    defaultValue={bookEdit.title ? bookEdit.title : ''}
+                    defaultValue={productEdit.title ? productEdit.title : ''}
                     onChange={event => changeField('title', event.target.value)}
                   />
                 </FormControl>
@@ -379,7 +379,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                     id='order'
                     label='Order'
                     type='number'
-                    defaultValue={bookEdit.order ? bookEdit.order : ''}
+                    defaultValue={productEdit.order ? productEdit.order : ''}
                     onChange={event => changeField('order', event.target.value)}
                   />
                 </FormControl>
@@ -397,7 +397,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                     variant='outlined'
                     id='image'
                     label='Image'
-                    value={bookEdit.image ? bookEdit.image : ''}
+                    value={productEdit.image ? productEdit.image : ''}
                     onChange={event => changeField('image', event.target.value)}
                   />
                 </FormControl>
@@ -407,7 +407,7 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
                   onChange={handleImageUpload}
                 />
               </Grid>
-              <img src={bookEdit.image || ''} className={classes.thumb} />
+              <img src={productEdit.image || ''} className={classes.thumb} />
               <Grid
                 container
                 direction='row'
@@ -454,4 +454,4 @@ const BookDisplay = ({ book, token, getData, showInactive }) => {
   }
 }
 
-export default connect(state => state)(BookDisplay)
+export default connect(state => state)(ProductDisplay)

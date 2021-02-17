@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import BookCard from '../../components/BookCardSummary'
+import ProductCard from '../../components/ProductCardSummary'
 import { axiosClient } from '../../src/axiosClient'
 import { useSnackbar } from 'notistack'
 import { connect } from 'react-redux'
@@ -234,7 +234,7 @@ const Order = ({ propsOrder, dispatch, token }) => {
         </Grid>
         <Grid item xs={4}>
           <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label='simple table'>
+            <Table className={classes.table}>
               <TableBody>
                 <TableRow>
                   <TableCell align='right' component='th' scope='row'>
@@ -327,7 +327,7 @@ const Order = ({ propsOrder, dispatch, token }) => {
           alignContent='flex-start'
         >
           {Object.entries(order.cart).map(([k, v], i) => {
-            return <BookCard key={k} book={v} />
+            return <ProductCard key={k} product={v} />
           })}
         </Grid>
         <Grid item xs={4}>

@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../src/Link'
 import TabPanel from '../components/TabPanel'
+import PricingTable from '../components/PricingTable'
 import BlockListJoined from '../components/BlockListJoined'
 import BlockListSegmented from '../components/BlockListSegmented'
 import numeral from 'numeral'
@@ -13,7 +14,7 @@ const priceFormat = '$0'
 import moment from 'moment-timezone'
 const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
 const dateDisplay = 'dddd MMM DD hh:mm a'
-import BookCard from '../components/BookCardPublic'
+import ProductCard from '../components/ProductCardPublic'
 import Container from '@material-ui/core/Container'
 import Badge from '@material-ui/core/Badge'
 import Card from '@material-ui/core/Card'
@@ -196,14 +197,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Form = ({ books, blocks, settings, dispatch, token }) => {
+const Form = ({ products, blocks, settings, dispatch, token }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [form, setForm] = React.useState({ cart: {} })
   const { enqueueSnackbar } = useSnackbar()
   const [selectedTab, setSelectedTab] = React.useState(2)
   const [readOnly, setReadOnly] = React.useState(false)
-  const [filtered, setFiltered] = React.useState(books)
+  const [filtered, setFiltered] = React.useState(products)
   const [search, setSearch] = React.useState('')
   const [progress, setProgress] = React.useState(false)
 
@@ -211,24 +212,24 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
     setProgress(false)
   })
 
-  const searchBooks = event => {
+  const searchProducts = event => {
     const searchString = event.target.value
     setSearch(searchString)
-    filterBooks(searchString)
+    filterProducts(searchString)
   }
 
-  const filterBooks = searchString => {
+  const filterProducts = searchString => {
     if (searchString && searchString.length > 0) {
-      let booksSorted = books
-        .map(book => {
-          if (book.title.toLowerCase().includes(searchString.toLowerCase()))
-            return book
+      let productsSorted = products
+        .map(product => {
+          if (product.title.toLowerCase().includes(searchString.toLowerCase()))
+            return product
           else return null
         })
         .filter(noNull => noNull)
-      setFiltered(booksSorted)
+      setFiltered(productsSorted)
     } else {
-      setFiltered(books)
+      setFiltered(products)
     }
   }
 
@@ -256,17 +257,21 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
     setForm(updated)
   }
 
-  const addToCart = (book, quantity) => {
+  const addToCart = (product, quantity) => {
     let { cart } = form
 
-    if (cart[book._id]) {
-      cart[book._id].quantity += quantity
+    if (cart[product._id]) {
+      cart[product._id].quantity += quantity
     } else {
-      cart[book._id] = { title: book.title, image: book.image, quantity }
+      cart[product._id] = {
+        title: product.title,
+        image: product.image,
+        quantity
+      }
     }
 
-    if (cart[book._id].quantity <= 0) {
-      delete cart[book._id]
+    if (cart[product._id].quantity <= 0) {
+      delete cart[product._id]
     }
 
     const updated = {
@@ -503,7 +508,7 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
             <OutlinedInput
               id='search'
               value={search}
-              onChange={searchBooks}
+              onChange={searchProducts}
               startAdornment={
                 <InputAdornment position='start'>
                   <SearchIcon />
@@ -519,13 +524,13 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
             alignItems='flex-start'
             alignContent='flex-start'
           >
-            {filtered.map(book => (
-              <Grid item lg={3} md={4} sm={5} xs={12} key={book._id}>
-                <BookCard
-                  key={book._id}
-                  book={book}
+            {filtered.map(product => (
+              <Grid item lg={3} md={4} sm={5} xs={12} key={product._id}>
+                <ProductCard
+                  key={product._id}
+                  product={product}
                   addToCart={addToCart}
-                  inCart={form.cart[book._id]}
+                  inCart={form.cart[product._id]}
                 />
               </Grid>
             ))}
@@ -711,14 +716,16 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
                 alignContent='flex-start'
               >
                 {filtered
-                  .filter(book => Object.keys(form.cart).includes(book._id))
-                  .map(book => (
+                  .filter(product =>
+                    Object.keys(form.cart).includes(product._id)
+                  )
+                  .map(product => (
                     <Grid item lg={3} md={4} sm={5} xs={12}>
-                      <BookCard
-                        key={book._id}
-                        book={book}
+                      <ProductCard
+                        key={product._id}
+                        product={product}
                         addToCart={addToCart}
-                        inCart={form.cart[book._id]}
+                        inCart={form.cart[product._id]}
                       />
                     </Grid>
                   ))}
@@ -728,6 +735,7 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
         </TabPanel>
         <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
           <BlockListJoined blocks={blocks} category='frontPage' />
+          <PricingTable />
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
           <BlockListSegmented blocks={blocks} category='stories' />
@@ -738,7 +746,9 @@ const Form = ({ books, blocks, settings, dispatch, token }) => {
 }
 
 export async function getServerSideProps (context) {
-  const books = await axiosClient.get('/books').then(response => response.data)
+  const products = await axiosClient
+    .get('/products')
+    .then(response => response.data)
   const blocks = await axiosClient
     .get('/blocks')
     .then(response => response.data)
@@ -752,7 +762,7 @@ export async function getServerSideProps (context) {
 
   return {
     props: {
-      books,
+      products,
       blocks,
       settings
     }
