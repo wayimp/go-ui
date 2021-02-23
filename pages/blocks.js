@@ -265,6 +265,18 @@ const Page = ({ dispatch, token }) => {
     changeValue(event.target.name, event.target.checked)
   }
 
+  const handleSwitchChangeInline = blockToUpdate => {
+    const updated = {
+      ...blockToUpdate,
+      active: !blockToUpdate.active
+    }
+    saveBlock(updated)
+    const updatedBlocks = blocks.map(b =>
+      b._id === blockToUpdate ? updated : b
+    )
+    setBlocks(updatedBlocks)
+  }
+
   const saveBlock = async blockToSave => {
     await axiosClient({
       method: creating ? 'post' : 'patch',
@@ -368,11 +380,22 @@ const Page = ({ dispatch, token }) => {
                         justify='center'
                         alignItems='center'
                       >
-                        {block.active ? (
+                        <FormControlLabel
+                          labelPlacement='top'
+                          control={
+                            <Switch
+                              checked={block.active}
+                              onChange={() => handleSwitchChangeInline(block)}
+                              name='active'
+                              color='primary'
+                            />
+                          }
+                        />
+                        {/*block.active ? (
                           <CheckBoxOutlinedIcon />
                         ) : (
                           <CheckBoxOutlineBlankOutlinedIcon />
-                        )}
+                        )*/}
                         &nbsp;
                         {block.type === 'video' ? (
                           <VideocamIcon />

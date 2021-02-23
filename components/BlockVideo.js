@@ -18,17 +18,19 @@ const BlockDisplay = ({ block }) => {
   {
     const classes = useStyles()
 
-    return (
-      <div className={classes.playerWrapper}>
-        <ReactPlayer
-          className={classes.reactPlayer}
-          url={block.html}
-          width='100%'
-          height='100%'
-          controls={true}
-        />
-      </div>
-    )
+    if (block.html.startsWith('https://files.lifereferencemanual.net'))
+      return (
+        <div className={classes.playerWrapper}>
+          <ReactPlayer
+            className={classes.reactPlayer}
+            url={block.html}
+            width='100%'
+            height='100%'
+            controls={true}
+          />
+        </div>
+      )
+    else return <ReactPlayer url={block.html} />
   }
 }
 
