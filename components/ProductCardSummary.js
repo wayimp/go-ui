@@ -69,14 +69,6 @@ const useStyles = makeStyles(theme => ({
     height: 300,
     position: 'relative'
   },
-  limitedIcon: {
-    position: 'absolute',
-    top: 6,
-    left: 0,
-    display: 'block',
-    width: 'auto',
-    height: 'auto'
-  },
   chips: {
     display: 'flex',
     justifyContent: 'center',

@@ -100,6 +100,23 @@ const useStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto'
   },
+  newIcon: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    display: 'block',
+    width: 'auto',
+    height: 'auto'
+  },
+  constitutionIcon: {
+    position: 'absolute',
+    top: 240,
+    left: 0,
+    display: 'block',
+    width: 'auto',
+    height: 'auto',
+    maxWidth: 240
+  },
   chips: {
     display: 'flex',
     justifyContent: 'center',
@@ -162,6 +179,22 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
           <img
             src={'https://files.lifereferencemanual.net/go/LimitedStock.png'}
             className={classes.limitedIcon}
+          />
+        ) : (
+          ''
+        )}
+        {product.new ? (
+          <img
+            src={'https://files.lifereferencemanual.net/go/new.png'}
+            className={classes.newIcon}
+          />
+        ) : (
+          ''
+        )}
+        {product.constitution ? (
+          <img
+            src={'https://files.lifereferencemanual.net/go/constitution.png'}
+            className={classes.constitutionIcon}
           />
         ) : (
           ''

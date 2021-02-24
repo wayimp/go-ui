@@ -55,6 +55,13 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Fab from '@material-ui/core/Fab'
 import CallIcon from '@material-ui/icons/Call'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import { loadStripe } from '@stripe/stripe-js'
+import {
+  CardElement,
+  Elements,
+  useStripe,
+  useElements
+} from '@stripe/react-stripe-js'
 
 Array.prototype.sum = function (prop) {
   var total = 0
@@ -207,6 +214,9 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
   const [filtered, setFiltered] = React.useState(products)
   const [search, setSearch] = React.useState('')
   const [progress, setProgress] = React.useState(false)
+
+  const stripe = useStripe()
+  const elements = useElements()
 
   useEffect(() => {
     setProgress(false)
@@ -681,6 +691,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
                       Your donation helps us to distribute more Bibles
                     </FormHelperText>
                   </FormControl>
+                  <CardElement />
                 </Grid>
                 <Grid item>
                   <TextField
@@ -734,7 +745,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
-          <BlockListJoined blocks={blocks} category='frontPage' />
+          <BlockListSegmented blocks={blocks} category='frontPage' />
           <PricingTable />
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>

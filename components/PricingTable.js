@@ -14,6 +14,10 @@ import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import Box from '@material-ui/core/Box'
+import { axiosClient } from '../src/axiosClient'
+import { useSnackbar } from 'notistack'
+import { loadStripe } from '@stripe/stripe-js'
+import { useStripe } from '@stripe/react-stripe-js'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -66,6 +70,7 @@ const tiers = [
   {
     title: 'Subscriber',
     price: '0',
+    priceId: 'price_1IOAdqAjeiXrtrS70x2HMNOK',
     description: ['Email Subscription', 'Prayer Support'],
     buttonText: 'Subscribe',
     buttonVariant: 'outlined'
@@ -73,6 +78,7 @@ const tiers = [
   {
     title: 'Supporter',
     price: '9',
+    priceId: 'price_1IO7lmAjeiXrtrS7v1nBix52',
     description: [
       'Email Subscription',
       'Prayer Support',
@@ -85,6 +91,7 @@ const tiers = [
     title: 'Partner',
     subheader: 'Provide More Bibles',
     price: '30',
+    priceId: 'price_1IO7ngAjeiXrtrS7xmoCUt1I',
     description: [
       'Email Subscription',
       'Prayer Support',
@@ -97,6 +104,33 @@ const tiers = [
 
 export default function Pricing () {
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
+  const stripe = useStripe()
+
+  const createSubscription = async tier => {
+    await axiosClient({
+      method: 'post',
+      url: '/subscriptions',
+      data: { priceId: tier.priceId }
+    })
+      .then(response => {
+        stripe
+          .redirectToCheckout({
+            sessionId: response.data.sessionId
+          })
+          .then(
+            enqueueSnackbar('Subscription Created', {
+              variant: 'success'
+            })
+          )
+      })
+      .catch(error => {
+        enqueueSnackbar('Error Creating Subscription ' + error, {
+          variant: 'error'
+        })
+        console.log(error)
+      })
+  }
 
   return (
     <React.Fragment>
@@ -125,13 +159,7 @@ export default function Pricing () {
         <Grid container spacing={5} alignItems='flex-end'>
           {tiers.map(tier => (
             // Enterprise card is full width at sm breakpoint
-            <Grid
-              item
-              key={tier.title}
-              xs={12}
-              sm={tier.title === 'Enterprise' ? 12 : 6}
-              md={4}
-            >
+            <Grid item key={tier.title} xs={12} sm={6} md={4}>
               <Card>
                 <CardHeader
                   title={tier.title}
@@ -168,6 +196,7 @@ export default function Pricing () {
                     fullWidth
                     variant={tier.buttonVariant}
                     color='primary'
+                    onClick={() => createSubscription(tier)}
                   >
                     {tier.buttonText}
                   </Button>

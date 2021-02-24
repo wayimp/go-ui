@@ -10,9 +10,13 @@ import { SnackbarProvider } from 'notistack'
 //import 'suneditor/dist/css/suneditor.min.css' // Import Sun Editor's CSS File
 import './suneditor.css'
 import './main.css'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
 
 class goApp extends App {
   getInitialProps = async ({ Component, ctx }) => {
+    const stripePromise = loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh')
+
     return {
       pageProps: {
         // Call page-level getInitialProps
@@ -27,6 +31,10 @@ class goApp extends App {
 
   render () {
     const { Component, pageProps } = this.props
+
+    const stripePromise = loadStripe(
+      'pk_test_51IJhVOAjeiXrtrS76TNXsMZKbYsXIjlZ12vR6Eyb4T9kWmmCwRFsK31O1dZ6Qjr7wmirHBKyIND7o0DTmPqlGbsO00PlrZZ8ai'
+    )
 
     return (
       <>
@@ -47,7 +55,9 @@ class goApp extends App {
               horizontal: 'right'
             }}
           >
-            <Component {...pageProps} />
+            <Elements stripe={stripePromise}>
+              <Component {...pageProps} />
+            </Elements>
           </SnackbarProvider>
         </ThemeProvider>
       </>

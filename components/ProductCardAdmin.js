@@ -115,6 +115,23 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     width: 'auto',
     height: 'auto'
+  },
+  newIcon: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    display: 'block',
+    width: 'auto',
+    height: 'auto'
+  },
+  constitutionIcon: {
+    position: 'absolute',
+    top: 240,
+    left: 0,
+    display: 'block',
+    width: 'auto',
+    height: 'auto',
+    maxWidth: 240
   }
 }))
 
@@ -299,6 +316,22 @@ const ProductDisplay = ({ product, token, getData, showInactive }) => {
           ) : (
             ''
           )}
+          {product.new ? (
+            <img
+              src={'https://files.lifereferencemanual.net/go/new.png'}
+              className={classes.newIcon}
+            />
+          ) : (
+            ''
+          )}
+          {product.constitution ? (
+            <img
+              src={'https://files.lifereferencemanual.net/go/constitution.png'}
+              className={classes.constitutionIcon}
+            />
+          ) : (
+            ''
+          )}
           <CardContent>
             <Typography variant='h6' component='h3'>
               {product.title}
@@ -361,6 +394,32 @@ const ProductDisplay = ({ product, token, getData, showInactive }) => {
                     />
                   }
                   label='Limited'
+                />
+                <FormControlLabel
+                  labelPlacement='top'
+                  control={
+                    <Switch
+                      className={classes.switch}
+                      checked={productEdit.new}
+                      onChange={handleSwitchChange}
+                      name='new'
+                      color='primary'
+                    />
+                  }
+                  label='New'
+                />
+                <FormControlLabel
+                  labelPlacement='top'
+                  control={
+                    <Switch
+                      className={classes.switch}
+                      checked={productEdit.constitution}
+                      onChange={handleSwitchChange}
+                      name='constitution'
+                      color='primary'
+                    />
+                  }
+                  label='Constitution'
                 />
                 <FormControl>
                   <TextField
