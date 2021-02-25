@@ -55,6 +55,11 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Fab from '@material-ui/core/Fab'
 import CallIcon from '@material-ui/icons/Call'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import MenuBookIcon from '@material-ui/icons/MenuBook'
+import Modal from '@material-ui/core/Modal'
+import Backdrop from '@material-ui/core/Backdrop'
+import Fade from '@material-ui/core/Fade'
+import parse from 'html-react-parser'
 import { loadStripe } from '@stripe/stripe-js'
 import {
   CardElement,
@@ -201,6 +206,27 @@ const useStyles = makeStyles(theme => ({
     left: 'auto',
     position: 'fixed',
     alignItems: 'left'
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: theme.spacing(2),
+    padding: theme.spacing(2)
+  },
+  modalScroll: {
+    position: 'absolute',
+    top: '10%',
+    left: '10%',
+    overflow: 'scroll',
+    height: '100%',
+    display: 'block'
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3)
   }
 }))
 
@@ -214,6 +240,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
   const [filtered, setFiltered] = React.useState(products)
   const [search, setSearch] = React.useState('')
   const [progress, setProgress] = React.useState(false)
+  const [showPrivacy, setShowPrivacy] = React.useState(false)
 
   const stripe = useStripe()
   const elements = useElements()
@@ -492,6 +519,18 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
                   }}
                 />
                 {settings.business_phone}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <MenuBookIcon
+                  onClick={() => setShowPrivacy(!showPrivacy)}
+                  color='primary'
+                  style={{
+                    marginTop: 10,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    marginBottom: -8
+                  }}
+                />
+                Privacy Policy
                 <br />
                 <MailOutlineIcon
                   color='primary'
@@ -752,6 +791,21 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
           <BlockListSegmented blocks={blocks} category='stories' />
         </TabPanel>
       </Box>
+      <Modal
+        id='items'
+        className={classes.modalScroll}
+        open={showPrivacy}
+        onClose={() => setShowPrivacy(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500
+        }}
+      >
+        <Fade in={showPrivacy}>
+          <div className={classes.paper} onClick={() => setShowPrivacy(false)}>{parse(settings.privacy_policy)}</div>
+        </Fade>
+      </Modal>
     </Container>
   )
 }

@@ -100,22 +100,21 @@ const useStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto'
   },
-  newIcon: {
+ newIcon: {
     position: 'absolute',
     top: 6,
-    right: 6,
+    left: 6,
     display: 'block',
     width: 'auto',
     height: 'auto'
   },
   constitutionIcon: {
     position: 'absolute',
-    top: 240,
+    top: 250,
     left: 0,
     display: 'block',
-    width: 'auto',
-    height: 'auto',
-    maxWidth: 240
+    width: '100%',
+    height: 'auto'
   },
   chips: {
     display: 'flex',
