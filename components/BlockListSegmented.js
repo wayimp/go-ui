@@ -7,6 +7,7 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import BlockVideo from './BlockVideo'
 import BlockText from './BlockText'
+import Box from '@material-ui/core/Box'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
   mirror: {
     transform: [{ scaleX: -1 }]
-  },
+  }
 }))
 
 const BlockDisplay = ({ blocks, category }) => {
@@ -38,13 +39,15 @@ const BlockDisplay = ({ blocks, category }) => {
           <Card className={classes.root}>
             <div className={classes.details}>
               <CardContent className={classes.content}>
-                <Grid>
-                  {block.type === 'video' ? (
-                    <BlockVideo key={block._id} block={block} />
-                  ) : (
-                    <BlockText key={block._id} block={block} />
-                  )}
-                </Grid>
+                <Box width={1}>
+                  <Grid>
+                    {block.type === 'video' ? (
+                      <BlockVideo key={block._id} block={block} />
+                    ) : (
+                      <BlockText key={block._id} block={block} />
+                    )}
+                  </Grid>
+                </Box>
               </CardContent>
             </div>
           </Card>

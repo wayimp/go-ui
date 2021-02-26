@@ -69,34 +69,26 @@ const useStyles = makeStyles(theme => ({
 const tiers = [
   {
     title: 'Subscriber',
-    price: '0',
-    priceId: 'price_1IOAdqAjeiXrtrS70x2HMNOK',
-    description: ['Email Subscription', 'Prayer Support'],
+    price: '9',
+    priceId: 'price_1IO7lmAjeiXrtrS7v1nBix52',
+    description: ['3 Bibles per month ($3 each)'],
     buttonText: 'Subscribe',
     buttonVariant: 'outlined'
   },
   {
     title: 'Supporter',
-    price: '9',
-    priceId: 'price_1IO7lmAjeiXrtrS7v1nBix52',
-    description: [
-      'Email Subscription',
-      'Prayer Support',
-      '3 Bibles per month ($3 each)'
-    ],
+    price: '30',
+    priceId: 'price_1IO7ngAjeiXrtrS7xmoCUt1I',
+    description: ['10 Bibles per month ($3 each)'],
     buttonText: 'Support',
     buttonVariant: 'contained'
   },
   {
     title: 'Partner',
     subheader: 'Provide More Bibles',
-    price: '30',
-    priceId: 'price_1IO7ngAjeiXrtrS7xmoCUt1I',
-    description: [
-      'Email Subscription',
-      'Prayer Support',
-      '10 Bibles per month ($3 each)'
-    ],
+    price: '90',
+    priceId: 'price_1IPDS1AjeiXrtrS73zPj6xdz',
+    description: ['30 Bibles per month ($3 each)'],
     buttonText: 'Partner',
     buttonVariant: 'outlined'
   }

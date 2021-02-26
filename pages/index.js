@@ -784,7 +784,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
-          <BlockListSegmented blocks={blocks} category='frontPage' />
+          <BlockListJoined blocks={blocks} category='frontPage' />
           <PricingTable />
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>

@@ -5,14 +5,12 @@ import ReactPlayer from 'react-player'
 const useStyles = makeStyles(theme => ({
   playerWrapper: {
     position: 'relative',
-    paddingTop: '56.25%' /* Player ratio: 100 / (1280 / 720) */,
-    minWidth: 720
+    paddingTop: '56.25%' /* Player ratio: 100 / (1280 / 720) */
   },
   reactPlayer: {
-    position: 'relative',
-    left: 0,
+    position: 'absolute',
     top: 0,
-    transform: 'none'
+    left: 0
   }
 }))
 
@@ -22,14 +20,17 @@ const BlockDisplay = ({ block }) => {
 
     if (block.html.endsWith('mp4'))
       return (
-        <ReactPlayer
-          url={block.html}
-          width='100%'
-          height='100%'
-          controls={true}
-        />
+        <div className={classes.playerWrapper}>
+          <ReactPlayer
+            className={classes.reactPlayer}
+            url={block.html}
+            width='100%'
+            height='100%'
+            controls={true}
+          />
+        </div>
       )
-    else return <ReactPlayer url={block.html}  />
+    else return <ReactPlayer url={block.html} />
   }
 }
 
