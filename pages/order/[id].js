@@ -376,10 +376,54 @@ const Order = ({ propsOrder, dispatch, token }) => {
 
 export async function getServerSideProps (context) {
   const { id } = context.params
-
-  const propsOrder = await axiosClient
+  let propsOrder = await axiosClient
     .get('/orders/' + id)
     .then(response => response.data)
+
+  if (context.query) {
+    const { sc } = context.query
+    if (sc === 'dr') {
+      let timeline = Array.from(propsOrder.timeline)
+      let found = false
+
+      timeline.map(t => {
+        if (t.action === 'Donation Received') {
+          found = true
+        }
+      })
+
+      if (!found) {
+        timeline = timeline.concat([
+          {
+            action: 'Donation Received',
+            fields: [
+              {
+                label: 'Amount',
+                inputType: 'number',
+                value: propsOrder.donation
+              },
+              {
+                label: 'Payment Method',
+                inputType: 'text',
+                value: 'card'
+              }
+            ],
+            status: 1,
+            timestamp: moment()
+              .tz('America/Chicago')
+              .format()
+          }
+        ])
+      }
+
+      propsOrder = {
+        ...propsOrder,
+        timeline
+      }
+
+      axiosClient.patch('/orders', propsOrder)
+    }
+  }
 
   return {
     props: {

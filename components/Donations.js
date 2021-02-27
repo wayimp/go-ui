@@ -18,6 +18,11 @@ import { axiosClient } from '../src/axiosClient'
 import { useSnackbar } from 'notistack'
 import { loadStripe } from '@stripe/stripe-js'
 import { useStripe } from '@stripe/react-stripe-js'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import InputLabel from '@material-ui/core/InputLabel'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Input from '@material-ui/core/Input'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -63,33 +68,33 @@ const useStyles = makeStyles(theme => ({
       paddingTop: theme.spacing(6),
       paddingBottom: theme.spacing(6)
     }
+  },
+  textField: {
+    margin: theme.spacing(1),
+    padding: 2
   }
 }))
 
 const tiers = [
   {
-    title: 'Subscriber',
-    price: '9',
-    priceId: 'price_1IO7lmAjeiXrtrS7v1nBix52',
-    description: ['3 Bibles per month ($3 each)'],
-    buttonText: 'Subscribe',
+    title: 'One-Time Donation',
+    price: '15',
+    description: ['5 Bibles ($3 each)'],
+    buttonText: 'Donate',
     buttonVariant: 'outlined'
   },
   {
-    title: 'Supporter',
-    price: '30',
-    priceId: 'price_1IO7ngAjeiXrtrS7xmoCUt1I',
-    description: ['10 Bibles per month ($3 each)'],
-    buttonText: 'Support',
-    buttonVariant: 'contained'
+    title: 'One-Time Donation',
+    price: '60',
+    description: ['20 Bibles ($3 each)'],
+    buttonText: 'Donate',
+    buttonVariant: 'outlined'
   },
   {
-    title: 'Partner',
-    subheader: 'Provide More Bibles',
-    price: '90',
-    priceId: 'price_1IPDS1AjeiXrtrS73zPj6xdz',
-    description: ['30 Bibles per month ($3 each)'],
-    buttonText: 'Partner',
+    title: 'One-Time Donation',
+    price: '300',
+    description: ['100 Bibles ($3 each)'],
+    buttonText: 'Donate',
     buttonVariant: 'outlined'
   }
 ]
@@ -98,26 +103,21 @@ export default function Pricing () {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const stripe = useStripe()
+  const [amount, setAmount] = React.useState(10)
 
-  const createSubscription = async tier => {
+  const createDonation = async price => {
     await axiosClient({
       method: 'post',
-      url: '/subscriptions',
-      data: { priceId: tier.priceId }
+      url: '/donation',
+      data: { amount: price }
     })
       .then(response => {
-        stripe
-          .redirectToCheckout({
-            sessionId: response.data.sessionId
-          })
-          .then(
-            enqueueSnackbar('Subscription Created', {
-              variant: 'success'
-            })
-          )
+        stripe.redirectToCheckout({
+          sessionId: response.data.sessionId
+        })
       })
       .catch(error => {
-        enqueueSnackbar('Error Creating Subscription ' + error, {
+        enqueueSnackbar('Error with Donation ' + error, {
           variant: 'error'
         })
         console.log(error)
@@ -126,48 +126,22 @@ export default function Pricing () {
 
   return (
     <React.Fragment>
-      <Container maxWidth='sm' component='main' className={classes.heroContent}>
-        <Typography
-          component='h1'
-          variant='h2'
-          align='center'
-          color='textPrimary'
-          gutterBottom
-        >
-          Partner with Us
-        </Typography>
-        <Typography
-          variant='h5'
-          align='center'
-          color='textSecondary'
-          component='p'
-        >
-          Your donations help to place the Word of God with precious souls.
-          Please consider partnering with us to further this meaningful work.
-        </Typography>
-      </Container>
-      {/* End hero unit */}
       <Container maxWidth='md' component='main'>
         <Grid container spacing={5} alignItems='flex-end'>
-          {tiers.map(tier => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid item key={tier.title} xs={12} sm={6} md={4}>
+          {tiers.map((tier, ti) => (
+            <Grid item key={ti} xs={12} sm={6} md={3}>
               <Card>
                 <CardHeader
                   title={tier.title}
                   subheader={tier.subheader}
                   titleTypographyProps={{ align: 'center' }}
                   subheaderTypographyProps={{ align: 'center' }}
-                  action={tier.title === 'Pro' ? <StarIcon /> : null}
                   className={classes.cardHeader}
                 />
                 <CardContent>
                   <div className={classes.cardPricing}>
                     <Typography component='h2' variant='h3' color='textPrimary'>
                       ${tier.price}
-                    </Typography>
-                    <Typography variant='h6' color='textSecondary'>
-                      /mo
                     </Typography>
                   </div>
                   <ul>
@@ -188,7 +162,7 @@ export default function Pricing () {
                     fullWidth
                     variant={tier.buttonVariant}
                     color='primary'
-                    onClick={() => createSubscription(tier)}
+                    onClick={() => createDonation(tier.price)}
                   >
                     {tier.buttonText}
                   </Button>
@@ -196,6 +170,48 @@ export default function Pricing () {
               </Card>
             </Grid>
           ))}
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card>
+              <CardHeader
+                title='One-Time Donation'
+                subheader='Enter Amount'
+                titleTypographyProps={{ align: 'center' }}
+                subheaderTypographyProps={{ align: 'center' }}
+                className={classes.cardHeader}
+              />
+              <CardContent>
+                <div className={classes.cardPricing}>
+                  <FormControl>
+                    <InputLabel htmlFor='donation'>Donation Amount</InputLabel>
+                    <Input
+                      id='donation'
+                      className={classes.textField}
+                      variant='outlined'
+                      name='donation'
+                      label='Donation Amount'
+                      defaultValue={amount}
+                      onChange={event => setAmount(event.target.value)}
+                      type='number'
+                      startAdornment={
+                        <InputAdornment position='start'>$</InputAdornment>
+                      }
+                    />
+                  </FormControl>
+                </div>
+              </CardContent>
+              <CardActions>
+                <Button
+                  fullWidth
+                  variant='outlined'
+                  color='primary'
+                  onClick={() => createDonation(amount)}
+                >
+                  Donate
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
         </Grid>
       </Container>
     </React.Fragment>

@@ -6,7 +6,8 @@ import { connect } from 'react-redux'
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../src/Link'
 import TabPanel from '../components/TabPanel'
-import PricingTable from '../components/PricingTable'
+import Subscriptions from '../components/Subscriptions'
+import Donations from '../components/Donations'
 import BlockListJoined from '../components/BlockListJoined'
 import BlockListSegmented from '../components/BlockListSegmented'
 import numeral from 'numeral'
@@ -397,7 +398,11 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
             variant: 'success'
           })
           setProgress(false)
-          Router.push('/order/' + res.data.ops[0]._id)
+          if (form.donation > 0) {
+            createDonation(form.donation, res.data.ops[0]._id, form.customerEmail)
+          } else {
+            Router.push('/order/' + res.data.ops[0]._id)
+          }
         })
         .catch(err => {
           setProgress(false)
@@ -406,6 +411,25 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
           })
         })
     }
+  }
+
+  const createDonation = async (price, orderId, email) => {
+    await axiosClient({
+      method: 'post',
+      url: '/donation',
+      data: { amount: price, orderId, email }
+    })
+      .then(response => {
+        stripe.redirectToCheckout({
+          sessionId: response.data.sessionId
+        })
+      })
+      .catch(error => {
+        enqueueSnackbar('Error with Donation ' + error, {
+          variant: 'error'
+        })
+        console.log(error)
+      })
   }
 
   // Calculate current cases
@@ -730,7 +754,6 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
                       Your donation helps us to distribute more Bibles
                     </FormHelperText>
                   </FormControl>
-                  <CardElement />
                 </Grid>
                 <Grid item>
                   <TextField
@@ -785,7 +808,8 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
         </TabPanel>
         <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
           <BlockListJoined blocks={blocks} category='frontPage' />
-          <PricingTable />
+          <Subscriptions />
+          <Donations />
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
           <BlockListSegmented blocks={blocks} category='stories' />
@@ -803,7 +827,9 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
         }}
       >
         <Fade in={showPrivacy}>
-          <div className={classes.paper} onClick={() => setShowPrivacy(false)}>{parse(settings.privacy_policy)}</div>
+          <div className={classes.paper} onClick={() => setShowPrivacy(false)}>
+            {parse(settings.privacy_policy)}
+          </div>
         </Fade>
       </Modal>
     </Container>
