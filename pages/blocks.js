@@ -166,8 +166,9 @@ const Page = ({ dispatch, token }) => {
   const { enqueueSnackbar } = useSnackbar()
 
   const categoryOptions = [
-    { value: 'stories', label: 'Stories' },
-    { value: 'frontPage', label: 'Front Page' }
+    { value: 'frontPage', label: 'Front Page' },
+    { value: 'donate', label: 'Donate' },
+    { value: 'stories', label: 'Stories' }
   ]
 
   const handleCategoryChange = option => {

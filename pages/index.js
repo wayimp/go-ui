@@ -48,6 +48,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline'
 import SearchIcon from '@material-ui/icons/Search'
 import Tooltip from '@material-ui/core/Tooltip'
+import Checkbox from '@material-ui/core/Checkbox'
 import WarningIcon from '@material-ui/icons/Warning'
 import { red } from '@material-ui/core/colors'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -236,12 +237,13 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
   const theme = useTheme()
   const [form, setForm] = React.useState({ cart: {} })
   const { enqueueSnackbar } = useSnackbar()
-  const [selectedTab, setSelectedTab] = React.useState(2)
+  const [selectedTab, setSelectedTab] = React.useState(1)
   const [readOnly, setReadOnly] = React.useState(false)
   const [filtered, setFiltered] = React.useState(products)
   const [search, setSearch] = React.useState('')
   const [progress, setProgress] = React.useState(false)
   const [showPrivacy, setShowPrivacy] = React.useState(false)
+  const [addFee, setAddFee] = React.useState(false)
 
   const stripe = useStripe()
   const elements = useElements()
@@ -287,10 +289,19 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
 
   const blurField = event => {}
 
-  const changeCheckbox = event => {
+  const changeAddFee = event => {
+    let updateDonation = Number(0 + form.donation)
+    if (addFee) {
+      updateDonation = Number(updateDonation / 1.022).toFixed(2)
+      setAddFee(false)
+    } else {
+      updateDonation = Number(updateDonation * 1.022).toFixed(2)
+      setAddFee(true)
+    }
+
     const updated = {
       ...form,
-      [event.target.name]: event.target.checked
+      donation: updateDonation
     }
     setForm(updated)
   }
@@ -399,7 +410,11 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
           })
           setProgress(false)
           if (form.donation > 0) {
-            createDonation(form.donation, res.data.ops[0]._id, form.customerEmail)
+            createDonation(
+              form.donation,
+              res.data.ops[0]._id,
+              form.customerEmail
+            )
           } else {
             Router.push('/order/' + res.data.ops[0]._id)
           }
@@ -474,7 +489,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
     }
   }
   if (chips.length > 0) {
-    if (selectedTab !== 1) {
+    if (selectedTab !== 2) {
       cartDisplay.push(
         <Fab
           id='fab1'
@@ -527,10 +542,11 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
               src='https://files.lifereferencemanual.net/go/logo.png'
               style={{ maxHeight: 60, margin: 10 }}
             />
-            <Tab label='About' value={2} />
-            <Tab label='Catalog' value={0} />
-            <Tab label='Order' value={1} />
-            <Tab label='Stories' value={3} />
+            <Tab label='About' value={0} />
+            <Tab label='Catalog' value={1} />
+            <Tab label='Order' value={2} />
+            <Tab label='Donate' value={3} />
+            <Tab label='Stories' value={4} />
             <Grid>
               <Typography style={{ margin: 10 }}>
                 <CallIcon
@@ -570,12 +586,15 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
             </Grid>
           </Tabs>
         </Grid>
-        <Grid className={classes.chips} onClick={() => setSelectedTab(1)}>
+        <Grid className={classes.chips} onClick={() => setSelectedTab(2)}>
           {cartDisplay}
         </Grid>
       </AppBar>
       <Box width={1}>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
+          <BlockListJoined blocks={blocks} category='frontPage' />
+        </TabPanel>
+        <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
           <FormControl variant='outlined'>
             <InputLabel>Search</InputLabel>
             <OutlinedInput
@@ -609,7 +628,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
             ))}
           </Grid>
         </TabPanel>
-        <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
+        <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
           {progress ? (
             <CircularProgress />
           ) : (
@@ -741,7 +760,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
                       variant='outlined'
                       name='donation'
                       label='Donation Amount'
-                      defaultValue={form.donation ? form.donation : ''}
+                      value={form.donation ? form.donation : ''}
                       onChange={changeField}
                       onBlur={blurField}
                       disabled={readOnly}
@@ -754,6 +773,18 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
                       Your donation helps us to distribute more Bibles
                     </FormHelperText>
                   </FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        className={classes.checkbox}
+                        checked={addFee}
+                        onChange={changeAddFee}
+                        name='transactionFee'
+                        color='secondary'
+                      />
+                    }
+                    label='Cover Transaction Fee (2.2%)'
+                  />
                 </Grid>
                 <Grid item>
                   <TextField
@@ -806,12 +837,12 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
             </>
           )}
         </TabPanel>
-        <TabPanel value={selectedTab} index={2} className={classes.tabPanel}>
-          <BlockListJoined blocks={blocks} category='frontPage' />
+        <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
+          <BlockListJoined blocks={blocks} category='donate' />
           <Subscriptions />
           <Donations />
         </TabPanel>
-        <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
+        <TabPanel value={selectedTab} index={4} className={classes.tabPanel}>
           <BlockListSegmented blocks={blocks} category='stories' />
         </TabPanel>
       </Box>

@@ -71,7 +71,7 @@ const tiers = [
     title: 'Subscriber',
     price: '9',
     priceId: 'price_1IO7lmAjeiXrtrS7v1nBix52',
-    description: ['3 Bibles per month ($3 each)'],
+    description: ['Donate 3 Bibles per month'],
     buttonText: 'Subscribe',
     buttonVariant: 'outlined'
   },
@@ -79,7 +79,7 @@ const tiers = [
     title: 'Supporter',
     price: '30',
     priceId: 'price_1IO7ngAjeiXrtrS7xmoCUt1I',
-    description: ['10 Bibles per month ($3 each)'],
+    description: ['Donate 10 Bibles per month'],
     buttonText: 'Support',
     buttonVariant: 'contained'
   },
@@ -88,7 +88,7 @@ const tiers = [
     subheader: 'Provide More Bibles',
     price: '90',
     priceId: 'price_1IPDS1AjeiXrtrS73zPj6xdz',
-    description: ['30 Bibles per month ($3 each)'],
+    description: ['Donate 30 Bibles per month'],
     buttonText: 'Partner',
     buttonVariant: 'outlined'
   }
@@ -106,10 +106,9 @@ export default function Pricing () {
       data: { priceId: tier.priceId }
     })
       .then(response => {
-        stripe
-          .redirectToCheckout({
-            sessionId: response.data.sessionId
-          })
+        stripe.redirectToCheckout({
+          sessionId: response.data.sessionId
+        })
       })
       .catch(error => {
         enqueueSnackbar('Error Creating Subscription ' + error, {
@@ -120,79 +119,55 @@ export default function Pricing () {
   }
 
   return (
-    <React.Fragment>
-      <Container maxWidth='sm' component='main' className={classes.heroContent}>
-        <Typography
-          component='h1'
-          variant='h2'
-          align='center'
-          color='textPrimary'
-          gutterBottom
-        >
-          Partner with Us
-        </Typography>
-        <Typography
-          variant='h5'
-          align='center'
-          color='textSecondary'
-          component='p'
-        >
-          Your donations help to place the Word of God with precious souls.
-          Please consider partnering with us to further this meaningful work.
-        </Typography>
-      </Container>
-      {/* End hero unit */}
-      <Container maxWidth='md' component='main'>
-        <Grid container spacing={5} alignItems='flex-end'>
-          {tiers.map(tier => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid item key={tier.title} xs={12} sm={6} md={4}>
-              <Card>
-                <CardHeader
-                  title={tier.title}
-                  subheader={tier.subheader}
-                  titleTypographyProps={{ align: 'center' }}
-                  subheaderTypographyProps={{ align: 'center' }}
-                  action={tier.title === 'Pro' ? <StarIcon /> : null}
-                  className={classes.cardHeader}
-                />
-                <CardContent>
-                  <div className={classes.cardPricing}>
-                    <Typography component='h2' variant='h3' color='textPrimary'>
-                      ${tier.price}
+    <Container maxWidth='md' component='main'>
+      <Grid container spacing={5} alignItems='flex-end'>
+        {tiers.map(tier => (
+          // Enterprise card is full width at sm breakpoint
+          <Grid item key={tier.title} xs={12} sm={6} md={4}>
+            <Card>
+              <CardHeader
+                title={tier.title}
+                subheader={tier.subheader}
+                titleTypographyProps={{ align: 'center' }}
+                subheaderTypographyProps={{ align: 'center' }}
+                className={classes.cardHeader}
+              />
+              <CardContent>
+                <div className={classes.cardPricing}>
+                  <Typography component='h2' variant='h3' color='textPrimary'>
+                    ${tier.price}
+                  </Typography>
+                  <Typography variant='h6' color='textSecondary'>
+                    /mo
+                  </Typography>
+                </div>
+                <ul>
+                  {tier.description.map(line => (
+                    <Typography
+                      component='li'
+                      variant='subtitle1'
+                      align='center'
+                      key={line}
+                    >
+                      {line}
                     </Typography>
-                    <Typography variant='h6' color='textSecondary'>
-                      /mo
-                    </Typography>
-                  </div>
-                  <ul>
-                    {tier.description.map(line => (
-                      <Typography
-                        component='li'
-                        variant='subtitle1'
-                        align='center'
-                        key={line}
-                      >
-                        {line}
-                      </Typography>
-                    ))}
-                  </ul>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    fullWidth
-                    variant={tier.buttonVariant}
-                    color='primary'
-                    onClick={() => createSubscription(tier)}
-                  >
-                    {tier.buttonText}
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </React.Fragment>
+                  ))}
+                </ul>
+              </CardContent>
+              <CardActions>
+                <Button
+                  fullWidth
+                  variant={tier.buttonVariant}
+                  color='primary'
+                  onClick={() => createSubscription(tier)}
+                >
+                  {tier.buttonText}
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   )
 }
