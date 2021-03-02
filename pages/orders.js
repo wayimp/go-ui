@@ -185,10 +185,15 @@ const Page = ({ dispatch, token, workflows, products }) => {
   const [search, setSearch] = React.useState('')
   const [confirmUseQuickBooks, setConfirmUseQuickBooks] = React.useState(false)
   const [confirmUseOrder, setConfirmUseOrder] = React.useState(false)
+  const [connectUri, setConnectUri] = React.useState('')
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success
   })
+
+  useEffect(() => {
+    getConnectUri()
+  }, [])
 
   const changeShowInactive = event => {
     if (event && event.target) {
@@ -537,6 +542,24 @@ const Page = ({ dispatch, token, workflows, products }) => {
       })
   }
 
+  const getConnectUri = () => {
+    axiosClient({
+      method: 'get',
+      url: '/getAuthUri'
+    })
+      .then(res => {
+        if (res.data && res.data.authUri) {
+          const authUri = res.data.authUri
+          setConnectUri(authUri)
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem connecting QuickBooks ' + err, {
+          variant: 'error'
+        })
+      })
+  }
+
   return (
     <Container>
       <TopBar />
@@ -644,8 +667,13 @@ const Page = ({ dispatch, token, workflows, products }) => {
             {loading && (
               <CircularProgress size={24} className={classes.buttonProgress} />
             )}
+            <a href={connectUri} target='_blank'>
+              <img
+                style={{ maxHeight: 36, marginBottom: -15 }}
+                src='https://files.lifereferencemanual.net/go/C2QB_auth.png'
+              />
+            </a>
           </div>
-
           <Select
             id='customers'
             instanceId='customers'
