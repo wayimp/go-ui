@@ -44,10 +44,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import Checkbox from '@material-ui/core/Checkbox'
-import SyncIcon from '@material-ui/icons/Sync'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { green } from '@material-ui/core/colors'
-import CheckIcon from '@material-ui/icons/Check'
 import Select from 'react-select'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Dialog from '@material-ui/core/Dialog'
@@ -62,6 +58,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 import MenuOpenIcon from '@material-ui/icons/MenuOpen'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import { green } from '@material-ui/core/colors'
 
 const formatDate = date => {
   var d = new Date(date),
@@ -175,8 +172,6 @@ const Page = ({ dispatch, token, workflows, products }) => {
   const [open, setOpen] = React.useState(false)
   const [orders, setOrders] = React.useState([])
   const [customers, setCustomers] = React.useState([])
-  const [loading, setLoading] = React.useState(false)
-  const [success, setSuccess] = React.useState(false)
   const [customerDialog, setCustomerDialog] = React.useState(false)
   const [customer, setCustomer] = React.useState({})
   const [orderInfo, setOrderInfo] = React.useState({})
@@ -185,15 +180,6 @@ const Page = ({ dispatch, token, workflows, products }) => {
   const [search, setSearch] = React.useState('')
   const [confirmUseQuickBooks, setConfirmUseQuickBooks] = React.useState(false)
   const [confirmUseOrder, setConfirmUseOrder] = React.useState(false)
-  const [connectUri, setConnectUri] = React.useState('')
-
-  const buttonClassname = clsx({
-    [classes.buttonSuccess]: success
-  })
-
-  useEffect(() => {
-    getConnectUri()
-  }, [])
 
   const changeShowInactive = event => {
     if (event && event.target) {
@@ -306,31 +292,6 @@ const Page = ({ dispatch, token, workflows, products }) => {
       Router.push('/admin')
     }
   }, [token])
-
-  const syncCustomers = async () => {
-    if (!loading) {
-      setSuccess(false)
-      setLoading(true)
-
-      await axiosClient({
-        method: 'delete',
-        url: '/customers',
-        data: {},
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(response => {
-          setSuccess(true)
-          setLoading(false)
-          getCustomers()
-        })
-        .catch(error => {
-          enqueueSnackbar('Sync Error:' + error, {
-            variant: 'error'
-          })
-          setLoading(false)
-        })
-    }
-  }
 
   const updateOrderInfo = () => {
     const updated = {
@@ -542,24 +503,7 @@ const Page = ({ dispatch, token, workflows, products }) => {
       })
   }
 
-  const getConnectUri = () => {
-    axiosClient({
-      method: 'get',
-      url: '/getAuthUri'
-    })
-      .then(res => {
-        if (res.data && res.data.authUri) {
-          const authUri = res.data.authUri
-          setConnectUri(authUri)
-        }
-      })
-      .catch(err => {
-        enqueueSnackbar('There was a problem connecting QuickBooks ' + err, {
-          variant: 'error'
-        })
-      })
-  }
-
+  
   return (
     <Container>
       <TopBar />
@@ -653,27 +597,7 @@ const Page = ({ dispatch, token, workflows, products }) => {
             root: classes.dialogPaper
           }}
         >
-          <div className={classes.buttonWrapper}>
-            <Button
-              variant='contained'
-              color='secondary'
-              className={buttonClassname}
-              disabled={loading}
-              onClick={syncCustomers}
-              startIcon={success ? <CheckIcon /> : <SyncIcon />}
-            >
-              Sync QuickBooks
-            </Button>
-            {loading && (
-              <CircularProgress size={24} className={classes.buttonProgress} />
-            )}
-            <a href={connectUri} target='_blank'>
-              <img
-                style={{ maxHeight: 36, marginBottom: -15 }}
-                src='https://files.lifereferencemanual.net/go/C2QB_auth.png'
-              />
-            </a>
-          </div>
+          
           <Select
             id='customers'
             instanceId='customers'

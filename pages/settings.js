@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Router from 'next/router'
+import clsx from 'clsx'
 import { axiosClient } from '../src/axiosClient'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
@@ -9,6 +10,7 @@ import Link from '../src/Link'
 import TopBar from '../components/AdminTopBar'
 import DeleteIcon from '@material-ui/icons/Delete'
 import SaveIcon from '@material-ui/icons/Save'
+import EditIcon from '@material-ui/icons/Edit'
 import CancelIcon from '@material-ui/icons/Cancel'
 import numeral from 'numeral'
 const priceFormat = '$0.00'
@@ -45,13 +47,29 @@ import DialogActions from '@material-ui/core/DialogActions'
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline'
-import EditIcon from '@material-ui/icons/Edit'
-import Select from 'react-select'
+import SyncIcon from '@material-ui/icons/Sync'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { green } from '@material-ui/core/colors'
+import CheckIcon from '@material-ui/icons/Check'
 
 import { useSnackbar } from 'notistack'
 import cookie from 'js-cookie'
 
 const useStyles = makeStyles(theme => ({
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700]
+    }
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
+  },
   toolbar: {
     display: 'flex',
     alignItems: 'center',
@@ -153,7 +171,57 @@ const Page = ({ dispatch, token }) => {
   const [settingToDelete, setSettingToDelete] = React.useState({})
   const [settings, setSettings] = React.useState([])
   const [confirmDelete, setConfirmDelete] = React.useState(false)
+  const [connectUri, setConnectUri] = React.useState('')
   const { enqueueSnackbar } = useSnackbar()
+  const [loading, setLoading] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: success
+  })
+
+  const syncCustomers = async () => {
+    if (!loading) {
+      setSuccess(false)
+      setLoading(true)
+
+      await axiosClient({
+        method: 'delete',
+        url: '/customers',
+        data: {},
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(response => {
+          setSuccess(true)
+          setLoading(false)
+        })
+        .catch(error => {
+          enqueueSnackbar('Sync Error:' + error, {
+            variant: 'error'
+          })
+          setLoading(false)
+        })
+    }
+  }
+
+  const getConnectUri = () => {
+    axiosClient({
+      method: 'get',
+      url: '/getAuthUri'
+    })
+      .then(res => {
+        if (res.data && res.data.authUri) {
+          const authUri = res.data.authUri
+          console.log(JSON.stringify(authUri))
+          setConnectUri(JSON.stringify(authUri))
+        }
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem connecting QuickBooks ' + err, {
+          variant: 'error'
+        })
+      })
+  }
 
   const getData = () => {
     axiosClient({
@@ -188,11 +256,11 @@ const Page = ({ dispatch, token }) => {
     setOpen(false)
   }
 
-
   useEffect(() => {
     const roles = cookie.get('roles')
     if (token && token.length > 0 && roles && roles.includes('admin')) {
       getData()
+      getConnectUri()
     } else {
       Router.push('/admin')
     }
@@ -241,13 +309,39 @@ const Page = ({ dispatch, token }) => {
     handleClose()
   }
 
-  
   return (
     <Container>
       <TopBar />
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div className={classes.root}>
+          <div className={classes.buttonWrapper}>
+            <Button
+              variant='contained'
+              color='secondary'
+              className={buttonClassname}
+              disabled={loading}
+              onClick={syncCustomers}
+              startIcon={success ? <CheckIcon /> : <SyncIcon />}
+            >
+              Sync QuickBooks
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+            <a
+              href={
+                connectUri ||
+                'https://appcenter.intuit.com/connect/oauth2?client_id=ABER7am4L92uCXRsO67MEsJOTb9TXsLKX1aFs6LM9f4jeAP1jQ&redirect_uri=https%3A%2F%2Fapi.lifereferencemanual.net%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting&state=default'
+              }
+              target='_blank'
+            >
+              <img
+                style={{ maxHeight: 36, marginBottom: -15 }}
+                src='https://files.lifereferencemanual.net/go/C2QB_auth.png'
+              />
+            </a>
+          </div>
           <Box width={1}>
             <Grid>
               <List>
