@@ -56,15 +56,7 @@ import { useSnackbar } from 'notistack'
 import cookie from 'js-cookie'
 import { green } from '@material-ui/core/colors'
 import CheckIcon from '@material-ui/icons/Check'
-import Select from 'react-select'
 import CancelIcon from '@material-ui/icons/Cancel'
-
-const selectStyles = {
-  menu: base => ({
-    ...base,
-    zIndex: 100
-  })
-}
 
 const useStyles = makeStyles(theme => ({
   toolbar: {

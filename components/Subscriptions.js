@@ -18,6 +18,21 @@ import { axiosClient } from '../src/axiosClient'
 import { useSnackbar } from 'notistack'
 import { loadStripe } from '@stripe/stripe-js'
 import { useStripe } from '@stripe/react-stripe-js'
+import Select from 'react-select'
+
+const selectStyles = {
+  menu: base => ({
+    ...base,
+    zIndex: 100
+  }),
+  menuList: base => ({
+    ...base,
+    position: 'fixed !important',
+    backgroundColor: 'white',
+    border: '1px solid lightgray',
+    width: '20rem'
+  })
+}
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -52,7 +67,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'baseline',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    overflow: 'visible'
   },
   footer: {
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -66,31 +82,54 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const tiers = [
+const tierOptions = [
   {
-    title: 'Subscriber',
-    price: '9',
-    priceId: 'price_1IO7lmAjeiXrtrS7v1nBix52',
-    description: ['Donate 3 Bibles per month'],
-    buttonText: 'Subscribe',
-    buttonVariant: 'outlined'
+    label: '$10/month',
+    value: 'price_1IRJyFAjeiXrtrS7jGmpYfyR'
   },
   {
-    title: 'Supporter',
-    price: '30',
-    priceId: 'price_1IO7ngAjeiXrtrS7xmoCUt1I',
-    description: ['Donate 10 Bibles per month'],
-    buttonText: 'Support',
-    buttonVariant: 'contained'
+    label: '$25/month',
+    value: 'price_1ISpurAjeiXrtrS7CDXC4F8i'
   },
   {
-    title: 'Partner',
-    subheader: 'Provide More Bibles',
-    price: '90',
-    priceId: 'price_1IPDS1AjeiXrtrS73zPj6xdz',
-    description: ['Donate 30 Bibles per month'],
-    buttonText: 'Partner',
-    buttonVariant: 'outlined'
+    label: '$50/month',
+    value: 'price_1ISpv4AjeiXrtrS798gkTdWx'
+  },
+  {
+    label: '$100/month',
+    value: 'price_1IPBgDAjeiXrtrS7OnoVrIIx'
+  },
+  {
+    label: '$150/month',
+    value: 'price_1ISpvOAjeiXrtrS7y7HITrCx'
+  },
+  {
+    label: '$200/month',
+    value: 'price_1ISpw1AjeiXrtrS7UPCoAOhe'
+  },
+  {
+    label: '$250/month',
+    value: 'price_1ISpwNAjeiXrtrS7hp96xUK2'
+  },
+  {
+    label: '$300/month',
+    value: 'price_1ISpwcAjeiXrtrS7aV1bYujB'
+  },
+  {
+    label: '$400/month',
+    value: 'price_1ISpwrAjeiXrtrS7PZO5apmZ'
+  },
+  {
+    label: '$500/month',
+    value: 'price_1ISpx8AjeiXrtrS7eaPqGoNL'
+  },
+  {
+    label: '$750/month',
+    value: 'price_1ISpxQAjeiXrtrS7xV0YURfU'
+  },
+  {
+    label: '$1000/month',
+    value: 'price_1ISpxdAjeiXrtrS7BTWHLAOm'
   }
 ]
 
@@ -98,12 +137,17 @@ export default function Pricing () {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const stripe = useStripe()
+  const [tier, setTier] = React.useState('')
+
+  const handleTierChange = option => {
+    setTier(option.value)
+  }
 
   const createSubscription = async tier => {
     await axiosClient({
       method: 'post',
       url: '/subscriptions',
-      data: { priceId: tier.priceId }
+      data: { priceId: tier }
     })
       .then(response => {
         stripe.redirectToCheckout({
@@ -120,53 +164,41 @@ export default function Pricing () {
 
   return (
     <Container maxWidth='md' component='main'>
-      <Grid container spacing={5} alignItems='flex-end'>
-        {tiers.map(tier => (
-          // Enterprise card is full width at sm breakpoint
-          <Grid item key={tier.title} xs={12} sm={6} md={4}>
-            <Card>
-              <CardHeader
-                title={tier.title}
-                subheader={tier.subheader}
-                titleTypographyProps={{ align: 'center' }}
-                subheaderTypographyProps={{ align: 'center' }}
-                className={classes.cardHeader}
+      <Grid container spacing={5} justify='center'>
+        <Grid item key={tier.title} xs={12} sm={6} md={4}>
+          <Card>
+            <CardHeader
+              title='Recurring Donation'
+              titleTypographyProps={{ align: 'center' }}
+              subheaderTypographyProps={{ align: 'center' }}
+              className={classes.cardHeader}
+            />
+            <CardContent>
+              <div className={classes.cardPricing}>
+                <Typography component='h2' variant='h3' color='textPrimary'>
+                  Monthly Supporter
+                </Typography>
+              </div>
+              <Select
+                id='tier'
+                name='tier'
+                onChange={handleTierChange}
+                options={tierOptions}
+                styles={selectStyles}
               />
-              <CardContent>
-                <div className={classes.cardPricing}>
-                  <Typography component='h2' variant='h3' color='textPrimary'>
-                    ${tier.price}
-                  </Typography>
-                  <Typography variant='h6' color='textSecondary'>
-                    /mo
-                  </Typography>
-                </div>
-                <ul>
-                  {tier.description.map(line => (
-                    <Typography
-                      component='li'
-                      variant='subtitle1'
-                      align='center'
-                      key={line}
-                    >
-                      {line}
-                    </Typography>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardActions>
-                <Button
-                  fullWidth
-                  variant={tier.buttonVariant}
-                  color='primary'
-                  onClick={() => createSubscription(tier)}
-                >
-                  {tier.buttonText}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+            </CardContent>
+            <CardActions>
+              <Button
+                fullWidth
+                variant='outlined'
+                color='primary'
+                onClick={() => createSubscription(tier)}
+              >
+                Subscribe
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
       </Grid>
     </Container>
   )
