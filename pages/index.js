@@ -237,7 +237,7 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
   const theme = useTheme()
   const [form, setForm] = React.useState({ cart: {} })
   const { enqueueSnackbar } = useSnackbar()
-  const [selectedTab, setSelectedTab] = React.useState(1)
+  const [selectedTab, setSelectedTab] = React.useState(0)
   const [readOnly, setReadOnly] = React.useState(false)
   const [filtered, setFiltered] = React.useState(products)
   const [search, setSearch] = React.useState('')

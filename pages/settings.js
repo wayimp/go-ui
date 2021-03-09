@@ -330,10 +330,7 @@ const Page = ({ dispatch, token }) => {
               <CircularProgress size={24} className={classes.buttonProgress} />
             )}
             <a
-              href={
-                connectUri ||
-                'https://appcenter.intuit.com/connect/oauth2?client_id=ABER7am4L92uCXRsO67MEsJOTb9TXsLKX1aFs6LM9f4jeAP1jQ&redirect_uri=https%3A%2F%2Fapi.lifereferencemanual.net%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting&state=default'
-              }
+              href='https://appcenter.intuit.com/connect/oauth2?client_id=ABER7am4L92uCXRsO67MEsJOTb9TXsLKX1aFs6LM9f4jeAP1jQ&redirect_uri=https%3A%2F%2Fapi.lifereferencemanual.net%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting&state=default'
               target='_blank'
             >
               <img

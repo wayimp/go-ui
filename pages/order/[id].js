@@ -306,14 +306,6 @@ const Order = ({ propsOrder, dispatch, token }) => {
                     {order.instructions ? order.instructions : ''}
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Fulfillment Notes:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.notes ? order.notes : ''}
-                  </TableCell>
-                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

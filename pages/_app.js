@@ -15,7 +15,6 @@ import { Elements } from '@stripe/react-stripe-js'
 
 class goApp extends App {
   getInitialProps = async ({ Component, ctx }) => {
-    const stripePromise = loadStripe('pk_test_6pRNASCoBOKtIshFeQd4XMUh')
 
     return {
       pageProps: {
@@ -33,7 +32,7 @@ class goApp extends App {
     const { Component, pageProps } = this.props
 
     const stripePromise = loadStripe(
-      'pk_test_51IJhVOAjeiXrtrS76TNXsMZKbYsXIjlZ12vR6Eyb4T9kWmmCwRFsK31O1dZ6Qjr7wmirHBKyIND7o0DTmPqlGbsO00PlrZZ8ai'
+      'pk_live_51IJhVOAjeiXrtrS7LWuGpLxKsr8AvptV48hJs3ckgArxQHyrqlOSjEMuYoJrr3VeLJ0kHfoZ34cTOf8gWVG0PUIT00GwyFrQKF'
     )
 
     return (
