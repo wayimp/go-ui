@@ -232,12 +232,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Form = ({ products, blocks, settings, dispatch, token }) => {
+const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [form, setForm] = React.useState({ cart: {} })
   const { enqueueSnackbar } = useSnackbar()
-  const [selectedTab, setSelectedTab] = React.useState(0)
+  const [selectedTab, setSelectedTab] = React.useState(defaultTab)
   const [readOnly, setReadOnly] = React.useState(false)
   const [filtered, setFiltered] = React.useState(products)
   const [search, setSearch] = React.useState('')
@@ -315,6 +315,8 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
       cart[product._id] = {
         title: product.title,
         image: product.image,
+        qbId: product.qbId,
+        qbName: product.qbName,
         quantity
       }
     }
@@ -868,6 +870,13 @@ const Form = ({ products, blocks, settings, dispatch, token }) => {
 }
 
 export async function getServerSideProps (context) {
+  let defaultTab = 0
+  if (context.query) {
+    const { t } = context.query
+    if (t) {
+      defaultTab = Number(t)
+    }
+  }
   const products = await axiosClient
     .get('/products')
     .then(response => response.data)
@@ -886,7 +895,8 @@ export async function getServerSideProps (context) {
     props: {
       products,
       blocks,
-      settings
+      settings,
+      defaultTab
     }
   }
 }

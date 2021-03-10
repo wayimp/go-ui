@@ -464,6 +464,29 @@ const ProductDisplay = ({ product, token, getData, showInactive }) => {
                   accept='image/*'
                   onChange={handleImageUpload}
                 />
+                <FormControl>
+                  <TextField
+                    className={classes.field}
+                    variant='outlined'
+                    id='qbName'
+                    label='QuickBooks Name'
+                    defaultValue={productEdit.qbName ? productEdit.qbName : ''}
+                    onChange={event =>
+                      changeField('qbName', event.target.value)
+                    }
+                  />
+                </FormControl>
+                <FormControl>
+                  <TextField
+                    className={classes.field}
+                    variant='outlined'
+                    id='qbId'
+                    label='QuickBooks ID'
+                    type='number'
+                    defaultValue={productEdit.qbId ? productEdit.qbId : ''}
+                    onChange={event => changeField('qbId', event.target.value)}
+                  />
+                </FormControl>
               </Grid>
               <img src={productEdit.image || ''} className={classes.thumb} />
               <Grid

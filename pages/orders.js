@@ -62,7 +62,7 @@ import { green } from '@material-ui/core/colors'
 
 const formatDate = date => {
   var d = new Date(date),
-    month = '' + (d.getMonth() + 1),
+    month = '' + d.getMonth(),
     day = '' + d.getDate(),
     year = d.getFullYear()
 
@@ -235,7 +235,7 @@ const Page = ({ dispatch, token, workflows, products }) => {
         response.data && Array.isArray(response.data) ? response.data : []
       result = result.map(customer => ({
         ...customer,
-        label: customer.FamilyName + ', ' + customer.GivenName
+        label: customer.GivenName + ' ' + customer.FamilyName
       }))
       setCustomers(result)
     })
@@ -413,6 +413,10 @@ const Page = ({ dispatch, token, workflows, products }) => {
         enqueueSnackbar('QuickBooks updated', {
           variant: 'success'
         })
+        if (res.data) {
+          setCustomers(customers.concat(res.data))
+          setCustomer(res.data)
+        }
       })
       .catch(err => {
         enqueueSnackbar('There was a problem updating QuickBooks ' + err, {
@@ -477,8 +481,8 @@ const Page = ({ dispatch, token, workflows, products }) => {
         DetailType: 'SalesItemLineDetail',
         SalesItemLineDetail: {
           ItemRef: {
-            value: '2',
-            name: value.title
+            value: value.qbId,
+            name: value.qbName
           },
           Qty: value.quantity
         }
@@ -503,7 +507,6 @@ const Page = ({ dispatch, token, workflows, products }) => {
       })
   }
 
-  
   return (
     <Container>
       <TopBar />
@@ -597,7 +600,6 @@ const Page = ({ dispatch, token, workflows, products }) => {
             root: classes.dialogPaper
           }}
         >
-          
           <Select
             id='customers'
             instanceId='customers'
