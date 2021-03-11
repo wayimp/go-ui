@@ -20,6 +20,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { useStripe } from '@stripe/react-stripe-js'
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
 import InputLabel from '@material-ui/core/InputLabel'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Input from '@material-ui/core/Input'
@@ -104,12 +105,31 @@ export default function Pricing () {
   const { enqueueSnackbar } = useSnackbar()
   const stripe = useStripe()
   const [amount, setAmount] = React.useState(10)
+  const [addFee, setAddFee] = React.useState(false)
+
+  const changeAddFee = event => {
+    if (addFee) {
+      setAddFee(false)
+    } else {
+      setAddFee(true)
+    }
+  }
+
+  const getPrice = base => {
+    let baseNumber = Number(base)
+    if (addFee) {
+      baseNumber *= 1.022
+    }
+
+    return baseNumber.toFixed(2)
+  }
 
   const createDonation = async price => {
+    const intPrice = parseInt(Math.floor(price * 100))
     await axiosClient({
       method: 'post',
       url: '/donation',
-      data: { amount: price }
+      data: { amount: intPrice }
     })
       .then(response => {
         stripe.redirectToCheckout({
@@ -156,15 +176,27 @@ export default function Pricing () {
                       </Typography>
                     ))}
                   </ul>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        className={classes.checkbox}
+                        checked={addFee}
+                        onChange={changeAddFee}
+                        name='transactionFee'
+                        color='secondary'
+                      />
+                    }
+                    label='Cover 2.2% Fee'
+                  />
                 </CardContent>
                 <CardActions>
                   <Button
                     fullWidth
                     variant={tier.buttonVariant}
                     color='primary'
-                    onClick={() => createDonation(tier.price)}
+                    onClick={() => createDonation(getPrice(tier.price))}
                   >
-                    {tier.buttonText}
+                    {tier.buttonText + ' $' + getPrice(tier.price)}
                   </Button>
                 </CardActions>
               </Card>
@@ -199,15 +231,27 @@ export default function Pricing () {
                     />
                   </FormControl>
                 </div>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      className={classes.checkbox}
+                      checked={addFee}
+                      onChange={changeAddFee}
+                      name='transactionFee'
+                      color='secondary'
+                    />
+                  }
+                  label='Cover 2.2% Fee'
+                />
               </CardContent>
               <CardActions>
                 <Button
                   fullWidth
                   variant='outlined'
                   color='primary'
-                  onClick={() => createDonation(amount)}
+                  onClick={() => createDonation(getPrice(amount))}
                 >
-                  Donate
+                  Donate {' $' + getPrice(amount)}
                 </Button>
               </CardActions>
             </Card>

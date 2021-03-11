@@ -431,10 +431,11 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   }
 
   const createDonation = async (price, orderId, email) => {
+    const intPrice = parseInt(Math.floor(price * 100))
     await axiosClient({
       method: 'post',
       url: '/donation',
-      data: { amount: price, orderId, email }
+      data: { amount: intPrice, orderId, email }
     })
       .then(response => {
         stripe.redirectToCheckout({

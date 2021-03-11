@@ -51,6 +51,7 @@ import SyncIcon from '@material-ui/icons/Sync'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { green } from '@material-ui/core/colors'
 import CheckIcon from '@material-ui/icons/Check'
+import BackupIcon from '@material-ui/icons/Backup'
 
 import { useSnackbar } from 'notistack'
 import cookie from 'js-cookie'
@@ -309,6 +310,23 @@ const Page = ({ dispatch, token }) => {
     handleClose()
   }
 
+  const backup = async () => {
+    await axiosClient({
+      method: 'get',
+      url: '/backup'
+    })
+      .then(response => {
+        enqueueSnackbar(JSON.stringify(response.data), {
+          variant: 'success'
+        })
+      })
+      .catch(error => {
+        enqueueSnackbar('Error Creating Backup: ' + error, {
+          variant: 'error'
+        })
+      })
+  }
+
   return (
     <Container>
       <TopBar />
@@ -361,6 +379,15 @@ const Page = ({ dispatch, token }) => {
               </List>
             </Grid>
           </Box>
+          <Button
+            variant='contained'
+            color='secondary'
+            className={buttonClassname}
+            onClick={backup}
+            startIcon={<BackupIcon />}
+          >
+            Backup Open Orders
+          </Button>
         </div>
       </main>
       <Modal
