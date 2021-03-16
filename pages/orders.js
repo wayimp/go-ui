@@ -166,7 +166,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Page = ({ dispatch, token, workflows, products }) => {
+const Page = ({ dispatch, token, workflows, products, settings }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -392,10 +392,6 @@ const Page = ({ dispatch, token, workflows, products }) => {
       },
       PrimaryPhone: { FreeFormNumber: orderInfo.customerPhone },
       PrimaryEmailAddr: { Address: orderInfo.customerEmail },
-      Job: false,
-      BillWithParent: false,
-      Balance: orderInfo.donation,
-      BalanceWithJobs: orderInfo.donation,
       CurrencyRef: {
         value: 'USD',
         name: 'United States Dollar'
@@ -446,7 +442,7 @@ const Page = ({ dispatch, token, workflows, products }) => {
         name: customer.DisplayName
       },
       CustomerMemo: {
-        value: 'Thank you for your web order.'
+        value: settings.customer_memo
       },
       Balance: Number(orderInfo.donation),
       BillAddr: {
@@ -810,11 +806,18 @@ export async function getServerSideProps (context) {
   const products = await axiosClient
     .get('/products')
     .then(response => response.data)
-
+  const settings = {}
+  const settingsArray = await axiosClient
+    .get('/settings')
+    .then(response => response.data)
+  settingsArray.map(setting => {
+    settings[setting.name] = setting.value
+  })
   return {
     props: {
       workflows,
-      products
+      products,
+      settings
     }
   }
 }
