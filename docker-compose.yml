@@ -8,10 +8,10 @@ services:
   ui:
     labels:
       - 'traefik.backend=go-ui'
-      - 'traefik.port=8044'
+      - 'traefik.port=8045'
       - 'traefik.frontend.rule=Host:lifereferencemanual.net'
     networks:
       web:
     image: wayimp/go-ui
     ports:
-      - 8044:8044
+      - 8045:8045

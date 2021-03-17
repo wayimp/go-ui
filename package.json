@@ -40,9 +40,9 @@
     "suneditor-react": "^2.15.2"
   },
   "scripts": {
-    "dev": "next -p 8044",
+    "dev": "next -p 8045",
     "build": "next build",
-    "start": "next start -p 8044",
+    "start": "next start -p 8045",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
   "devDependencies": {

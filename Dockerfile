@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run-script build
 
-EXPOSE 8044
+EXPOSE 8045
 
 CMD [ "npm", "start" ]

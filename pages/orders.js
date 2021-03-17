@@ -808,7 +808,7 @@ export async function getServerSideProps (context) {
     .then(response => response.data)
   const settings = {}
   const settingsArray = await axiosClient
-    .get('/settings')
+    .get('/settingsPublic')
     .then(response => response.data)
   settingsArray.map(setting => {
     settings[setting.name] = setting.value
