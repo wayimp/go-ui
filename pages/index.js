@@ -292,10 +292,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const changeAddFee = event => {
     let updateDonation = Number(0 + form.donation)
     if (addFee) {
-      updateDonation = Number(updateDonation / 1.022).toFixed(2)
+      updateDonation = Number((updateDonation - 0.3) / 1.022).toFixed(2)
       setAddFee(false)
     } else {
-      updateDonation = Number(updateDonation * 1.022).toFixed(2)
+      updateDonation = Number(updateDonation * 1.022 + .3).toFixed(2)
       setAddFee(true)
     }
 
@@ -786,7 +786,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                         color='secondary'
                       />
                     }
-                    label='Cover Transaction Fee (2.2%)'
+                    label='Cover Transaction Fee'
                   />
                 </Grid>
                 <Grid item>

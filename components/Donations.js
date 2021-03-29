@@ -119,6 +119,7 @@ export default function Pricing () {
     let baseNumber = Number(base)
     if (addFee) {
       baseNumber *= 1.022
+      baseNumber += 0.3
     }
 
     return baseNumber.toFixed(2)
@@ -186,7 +187,7 @@ export default function Pricing () {
                         color='secondary'
                       />
                     }
-                    label='Cover 2.2% Fee'
+                    label='Cover Fee'
                   />
                 </CardContent>
                 <CardActions>
