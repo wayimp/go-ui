@@ -11,7 +11,6 @@ import BlockText from './BlockText'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    margin: 40,
     overflow: 'visible'
   },
   paper: {
@@ -21,8 +20,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3)
   },
   content: {
-    display: 'flex',
-    margin: 40
+    display: 'flex'
   },
   mirror: {
     transform: [{ scaleX: -1 }]

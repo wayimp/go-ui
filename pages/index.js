@@ -28,7 +28,6 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -63,12 +62,14 @@ import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import parse from 'html-react-parser'
 import { loadStripe } from '@stripe/stripe-js'
-import {
-  CardElement,
-  Elements,
-  useStripe,
-  useElements
-} from '@stripe/react-stripe-js'
+import { useStripe, useElements } from '@stripe/react-stripe-js'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Divider from '@material-ui/core/Divider'
+import Drawer from '@material-ui/core/Drawer'
+import Hidden from '@material-ui/core/Hidden'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import Toolbar from '@material-ui/core/Toolbar'
 
 Array.prototype.sum = function (prop) {
   var total = 0
@@ -229,8 +230,33 @@ const useStyles = makeStyles(theme => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0
+    }
+  },
+  // necessary for content to be below app bar
+  toolbar: { marginTop: 100 },
+  appBar: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth
+    }
+  },
+  menuButton: {
+    marginLeft: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
+    }
+  },
+  drawerPaper: {
+    width: drawerWidth
   }
 }))
+
+const drawerWidth = 240
 
 const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const classes = useStyles()
@@ -244,7 +270,34 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const [progress, setProgress] = React.useState(false)
   const [showPrivacy, setShowPrivacy] = React.useState(false)
   const [addFee, setAddFee] = React.useState(false)
+  const [mobileOpen, setMobileOpen] = React.useState(false)
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen)
+  }
+
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <Divider />
+      <List>
+        {['About', 'Catalog', 'Order', 'Donate', 'Stories'].map(
+          (text, index) => (
+            <ListItem
+              button
+              key={text}
+              onClick={() => {
+                setSelectedTab(index)
+                setMobileOpen(false)
+              }}
+            >
+              <ListItemText primary={text} />
+            </ListItem>
+          )
+        )}
+      </List>
+    </div>
+  )
   const stripe = useStripe()
   const elements = useElements()
 
@@ -295,7 +348,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
       updateDonation = Number((updateDonation - 0.3) / 1.022).toFixed(2)
       setAddFee(false)
     } else {
-      updateDonation = Number(updateDonation * 1.022 + .3).toFixed(2)
+      updateDonation = Number(updateDonation * 1.022 + 0.3).toFixed(2)
       setAddFee(true)
     }
 
@@ -530,7 +583,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
 
   return (
     <Container className={classes.root}>
-      <AppBar position='sticky' color='default'>
+      <AppBar position='fixed'>
         <Grid>
           <Tabs
             value={selectedTab}
@@ -541,6 +594,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             variant='scrollable'
             scrollButtons='auto'
           >
+            <IconButton
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
             <img
               src='https://files.lifereferencemanual.net/go/logo.png'
               style={{ maxHeight: 60, margin: 10 }}
@@ -593,7 +652,25 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           {cartDisplay}
         </Grid>
       </AppBar>
-      <Box width={1}>
+      <nav className={classes.drawer}>
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Hidden smUp implementation='css'>
+          <Drawer
+            variant='temporary'
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper
+            }}
+            ModalProps={{
+              keepMounted: true // Better open performance on mobile.
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+      </nav>
+      <Box width={1} className={classes.toolbar}>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
           <BlockListJoined blocks={blocks} category='frontPage' />
         </TabPanel>
@@ -791,7 +868,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                 </Grid>
                 <Grid item>
                   <TextField
-                    className={classes.textFieldWide}
+                    className={classes.textField}
                     variant='outlined'
                     name='instructions'
                     label='Leave us a note'
