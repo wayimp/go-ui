@@ -176,6 +176,8 @@ const Page = ({ dispatch, token }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
+  const [loadingInvoices, setLoadingInvoices] = React.useState(false)
+  const [successInvoices, setSuccessInvoices] = React.useState(false)
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success
@@ -201,6 +203,30 @@ const Page = ({ dispatch, token }) => {
             variant: 'error'
           })
           setLoading(false)
+        })
+    }
+  }
+
+  const syncInvoices = async () => {
+    if (!loadingInvoices) {
+      setSuccessInvoices(false)
+      setLoadingInvoices(true)
+
+      await axiosClient({
+        method: 'delete',
+        url: '/invoices',
+        data: {},
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(response => {
+          setSuccessInvoices(true)
+          setLoadingInvoices(false)
+        })
+        .catch(error => {
+          enqueueSnackbar('Sync Error:' + error, {
+            variant: 'error'
+          })
+          setLoadingInvoices(false)
         })
     }
   }
@@ -334,19 +360,6 @@ const Page = ({ dispatch, token }) => {
         <div className={classes.toolbar} />
         <div className={classes.root}>
           <div className={classes.buttonWrapper}>
-            <Button
-              variant='contained'
-              color='secondary'
-              className={buttonClassname}
-              disabled={loading}
-              onClick={syncCustomers}
-              startIcon={success ? <CheckIcon /> : <SyncIcon />}
-            >
-              Sync QuickBooks
-            </Button>
-            {loading && (
-              <CircularProgress size={24} className={classes.buttonProgress} />
-            )}
             <a
               href='https://appcenter.intuit.com/connect/oauth2?client_id=ABER7am4L92uCXRsO67MEsJOTb9TXsLKX1aFs6LM9f4jeAP1jQ&redirect_uri=https%3A%2F%2Fapi.gothereforeministries.org%2Fcallback&response_type=code&scope=com.intuit.quickbooks.accounting&state=default'
               target='_blank'
@@ -356,6 +369,38 @@ const Page = ({ dispatch, token }) => {
                 src='https://files.lifereferencemanual.net/go/C2QB_auth.png'
               />
             </a>
+            <Button
+              variant='contained'
+              color='secondary'
+              className={buttonClassname}
+              disabled={loading}
+              onClick={syncCustomers}
+              startIcon={success ? <CheckIcon /> : <SyncIcon />}
+            >
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+              Sync Customers
+            </Button>
+            <Button
+              variant='contained'
+              color='secondary'
+              className={buttonClassname}
+              disabled={loadingInvoices}
+              onClick={syncInvoices}
+              startIcon={successInvoices ? <CheckIcon /> : <SyncIcon />}
+            >
+              {loadingInvoices && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+              Sync Invoices
+            </Button>
           </div>
           <Box width={1}>
             <Grid>

@@ -79,6 +79,20 @@ export default function SearchAppBar () {
               </Grid>
               <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
+                  <Link href='/blocks' className={classes.title}>
+                    Blocks
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={1}>
+                <Typography variant='h6' noWrap>
+                  <Link href='/invoices' className={classes.title}>
+                    Invoices
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={1}>
+                <Typography variant='h6' noWrap>
                   <Link href='/users' className={classes.title}>
                     Users
                   </Link>
@@ -95,13 +109,6 @@ export default function SearchAppBar () {
                 <Typography variant='h6' noWrap>
                   <Link href='/settings' className={classes.title}>
                     Settings
-                  </Link>
-                </Typography>
-              </Grid>
-              <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
-                  <Link href='/blocks' className={classes.title}>
-                    Blocks
                   </Link>
                 </Typography>
               </Grid>
