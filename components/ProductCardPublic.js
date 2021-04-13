@@ -215,7 +215,6 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
             <span>
               <Button
                 size='large'
-                style={{ marginTop: 6 }}
                 variant='outlined'
                 color='primary'
                 onClick={e => {

@@ -495,6 +495,8 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
         enqueueSnackbar('QuickBooks invoice created', {
           variant: 'success'
         })
+        const link = `https://app.qbo.intuit.com/app/invoice?txnId=${res.data.Invoice.Id}`
+        window.open(link)
       })
       .catch(err => {
         enqueueSnackbar('There was a problem updating QuickBooks ' + err, {

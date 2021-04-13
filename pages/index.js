@@ -246,7 +246,13 @@ const useStyles = makeStyles(theme => ({
     }
   },
   menuButton: {
-    marginLeft: theme.spacing(2),
+    zIndex: 1101,
+    margin: 0,
+    top: 16,
+    left: 10,
+    right: 'auto',
+    bottom: 'auto',
+    position: 'fixed',
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     }
@@ -594,12 +600,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             variant='scrollable'
             scrollButtons='auto'
           >
-            <IconButton
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
             <img
               src='https://files.lifereferencemanual.net/go/logo.png'
               style={{ maxHeight: 60, margin: 10 }}
@@ -671,6 +671,9 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
         </Hidden>
       </nav>
       <Box width={1} className={classes.toolbar}>
+        <Fab onClick={handleDrawerToggle} className={classes.menuButton}>
+          <MenuIcon />
+        </Fab>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
           <BlockListJoined blocks={blocks} category='frontPage' />
         </TabPanel>

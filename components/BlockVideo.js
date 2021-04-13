@@ -1,37 +1,23 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import ReactPlayer from 'react-player'
-
-const useStyles = makeStyles(theme => ({
-  playerWrapper: {
-    position: 'relative',
-    paddingTop: '56.25%' /* Player ratio: 100 / (1280 / 720) */
-  },
-  reactPlayer: {
-    position: 'absolute',
-    top: 0,
-    left: 0
-  }
-}))
+import YouTube from 'react-youtube'
 
 const BlockDisplay = ({ block }) => {
-  {
-    const classes = useStyles()
-
-    if (block.html.endsWith('mp4'))
-      return (
-        <div className={classes.playerWrapper}>
-          <ReactPlayer
-            className={classes.reactPlayer}
-            url={block.html}
-            width='100%'
-            height='100%'
-            controls={true}
-          />
-        </div>
-      )
-    else return <ReactPlayer url={block.html} />
+  const opts = {
+    height: '390',
+    width: '640',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1
+    }
   }
+
+  const onReady = event => {
+    // access to player in all event handlers via event.target
+    event.target.pauseVideo()
+  }
+
+  return <YouTube videoId={block.html} onReady={onReady} />
 }
 
 export default BlockDisplay

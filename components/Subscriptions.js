@@ -267,7 +267,7 @@ export default function Pricing () {
   }
 
   return (
-    <Container maxWidth='md' component='main'>
+    <Container maxWidth='md' component='main' style={{ marginTop: 10 }}>
       <Grid container spacing={5} justify='center'>
         <Grid item key={tier.title} xs={12} sm={6} md={4}>
           <Card>
