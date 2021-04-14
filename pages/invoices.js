@@ -29,6 +29,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Tooltip from '@material-ui/core/Tooltip'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import Select from 'react-select'
+import TextField from '@material-ui/core/TextField'
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -134,8 +136,54 @@ const Page = ({ dispatch, token }) => {
   const [bibles, setBibles] = useState([])
   const [showBibles, setShowBibles] = useState(false)
   const [invoices, setInvoices] = useState([])
-  const [page, setPage] = React.useState(0)
-  const [loading, setLoading] = React.useState(false)
+  const [page, setPage] = useState(0)
+  const [totalCount, setTotalCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [productOptions, setProductOptions] = useState([])
+  const [productSelected, setProductSelected] = useState('')
+  const [searchString, setSearchString] = useState('')
+  const [sortModel, setSortModel] = useState([
+    { field: 'totalDonations', sort: 'desc' }
+  ])
+
+  const changeField = event => {
+    setSearchString(event.target.value)
+  }
+
+  const search = () => {
+    loadServerRows(0)
+  }
+
+  useEffect(() => {
+    if (token && token.length > 0) {
+      getProducts()
+    } else {
+      Router.push('/admin')
+    }
+  }, [])
+
+  const getProducts = () => {
+    axiosClient({
+      method: 'get',
+      url: '/products?showInactive=true',
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(response => {
+      const result =
+        response.data && Array.isArray(response.data) ? response.data : []
+      const options = result.map(product => {
+        return { value: product.qbName, label: product.title }
+      })
+      setProductOptions(options)
+    })
+  }
+
+  const selectProduct = product => {
+    if (product) {
+      setProductSelected(product.value)
+    } else {
+      setProductSelected('')
+    }
+  }
 
   const handlePageChange = params => {
     setPage(params.page)
@@ -155,15 +203,13 @@ const Page = ({ dispatch, token }) => {
       field: 'customerName',
       headerName: 'Name',
       width: 200,
-
+      sortable: false,
       renderCell: params => (
         <span>
           <Tooltip title='Open in QuickBooks'>
             <IconButton color='primary'>
               <Link
-                href={`https://c72.qbo.intuit.com/app/customerdetail?nameId=${params.getValue(
-                  'customerId'
-                )}`}
+                href={`https://c72.qbo.intuit.com/app/customerdetail?nameId=${params.row.customerId}`}
                 target='_blank'
               >
                 <AccountBoxIcon />
@@ -206,31 +252,48 @@ const Page = ({ dispatch, token }) => {
       width: 120,
       renderCell: params => numeral(params.value).format('$0')
     },
-    { field: 'customerStreet', headerName: 'Street', width: 160, hide: true },
-    { field: 'customerCity', headerName: 'City', width: 160, hide: true },
-    { field: 'customerState', headerName: 'State', width: 110, hide: true },
-    { field: 'customerZip', headerName: 'Zip', width: 110, hide: true }
+    { field: 'customerCity', headerName: 'City', width: 160, sortable: false },
+    {
+      field: 'customerState',
+      headerName: 'State',
+      width: 110,
+      sortable: false
+    },
+    { field: 'customerZip', headerName: 'Zip', width: 110, sortable: false }
   ]
 
-  const loadServerRows = page => {
+  const loadServerRows = (page, sortModelCurrent) => {
+    let url = `/invoices?page=${page}`
+    if (productSelected && productSelected.length > 0) {
+      url += `&code=${productSelected}`
+    }
+    if (searchString && searchString.length > 0) {
+      url += `&search=${searchString}`
+    }
+    if (sortModelCurrent) {
+      url += `&field=${sortModelCurrent[0].field}&sort=${sortModelCurrent[0].sort}`
+    } else if (sortModel) {
+      url += `&field=${sortModel[0].field}&sort=${sortModel[0].sort}`
+    }
+
     axiosClient({
       method: 'get',
-      url: `/invoices?page=${page}`,
+      url,
       headers: { Authorization: `Bearer ${token}` }
     }).then(response => {
-      const result =
-        response.data && Array.isArray(response.data) ? response.data : []
-      setInvoices(result)
+      setTotalCount(response.data.count)
+      setInvoices(response.data.invoices)
     })
   }
 
-  useEffect(() => {
-    const roles = cookie.get('roles')
-    if (token && token.length > 0 && roles && roles.includes('admin')) {
-    } else {
-      Router.push('/admin')
+  const handleSortModelChange = params => {
+    if (params.sortModel !== sortModel) {
+      setSortModel(params.sortModel)
+      loadServerRows(0, params.sortModel)
     }
+  }
 
+  useEffect(() => {
     let active = true
 
     ;(async () => {
@@ -255,6 +318,35 @@ const Page = ({ dispatch, token }) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div className={classes.root}>
+          <Grid container spacing={1} justify='space-between'>
+            <Grid item xs={4}>
+              <Select
+                style={{ marginBottom: 4 }}
+                id='products'
+                className='itemsSelect'
+                classNamePrefix='select'
+                onChange={selectProduct}
+                name='products'
+                options={productOptions}
+                isClearable={true}
+                isSearchable={true}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                className={classes.textField}
+                variant='outlined'
+                name='searchString'
+                label='Search String'
+                onChange={changeField}
+              />
+            </Grid>
+            <Grid>
+              <Button variant='outlined' color='primary' onClick={search}>
+                Search
+              </Button>
+            </Grid>
+          </Grid>
           <div style={{ display: 'flex', minHeight: 780 }}>
             <div style={{ flexGrow: 1 }}>
               <DataGrid
@@ -262,10 +354,13 @@ const Page = ({ dispatch, token }) => {
                 columns={columns}
                 pagination
                 pageSize={20}
-                rowCount={9054}
+                rowCount={totalCount}
                 paginationMode='server'
                 onPageChange={handlePageChange}
                 loading={loading}
+                sortingMode='server'
+                sortModel={sortModel}
+                onSortModelChange={handleSortModelChange}
               />
             </div>
           </div>

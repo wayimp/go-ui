@@ -203,9 +203,9 @@ const useStyles = makeStyles(theme => ({
   },
   fab1: {
     margin: 0,
-    top: 'auto',
-    right: theme.spacing(4),
-    top: theme.spacing(4),
+    bottom: 'auto',
+    right: theme.spacing(2),
+    top: theme.spacing(18),
     left: 'auto',
     position: 'fixed',
     alignItems: 'left'
