@@ -170,9 +170,11 @@ const Page = ({ dispatch, token }) => {
     }).then(response => {
       const result =
         response.data && Array.isArray(response.data) ? response.data : []
-      const options = result.map(product => {
-        return { value: product.qbName, label: product.title }
-      })
+      const options = result
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .map(product => {
+          return { value: product.qbName, label: product.title }
+        })
       setProductOptions(options)
     })
   }

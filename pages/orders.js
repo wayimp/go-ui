@@ -235,7 +235,11 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
         response.data && Array.isArray(response.data) ? response.data : []
       result = result.map(customer => ({
         ...customer,
-        label: customer.GivenName + ' ' + customer.FamilyName
+        label:
+          customer.GivenName +
+          ' ' +
+          customer.FamilyName +
+          (customer.CompanyName ? ` (${customer.CompanyName})` : '')
       }))
       setCustomers(result)
     })

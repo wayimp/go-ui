@@ -94,7 +94,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
+    marginTop: theme.spacing(16),
+    // necessary for content to be below app bar (doesn't work)
     ...theme.mixins.toolbar
   },
   formGroup: {
@@ -205,7 +206,16 @@ const useStyles = makeStyles(theme => ({
     margin: 0,
     bottom: 'auto',
     right: theme.spacing(2),
-    top: theme.spacing(18),
+    top: theme.spacing(11),
+    left: 'auto',
+    position: 'fixed',
+    alignItems: 'left'
+  },
+  fab2: {
+    margin: 0,
+    bottom: 'auto',
+    right: theme.spacing(2),
+    top: theme.spacing(2),
     left: 'auto',
     position: 'fixed',
     alignItems: 'left'
@@ -237,8 +247,6 @@ const useStyles = makeStyles(theme => ({
       flexShrink: 0
     }
   },
-  // necessary for content to be below app bar
-  toolbar: { marginTop: 100 },
   appBar: {
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -526,7 +534,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   items = quantity % 48
   for (let c = 0; c < cases; c++) {
     chips.push(
-      <Chip key={keyIndex++} variant='outlined' label='48' color='primary' />
+      <Chip key={keyIndex++} variant='outlined' label='48' />
     )
   }
   if (items > 0) {
@@ -545,7 +553,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           key={keyIndex++}
           variant='outlined'
           label={items}
-          color='primary'
         />
       )
     }
@@ -558,7 +565,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           key='fab1'
           className={classes.fab1}
           variant='extended'
-          color='primary'
+          color='secondary'
         >
           Confirm Order&nbsp;&nbsp;
           <Badge badgeContent={quantity ? quantity : 0} color='error'>
@@ -566,16 +573,25 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           </Badge>
         </Fab>
       )
+      cartDisplay.push(
+        <Fab
+          id='fab2'
+          key='fab2'
+          className={classes.fab2}
+          variant='extended'
+          color='secondary'
+        >
+          <Badge badgeContent={quantity ? quantity : 0} color='error'>
+            <Typography style={{ marginTop: 7 }}>
+              Suggested Donation:&nbsp;
+              {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per Bible)
+            </Typography>
+          </Badge>
+        </Fab>
+      )
     }
     cartDisplay.push(<Grid>{chips}</Grid>)
-    cartDisplay.push(
-      <Grid key='donation'>
-        <Typography style={{ marginTop: 7 }}>
-          Suggested Donation:&nbsp;
-          {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per Bible)
-        </Typography>
-      </Grid>
-    )
+
     if (items > 0 && cases > 0) {
       cartDisplay.push(<br />)
       cartDisplay.push(

@@ -279,10 +279,11 @@ const Page = ({ dispatch, token }) => {
   }
 
   const saveBlock = async blockToSave => {
+    const updateBlock = blockToSave ? blockToSave : block
     await axiosClient({
       method: creating ? 'post' : 'patch',
       url: '/blocks',
-      data: blockToSave,
+      data: updateBlock,
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => {
@@ -497,7 +498,7 @@ const Page = ({ dispatch, token }) => {
                     variant='outlined'
                     name='description'
                     label='Description'
-                    defaultValue={block.description}
+                    value={block.description}
                     onChange={changeField}
                   />
                 </Grid>
@@ -540,7 +541,7 @@ const Page = ({ dispatch, token }) => {
                   variant='contained'
                   color='secondary'
                   style={{ margin: 10 }}
-                  onClick={() => saveBlock(block)}
+                  onClick={() => saveBlock()}
                   startIcon={<SaveIcon />}
                 >
                   Save
@@ -647,7 +648,7 @@ const Page = ({ dispatch, token }) => {
                   variant='contained'
                   color='secondary'
                   style={{ margin: 10 }}
-                  onClick={() => saveBlock(block)}
+                  onClick={() => saveBlock()}
                   startIcon={<SaveIcon />}
                 >
                   Save
