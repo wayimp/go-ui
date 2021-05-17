@@ -32,6 +32,21 @@ import Select from 'react-select'
 import TextField from '@material-ui/core/TextField'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 
+const columns = [
+  {
+    field: 'id',
+    headerName: 'Month',
+    type: 'date',
+    width: 150
+  },
+  {
+    field: 'total',
+    headerName: 'Total',
+    type: 'currency',
+    width: 150
+  }
+]
+
 const useStyles = makeStyles(theme => ({
   toolbar: {
     display: 'flex',
@@ -165,8 +180,13 @@ const Page = ({ dispatch, token }) => {
           <Grid>
             <h3>Total Donations by Month</h3>
           </Grid>
+          <div style={{ display: 'flex', minHeight: 780 }}>
+            <div style={{ flexGrow: 1 }}>
+              <DataGrid rows={invoices} columns={columns} autoPageSize pagination/>
+            </div>
+          </div>
           <BarChart width={1100} height={700} data={invoices}>
-            <XAxis dataKey='month' stroke='#8884d8' />
+            <XAxis dataKey='id' stroke='#8884d8' />
             <YAxis />
             <Tooltip />
             <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
