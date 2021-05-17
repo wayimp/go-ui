@@ -135,9 +135,32 @@ const Page = ({ dispatch, token }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [invoices, setInvoices] = useState([])
   const [loading, setLoading] = useState(false)
+  const [productOptions, setProductOptions] = useState([])
+  const [productSelected, setProductSelected] = useState('')
+
+  const getProducts = () => {
+    axiosClient({
+      method: 'get',
+      url: '/products?showInactive=true',
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(response => {
+      const result =
+        response.data && Array.isArray(response.data) ? response.data : []
+      const options = result
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .map(product => {
+          return { value: product.qbName, label: product.title }
+        })
+      setProductOptions(options)
+    })
+  }
 
   const getData = () => {
-    let url = '/monthly'
+    let url = '/bibles'
+
+    if (productSelected && productSelected.length > 0) {
+      url += `?code=${productSelected}`
+    }
 
     axiosClient({
       method: 'get',
@@ -151,10 +174,23 @@ const Page = ({ dispatch, token }) => {
   useEffect(() => {
     if (token && token.length > 0) {
       getData()
+      getProducts()
     } else {
       Router.push('/admin')
     }
   }, [])
+
+  const selectProduct = product => {
+    if (product) {
+      setProductSelected(product.value)
+    } else {
+      setProductSelected('')
+    }
+  }
+
+  const search = () => {
+    getData()
+  }
 
   return (
     <Container>
@@ -162,8 +198,29 @@ const Page = ({ dispatch, token }) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <div className={classes.root}>
-          <Grid>
-            <h3>Total Donations by Month</h3>
+          <Grid container spacing={1} justify='space-between'>
+            <Grid>
+              <h3>Total Bibles by Month</h3>
+            </Grid>
+            <Grid item xs={4}>
+              <Select
+                style={{ marginBottom: 4 }}
+                id='products'
+                className='itemsSelect'
+                classNamePrefix='select'
+                onChange={selectProduct}
+                name='products'
+                options={productOptions}
+                isClearable={true}
+                isSearchable={true}
+              />
+            </Grid>
+
+            <Grid>
+              <Button variant='outlined' color='primary' onClick={search}>
+                Filter
+              </Button>
+            </Grid>
           </Grid>
           <BarChart width={1100} height={700} data={invoices}>
             <XAxis dataKey='month' stroke='#8884d8' />
