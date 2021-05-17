@@ -199,6 +199,7 @@ const Page = ({ dispatch, token }) => {
         .map(product => {
           return { value: product.qbName, label: product.title }
         })
+      options.unshift({ value: 'ANY', label: 'Any Title' })
       setProductOptions(options)
     })
   }
@@ -641,22 +642,34 @@ const Page = ({ dispatch, token }) => {
               <Grid>
                 <ToggleButtonGroup onChange={changeStatus} value={status}>
                   <ToggleButton value='Missed'>
-                    <PhoneMissedIcon />
+                    <Tooltip title='Missed'>
+                      <PhoneMissedIcon />
+                    </Tooltip>
                   </ToggleButton>
                   <ToggleButton value='Disabled'>
-                    <PhoneDisabledIcon />
+                    <Tooltip title='Do Not Call'>
+                      <PhoneDisabledIcon />
+                    </Tooltip>
                   </ToggleButton>
                   <ToggleButton value='Called'>
-                    <PhoneEnabledIcon />
+                    <Tooltip title='Called'>
+                      <PhoneEnabledIcon />
+                    </Tooltip>
                   </ToggleButton>
                   <ToggleButton value='Voicemail'>
-                    <VoicemailIcon />
+                    <Tooltip title='Left Voicemail'>
+                      <VoicemailIcon />
+                    </Tooltip>
                   </ToggleButton>
                   <ToggleButton value='Emailed'>
-                    <MailOutlineIcon />
+                    <Tooltip title='Emailed'>
+                      <MailOutlineIcon />
+                    </Tooltip>
                   </ToggleButton>
                   <ToggleButton value='Donated'>
-                    <AttachMoneyIcon />
+                    <Tooltip title='Donation Received'>
+                      <AttachMoneyIcon />
+                    </Tooltip>
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Grid>

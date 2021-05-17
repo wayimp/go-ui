@@ -93,8 +93,8 @@ export default function SearchAppBar () {
               </Grid>
               <Grid item xs={1}>
                 <Typography variant='h6' noWrap>
-                  <Link href='/totals' className={classes.title}>
-                    Totals
+                  <Link href='/monthly' className={classes.title}>
+                    Monthly
                   </Link>
                 </Typography>
               </Grid>
