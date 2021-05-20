@@ -615,9 +615,9 @@ const Page = ({ dispatch, token }) => {
                 {bibles.map((bible, index) => (
                   <ListItem key={index}>
                     <ListItemAvatar>
-                      {bible.SalesItemLineDetail.Qty}
+                      <span>{bible[1]}</span>
                     </ListItemAvatar>
-                    <ListItemText>{bible.Description}</ListItemText>
+                    <ListItemText>{bible[0]}</ListItemText>
                   </ListItem>
                 ))}
               </List>

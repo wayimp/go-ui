@@ -107,13 +107,6 @@ export default function SearchAppBar () {
               </Grid>
               <Grid item xs={1}>
                 <Typography variant='h7' noWrap>
-                  <Link href='/bibles' className={classes.title}>
-                    Bibles
-                  </Link>
-                </Typography>
-              </Grid>
-              <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
                   <Link href='/users' className={classes.title}>
                     Users
                   </Link>

@@ -30,22 +30,14 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import Select from 'react-select'
 import TextField from '@material-ui/core/TextField'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
+import Tooltip from '@material-ui/core/Tooltip'
 
-const columns = [
-  {
-    field: 'id',
-    headerName: 'Month',
-    type: 'date',
-    width: 150
-  },
-  {
-    field: 'total',
-    headerName: 'Total',
-    type: 'currency',
-    width: 150
-  }
-]
+var currency = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0
+})
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -150,6 +142,17 @@ const Page = ({ dispatch, token }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [invoices, setInvoices] = useState([])
   const [loading, setLoading] = useState(false)
+  const [bibles, setBibles] = useState([])
+  const [showBibles, setShowBibles] = useState(false)
+
+  const displayBibles = b => {
+    setBibles(b)
+    setShowBibles(true)
+  }
+
+  const closeShowBibles = () => {
+    setShowBibles(false)
+  }
 
   const getData = () => {
     let url = '/monthly'
@@ -171,6 +174,48 @@ const Page = ({ dispatch, token }) => {
     }
   }, [])
 
+  const columns = [
+    {
+      field: 'id',
+      headerName: 'Month',
+      type: 'date',
+      width: 150
+    },
+    {
+      field: 'totalDonations',
+      headerName: 'Donations',
+      type: 'currency',
+      width: 150,
+      renderCell: params => <span>{currency.format(params.value)}</span>
+    },
+    {
+      field: 'outstandingBalance',
+      headerName: 'Balance',
+      type: 'currency',
+      width: 150,
+      renderCell: params => <span>{currency.format(params.value)}</span>
+    },
+    {
+      field: 'totalBibles',
+      headerName: 'Bibles',
+      type: 'number',
+      width: 150,
+      renderCell: params => (
+        <span>
+          <Tooltip title='Show Details'>
+            <IconButton
+              color='primary'
+              onClick={() => displayBibles(params.getValue('bibles'))}
+            >
+              <MenuBookIcon />
+            </IconButton>
+          </Tooltip>
+          {params.value}
+        </span>
+      )
+    }
+  ]
+
   return (
     <Container>
       <TopBar />
@@ -178,22 +223,61 @@ const Page = ({ dispatch, token }) => {
         <div className={classes.toolbar} />
         <div className={classes.root}>
           <Grid>
-            <h3>Total Donations by Month</h3>
+            <h3>Monthly Totals</h3>
           </Grid>
           <div style={{ display: 'flex', minHeight: 780 }}>
             <div style={{ flexGrow: 1 }}>
-              <DataGrid rows={invoices} columns={columns} autoPageSize pagination/>
+              <DataGrid
+                rows={invoices}
+                columns={columns}
+                pageSize={12}
+                pagination
+              />
             </div>
           </div>
-          <BarChart width={1100} height={700} data={invoices}>
-            <XAxis dataKey='id' stroke='#8884d8' />
-            <YAxis />
-            <Tooltip />
-            <CartesianGrid stroke='#ccc' strokeDasharray='5 5' />
-            <Bar dataKey='total' fill='#8884d8' />
-          </BarChart>
         </div>
       </main>
+      <Modal
+        id='edit'
+        className={classes.modalScroll}
+        open={showBibles}
+        onClose={closeShowBibles}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500
+        }}
+      >
+        <Fade in={showBibles}>
+          <div className={classes.paper}>
+            <Grid
+              container
+              direction='row'
+              justify='flex-end'
+              alignItems='flex-start'
+            >
+              <Button
+                variant='contained'
+                color='secondary'
+                style={{ margin: 20 }}
+                onClick={closeShowBibles}
+              >
+                Ok
+              </Button>
+            </Grid>
+            <Box width={1}>
+              <List dense={true}>
+                {bibles.map((bible, index) => (
+                  <ListItem key={index}>
+                    <ListItemAvatar>{bible[1]}</ListItemAvatar>
+                    <ListItemText>{bible[0]}</ListItemText>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </div>
+        </Fade>
+      </Modal>
     </Container>
   )
 }
