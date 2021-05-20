@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto',
     margin: 20,
-    maxWidth: 200
+    maxWidth: 140
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -55,7 +55,7 @@ export default function SearchAppBar () {
         <Toolbar>
           <Box width={1}>
             <Grid container direction='row' alignItems='center'>
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <img
                   src='https://files.lifereferencemanual.net/go/logo.png'
                   alt='Go Therefore Ministries'
@@ -64,63 +64,70 @@ export default function SearchAppBar () {
                 />
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/orders' className={classes.title}>
                     Orders
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/products' className={classes.title}>
                     Products
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/blocks' className={classes.title}>
                     Blocks
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/clients' className={classes.title}>
                     Clients
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
+                  <Link href='/yearly' className={classes.title}>
+                    Yearly
+                  </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={1}>
+                <Typography variant='h7' noWrap>
                   <Link href='/monthly' className={classes.title}>
                     Monthly
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/bibles' className={classes.title}>
                     Bibles
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/users' className={classes.title}>
                     Users
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/workflows' className={classes.title}>
                     Workflow
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h6' noWrap>
+                <Typography variant='h7' noWrap>
                   <Link href='/settings' className={classes.title}>
                     Settings
                   </Link>
