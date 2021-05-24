@@ -64,63 +64,63 @@ export default function SearchAppBar () {
                 />
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/orders' className={classes.title}>
                     Orders
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/products' className={classes.title}>
                     Products
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/blocks' className={classes.title}>
                     Blocks
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/clients' className={classes.title}>
                     Clients
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/yearly' className={classes.title}>
                     Yearly
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/monthly' className={classes.title}>
                     Monthly
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/users' className={classes.title}>
                     Users
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/workflows' className={classes.title}>
                     Workflow
                   </Link>
                 </Typography>
               </Grid>
               <Grid item xs={1}>
-                <Typography variant='h7' noWrap>
+                <Typography noWrap>
                   <Link href='/settings' className={classes.title}>
                     Settings
                   </Link>

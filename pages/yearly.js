@@ -29,6 +29,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import TextField from '@material-ui/core/TextField'
 import Input from '@material-ui/core/Input'
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
+import ContactMailIcon from '@material-ui/icons/ContactMail'
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
@@ -134,7 +135,7 @@ const Page = ({ dispatch, token }) => {
   const [invoices, setInvoices] = useState([])
   const [loading, setLoading] = useState(false)
   const [year, setYear] = useState(moment().year())
-  const [bookValue, setBookValue] = useState(1)
+  const [minValue, setMinValue] = useState(50)
   const [yearOptions, setYearOptions] = useState([])
 
   const columns = [
@@ -174,12 +175,23 @@ const Page = ({ dispatch, token }) => {
       renderCell: params => numeral(params.value).format('0')
     },
     {
-      field: 'bookValue',
+      field: 'totalCoffee',
+      headerName: 'Coffee',
+      type: 'number',
+      width: 120,
+      renderCell: params => numeral(params.value).format('0')
+    },
+    {
+      field: 'donationValue',
       headerName: 'Value',
       type: 'number',
       width: 120,
       renderCell: params =>
-        numeral(params.row.totalBibles * bookValue).format('$0')
+        numeral(
+          params.row.totalDonations -
+            params.row.totalBibles -
+            params.row.totalCoffee * 6.5
+        ).format('$0')
     },
     {
       field: 'pdf',
@@ -193,7 +205,7 @@ const Page = ({ dispatch, token }) => {
               <Link
                 href={`${baseURL}/pdf/${params.row.customerId}/${year}/${
                   params.row.totalDonations
-                }/${params.row.totalBibles * bookValue}`}
+                }/${params.row.totalBibles + params.row.totalCoffee * 6.5}`}
                 target='_blank'
               >
                 <PictureAsPdfIcon />
@@ -207,7 +219,7 @@ const Page = ({ dispatch, token }) => {
   ]
 
   const getData = () => {
-    let url = `/yearly/${year}/${bookValue}`
+    let url = `/yearly/${year}/${minValue}`
 
     axiosClient({
       method: 'get',
@@ -216,6 +228,11 @@ const Page = ({ dispatch, token }) => {
     }).then(response => {
       setInvoices(response.data)
     })
+  }
+
+  const getCsv = () => {
+    let url = `/csv/${year}/${minValue}`
+    window.open(url)
   }
 
   useEffect(() => {
@@ -232,7 +249,7 @@ const Page = ({ dispatch, token }) => {
   }, [])
 
   const changeField = event => {
-    setBookValue(Number(event.target.value))
+    setMinValue(Number(event.target.value))
   }
 
   const selectYear = year => {
@@ -264,13 +281,13 @@ const Page = ({ dispatch, token }) => {
               />
             </Grid>
             <Grid item>
+              Minimum Value:
               <Input
                 className={classes.textField}
                 type='number'
                 variant='outlined'
-                name='bookValue'
-                label='Book Value'
-                defaultValue={bookValue}
+                name='minValue'
+                defaultValue={minValue}
                 onChange={changeField}
               />
             </Grid>
@@ -290,6 +307,13 @@ const Page = ({ dispatch, token }) => {
               />
             </div>
           </div>
+          <Tooltip title='Download Addresses'>
+            <IconButton color='primary'>
+              <Link href={`${baseURL}/csv/${year}/${minValue}`} target='_blank'>
+                <ContactMailIcon />
+              </Link>
+            </IconButton>
+          </Tooltip>
         </div>
       </main>
     </Container>

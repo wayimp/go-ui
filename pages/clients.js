@@ -165,9 +165,10 @@ const Page = ({ dispatch, token }) => {
   const [loading, setLoading] = useState(false)
   const [productOptions, setProductOptions] = useState([])
   const [productSelected, setProductSelected] = useState('')
+  const [statusSelected, setStatusSelected] = useState('')
   const [searchString, setSearchString] = useState('')
   const [sortModel, setSortModel] = useState([
-    { field: 'totalDonations', sort: 'desc' }
+    { field: 'totalBibles', sort: 'desc' }
   ])
 
   const changeField = event => {
@@ -209,6 +210,14 @@ const Page = ({ dispatch, token }) => {
       setProductSelected(product.value)
     } else {
       setProductSelected('')
+    }
+  }
+
+  const selectStatus = status => {
+    if (status) {
+      setStatusSelected(status.value)
+    } else {
+      setStatusSelected('')
     }
   }
 
@@ -449,6 +458,7 @@ const Page = ({ dispatch, token }) => {
       headerName: 'Donations',
       type: 'number',
       width: 120,
+      sortable: false,
       renderCell: params => numeral(params.value).format('$0')
     },
     { field: 'customerCity', headerName: 'City', width: 160, sortable: false },
@@ -483,12 +493,15 @@ const Page = ({ dispatch, token }) => {
     if (productSelected && productSelected.length > 0) {
       url += `&code=${productSelected}`
     }
+    if (statusSelected && statusSelected.length > 0) {
+      url += `&status=${statusSelected}`
+    }
     if (searchString && searchString.length > 0) {
       url += `&search=${searchString}`
     }
-    if (sortModelCurrent) {
+    if (sortModelCurrent && sortModelCurrent[0] && sortModelCurrent[0].field) {
       url += `&field=${sortModelCurrent[0].field}&sort=${sortModelCurrent[0].sort}`
-    } else if (sortModel) {
+    } else if (sortModel && sortModel[0] && sortModel[0].field) {
       url += `&field=${sortModel[0].field}&sort=${sortModel[0].sort}`
     }
 
@@ -498,7 +511,7 @@ const Page = ({ dispatch, token }) => {
       headers: { Authorization: `Bearer ${token}` }
     }).then(response => {
       setTotalCount(response.data.count)
-      setInvoices(response.data.invoices)
+      setInvoices(response.data.result)
     })
   }
 
@@ -548,6 +561,28 @@ const Page = ({ dispatch, token }) => {
                 isSearchable={true}
               />
             </Grid>
+            <Grid item xs={4}>
+              <Select
+                style={{ marginBottom: 4 }}
+                id='status'
+                className='itemsSelect'
+                classNamePrefix='select'
+                onChange={selectStatus}
+                name='products'
+                options={[
+                  { value: 'Any', label: 'Any Status' },
+                  { value: 'Missed', label: 'Missed' },
+                  { value: 'Disabled', label: 'Do Not Call' },
+                  { value: 'Called', label: 'Called' },
+                  { value: 'Voicemail', label: 'Left Voicemail' },
+                  { value: 'Emailed', label: 'Emailed' },
+                  { value: 'Donated', label: 'Donation Received' }
+                ]}
+                isClearable={true}
+                isSearchable={true}
+              />
+            </Grid>
+
             <Grid item>
               <TextField
                 className={classes.textField}
