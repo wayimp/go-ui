@@ -168,7 +168,7 @@ const Page = ({ dispatch, token }) => {
   const [statusSelected, setStatusSelected] = useState('')
   const [searchString, setSearchString] = useState('')
   const [sortModel, setSortModel] = useState([
-    { field: 'totalBibles', sort: 'desc' }
+    { field: 'totalDonations', sort: 'desc' }
   ])
 
   const changeField = event => {
@@ -458,7 +458,6 @@ const Page = ({ dispatch, token }) => {
       headerName: 'Donations',
       type: 'number',
       width: 120,
-      sortable: false,
       renderCell: params => numeral(params.value).format('$0')
     },
     { field: 'customerCity', headerName: 'City', width: 160, sortable: false },

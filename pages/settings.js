@@ -178,6 +178,14 @@ const Page = ({ dispatch, token }) => {
   const [success, setSuccess] = React.useState(false)
   const [loadingInvoices, setLoadingInvoices] = React.useState(false)
   const [successInvoices, setSuccessInvoices] = React.useState(false)
+  const [
+    loadingSummarizeInvoices,
+    setLoadingSummarizeInvoices
+  ] = React.useState(false)
+  const [
+    successSummarizeInvoices,
+    setSuccessSummarizeInvoices
+  ] = React.useState(false)
 
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success
@@ -227,6 +235,30 @@ const Page = ({ dispatch, token }) => {
             variant: 'error'
           })
           setLoadingInvoices(false)
+        })
+    }
+  }
+
+  const summarizeInvoices = async () => {
+    if (!loadingSummarizeInvoices) {
+      setSuccessSummarizeInvoices(false)
+      setLoadingSummarizeInvoices(true)
+
+      await axiosClient({
+        method: 'delete',
+        url: '/donations',
+        data: {},
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(response => {
+          setSuccessSummarizeInvoices(true)
+          setLoadingSummarizeInvoices(false)
+        })
+        .catch(error => {
+          enqueueSnackbar('Sync Error:' + error, {
+            variant: 'error'
+          })
+          setLoadingSummarizeInvoices(false)
         })
     }
   }
@@ -400,6 +432,24 @@ const Page = ({ dispatch, token }) => {
                 />
               )}
               Sync Invoices
+            </Button>
+            <Button
+              variant='contained'
+              color='secondary'
+              className={buttonClassname}
+              disabled={loadingSummarizeInvoices}
+              onClick={summarizeInvoices}
+              startIcon={
+                successSummarizeInvoices ? <CheckIcon /> : <SyncIcon />
+              }
+            >
+              {loadingInvoices && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+              Summarize Invoices
             </Button>
           </div>
           <Box width={1}>
