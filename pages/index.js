@@ -275,6 +275,7 @@ const drawerWidth = 240
 const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const classes = useStyles()
   const theme = useTheme()
+  const [leavingPage, setLeavingPage] = React.useState(false)
   const [form, setForm] = React.useState({ cart: {} })
   const { enqueueSnackbar } = useSnackbar()
   const [selectedTab, setSelectedTab] = React.useState(defaultTab)
@@ -469,7 +470,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
     const isValid = formIsValid()
     if (isValid) {
       setProgress(true)
-
+      setLeavingPage(true)
       await axiosClient
         .post('/orders', form)
         .then(res => {
@@ -477,6 +478,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           enqueueSnackbar('Your order has been submitted', {
             variant: 'success'
           })
+          setForm({ cart: {} })
           setProgress(false)
           if (form.donation > 0) {
             createDonation(
@@ -533,9 +535,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   cases = Math.floor(quantity / 48)
   items = quantity % 48
   for (let c = 0; c < cases; c++) {
-    chips.push(
-      <Chip key={keyIndex++} variant='outlined' label='48' />
-    )
+    chips.push(<Chip key={keyIndex++} variant='outlined' label='48' />)
   }
   if (items > 0) {
     if (cases > 1) {
@@ -548,13 +548,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
         />
       )
     } else {
-      chips.push(
-        <Chip
-          key={keyIndex++}
-          variant='outlined'
-          label={items}
-        />
-      )
+      chips.push(<Chip key={keyIndex++} variant='outlined' label={items} />)
     }
   }
   if (chips.length > 0) {
@@ -628,7 +622,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             <Grid>
               <Typography style={{ margin: 10 }}>
                 <CallIcon
-                  color='primary'
+                  color='secondary'
                   style={{
                     marginTop: 10,
                     marginLeft: 10,
@@ -640,7 +634,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <MenuBookIcon
                   onClick={() => setShowPrivacy(!showPrivacy)}
-                  color='primary'
+                  color='secondary'
                   style={{
                     marginTop: 10,
                     marginLeft: 10,
@@ -651,7 +645,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                 Privacy Policy
                 <br />
                 <MailOutlineIcon
-                  color='primary'
+                  color='secondary'
                   style={{
                     marginTop: 10,
                     marginLeft: 10,
@@ -905,7 +899,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     style={{ margin: 20 }}
                     onClick={handleSubmit}
                     startIcon={<SendIcon />}
-                    disabled={progress}
+                    disabled={leavingPage}
                   >
                     Request Shipment
                   </Button>

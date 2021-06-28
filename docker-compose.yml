@@ -9,7 +9,7 @@ services:
     labels:
       - 'traefik.backend=go-ui'
       - 'traefik.port=8045'
-      - 'traefik.frontend.rule=Host:gothereforeministries.org,gothereforeministries.org'
+      - 'traefik.frontend.rule=Host:gothereforeministries.org,www.gothereforeministries.org'
     networks:
       web:
     image: wayimp/go-ui
