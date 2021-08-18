@@ -832,6 +832,18 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     error={form.customerEmail ? false : true}
                   />
                 </Grid>
+                <Grid item>
+                  <TextField
+                    className={classes.textField}
+                    variant='outlined'
+                    name='customerCompany'
+                    label='Company Name'
+                    defaultValue={form.customerCompany ? form.customerCompany : ''}
+                    onChange={changeField}
+                    onBlur={blurField}
+                    disabled={readOnly}
+                  />
+                </Grid>
               </Grid>
               <Grid
                 container
@@ -864,6 +876,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     />
                     <FormHelperText>
                       Your donation helps us to distribute more Bibles
+                      <br />
+                      Suggested donation:
+                      {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per
+                      Bible)
                     </FormHelperText>
                   </FormControl>
                   <FormControlLabel

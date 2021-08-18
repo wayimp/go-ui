@@ -381,6 +381,7 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
       Notes: 'Created from web order',
       DisplayName: orderInfo.customerName,
       PrintOnCheckName: orderInfo.customerName,
+      CompanyName: orderInfo.customerCompany,
       Active: true,
       BillAddr: {
         Line1: orderInfo.customerStreet,
@@ -453,18 +454,20 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
         Line1: orderInfo.customerName,
         Line2: orderInfo.customerStreet,
         Line3:
-          orderInfo.customerCity +
-          ', ' +
-          orderInfo.customerState +
+          (orderInfo.customerCity ? orderInfo.customerCity.trim() : '') +
+          ',' +
+          (orderInfo.customerState ? orderInfo.customerState.trim() : '') +
           ' ' +
-          orderInfo.customerZip,
+          (orderInfo.customerZip ? orderInfo.customerZip.trim() : ''),
         Line4: ''
       },
       ShipAddr: {
-        Line1: orderInfo.customerStreet,
-        City: orderInfo.customerCity,
-        CountrySubDivisionCode: orderInfo.customerState,
-        PostalCode: orderInfo.customerZip
+        Line1: orderInfo.customerStreet ? orderInfo.customerStreet.trim() : '',
+        City: orderInfo.customerCity ? orderInfo.customerCity.trim() : '',
+        CountrySubDivisionCode: orderInfo.customerState
+          ? orderInfo.customerState.trim()
+          : '',
+        PostalCode: orderInfo.customerZip ? orderInfo.customerZip : ''
       },
       BillEmail: { Address: orderInfo.customerEmail },
       CurrencyRef: {
@@ -553,31 +556,35 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
             />
           </Grid>
           <Box width={1}>
-            {days.map(day => (
-              <Card key={day} className={classes.section}>
-                <h3>{day}</h3>
-                <Grid
-                  container
-                  spacing={1}
-                  justify='center'
-                  alignItems='flex-start'
-                >
-                  {ordersSorted
-                    .filter(order => order.daySubmitted === day)
-                    .map(order => (
-                      <OrderCard
-                        key={order._id}
-                        propsOrder={order}
-                        workflows={workflows}
-                        products={products}
-                        getData={getOrders}
-                        showInactive={showInactive}
-                        handleOpenDialog={handleOpenDialog}
-                      />
-                    ))}
-                </Grid>
-              </Card>
-            ))}
+            {ordersSorted.length === 0 ? (
+              <h2>No Open Orders</h2>
+            ) : (
+              days.map(day => (
+                <Card key={day} className={classes.section}>
+                  <h3>{day}</h3>
+                  <Grid
+                    container
+                    spacing={1}
+                    justify='center'
+                    alignItems='flex-start'
+                  >
+                    {ordersSorted
+                      .filter(order => order.daySubmitted === day)
+                      .map(order => (
+                        <OrderCard
+                          key={order._id}
+                          propsOrder={order}
+                          workflows={workflows}
+                          products={products}
+                          getData={getOrders}
+                          showInactive={showInactive}
+                          handleOpenDialog={handleOpenDialog}
+                        />
+                      ))}
+                  </Grid>
+                </Card>
+              ))
+            )}
           </Box>
         </div>
       </main>
