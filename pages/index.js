@@ -837,7 +837,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     className={classes.textField}
                     variant='outlined'
                     name='customerCompany'
-                    label='Company Name'
+                    label='Ministry or Company'
                     defaultValue={form.customerCompany ? form.customerCompany : ''}
                     onChange={changeField}
                     onBlur={blurField}

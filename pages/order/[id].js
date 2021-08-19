@@ -274,6 +274,14 @@ const Order = ({ propsOrder, dispatch, token }) => {
                 </TableRow>
                 <TableRow>
                   <TableCell align='right' component='th' scope='row'>
+                    Ministry or Company:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.customerCompany ? order.customerCompany : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
                     Donation:
                   </TableCell>
                   <TableCell align='left'>
