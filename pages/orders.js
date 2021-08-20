@@ -455,9 +455,8 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
         Line2: orderInfo.customerStreet,
         Line3:
           (orderInfo.customerCity ? orderInfo.customerCity.trim() : '') +
-          ',' +
+          ', ' +
           (orderInfo.customerState ? orderInfo.customerState.trim() : '') +
-          ' ' +
           (orderInfo.customerZip ? orderInfo.customerZip.trim() : ''),
         Line4: ''
       },
