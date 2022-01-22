@@ -337,10 +337,22 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
       GivenName: firstName,
       FamilyName: lastName,
       ShipAddr: {
-        Line1: orderInfo.customerStreet,
-        City: orderInfo.customerCity,
-        CountrySubDivisionCode: orderInfo.customerState,
-        PostalCode: orderInfo.customerZip
+        Line1: orderInfo.customerStreet ? orderInfo.customerStreet.trim() : '',
+        City: orderInfo.customerCity ? orderInfo.customerCity.trim() : '',
+        CountrySubDivisionCode: orderInfo.customerState
+          ? orderInfo.customerState.trim()
+          : '',
+        PostalCode: orderInfo.customerZip ? orderInfo.customerZip.trim() : ''
+      },
+      BillAddr: {
+        Line1: orderInfo.customerName,
+        Line2: orderInfo.customerStreet ? orderInfo.customerStreet.trim() : '',
+        Line3:
+          (orderInfo.customerCity ? orderInfo.customerCity.trim() : '') +
+          ',' +
+          (orderInfo.customerState ? orderInfo.customerState.trim() : '') +
+          (orderInfo.customerZip ? orderInfo.customerZip.trim() : ''),
+        Line4: ''
       },
       PrimaryPhone: { FreeFormNumber: orderInfo.customerPhone },
       PrimaryEmailAddr: { Address: orderInfo.customerEmail }
@@ -371,9 +383,20 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
   }
 
   const createQuickBooksCustomer = () => {
-    const splitName = orderInfo.customerName.split(' ')
-    const firstName = splitName[0]
-    const lastName = splitName[splitName.length - 1]
+    let firstName = orderInfo?.customerName || ''
+    let lastName = orderInfo?.customerName || ''
+    const spacePosition = orderInfo?.customerName?.indexOf(' ')
+    if (spacePosition > 0) {
+      firstName = orderInfo.customerName
+        .split(' ')
+        .slice(0, -1)
+        .join(' ')
+      lastName = orderInfo.customerName
+        .split(' ')
+        .slice(-1)
+        .join(' ')
+    }
+
     const newCustomer = {
       Taxable: false,
       GivenName: firstName,
@@ -430,8 +453,8 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
     const splitName = orderInfo.customerName.split(' ')
     const firstName = splitName[0]
     const lastName = splitName[splitName.length - 1]
-    const date = new Date()
-    const dueDate = new Date(date.setMonth(date.getMonth() + 1))
+    const date = moment().tz('America/Chicago')
+    const dueDate = moment(date).add(1, 'M')
 
     const newInvoice = {
       AllowIPNPayment: true,
@@ -452,7 +475,7 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
       Balance: Number(orderInfo.donation),
       BillAddr: {
         Line1: orderInfo.customerName,
-        Line2: orderInfo.customerStreet,
+        Line2: orderInfo.customerStreet ? orderInfo.customerStreet.trim() : '',
         Line3:
           (orderInfo.customerCity ? orderInfo.customerCity.trim() : '') +
           ', ' +

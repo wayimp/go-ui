@@ -19,6 +19,7 @@ import ProductCard from '../components/ProductCardPublic'
 import Container from '@material-ui/core/Container'
 import Badge from '@material-ui/core/Badge'
 import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
 import Chip from '@material-ui/core/Chip'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
@@ -276,7 +277,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [leavingPage, setLeavingPage] = React.useState(false)
-  const [form, setForm] = React.useState({ cart: {} })
+  const [form, setForm] = React.useState({ cart: {}, newsletter: true })
   const { enqueueSnackbar } = useSnackbar()
   const [selectedTab, setSelectedTab] = React.useState(defaultTab)
   const [readOnly, setReadOnly] = React.useState(false)
@@ -352,6 +353,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const changeField = event => {
     const fieldName = event.target.name
     const fieldValue = event.target.value
+    changeValue(fieldName, fieldValue)
+  }
+
+  const changeCheckbox = event => {
+    const fieldName = event.target.name
+    const fieldValue = event.target.checked
     changeValue(fieldName, fieldValue)
   }
 
@@ -464,6 +471,21 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
       })
     }
     return valid
+  }
+
+  const handleSignup = async () => {
+    await axiosClient
+      .post('/newsletter', form)
+      .then(res => {
+        enqueueSnackbar('You have been signed up', {
+          variant: 'success'
+        })
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem signing up' + err, {
+          variant: 'error'
+        })
+      })
   }
 
   const handleSubmit = async () => {
@@ -819,26 +841,45 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                   />
                 </Grid>
                 <Grid item>
-                  <TextField
-                    required
-                    className={classes.textField}
-                    variant='outlined'
-                    name='customerEmail'
-                    label='Email'
-                    defaultValue={form.customerEmail ? form.customerEmail : ''}
-                    onChange={changeField}
-                    onBlur={blurField}
-                    disabled={readOnly}
-                    error={form.customerEmail ? false : true}
+                  <FormControl>
+                    <TextField
+                      required
+                      className={classes.textField}
+                      variant='outlined'
+                      name='customerEmail'
+                      label='Email'
+                      defaultValue={
+                        form.customerEmail ? form.customerEmail : ''
+                      }
+                      onChange={changeField}
+                      onBlur={blurField}
+                      disabled={readOnly}
+                      error={form.customerEmail ? false : true}
+                    />
+                  </FormControl>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        className={classes.checkbox}
+                        checked={form.newsletter}
+                        onChange={changeCheckbox}
+                        name='newsletter'
+                        color='secondary'
+                      />
+                    }
+                    label='Receive Occasional Newsletter'
                   />
                 </Grid>
+
                 <Grid item>
                   <TextField
                     className={classes.textField}
                     variant='outlined'
                     name='customerCompany'
                     label='Ministry or Company'
-                    defaultValue={form.customerCompany ? form.customerCompany : ''}
+                    defaultValue={
+                      form.customerCompany ? form.customerCompany : ''
+                    }
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
@@ -952,6 +993,43 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <Donations />
         </TabPanel>
         <TabPanel value={selectedTab} index={4} className={classes.tabPanel}>
+          <Card>
+            <CardContent>
+              <Box width={1}>
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
+                  name='customerName'
+                  label='Name'
+                  defaultValue={form.customerName ? form.customerName : ''}
+                  onChange={changeField}
+                  onBlur={blurField}
+                  disabled={readOnly}
+                />
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
+                  name='customerEmail'
+                  label='Email'
+                  defaultValue={form.customerEmail ? form.customerEmail : ''}
+                  onChange={changeField}
+                  onBlur={blurField}
+                  disabled={readOnly}
+                />
+                <Button
+                  variant='contained'
+                  color='primary'
+                  style={{ margin: 20 }}
+                  onClick={handleSignup}
+                  startIcon={<SendIcon />}
+                  disabled={leavingPage}
+                >
+                  Newsletter Sign Up
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+
           <BlockListSegmented blocks={blocks} category='stories' />
         </TabPanel>
       </Box>

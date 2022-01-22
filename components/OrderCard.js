@@ -44,6 +44,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked'
 import SaveIcon from '@material-ui/icons/Save'
 import { green, yellow, orange } from '@material-ui/core/colors'
+import EditIcon from '@material-ui/icons/Edit'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import CancelIcon from '@material-ui/icons/Cancel'
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
@@ -196,6 +197,7 @@ const OrderCard = ({
   const [order, setOrder] = React.useState(propsOrder)
   const [expanded, setExpanded] = React.useState(false)
   const [details, setDetails] = React.useState(false)
+  const [edit, setEdit] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const [openProducts, setOpenProducts] = React.useState(false)
@@ -219,6 +221,14 @@ const OrderCard = ({
 
   const handleConfirmDeleteClose = () => {
     setConfirmDelete(false)
+  }
+
+  const handleEditOpen = () => {
+    setEdit(true)
+  }
+
+  const handleEditClose = () => {
+    setEdit(false)
   }
 
   const handleOpen = () => {
@@ -380,6 +390,16 @@ const OrderCard = ({
     handleClose()
   }
 
+  const handleEditCancel = () => {
+    changeValue('notes', propsOrder.notes)
+    handleEditClose()
+  }
+
+  const handleEditSubmit = () => {
+    updateOrder(order)
+    handleEditClose()
+  }
+
   const handleDelete = async () => {
     setConfirmDelete(false)
     await axiosClient({
@@ -441,6 +461,11 @@ const OrderCard = ({
         }
         action={
           <>
+            <Tooltip title='Edit'>
+              <IconButton onClick={handleEditOpen} color='primary'>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
             <Tooltip title='Notes'>
               <IconButton onClick={handleOpen} color='primary'>
                 <AssignmentIcon />
@@ -607,8 +632,130 @@ const OrderCard = ({
           </Grid>
         </Collapse>
       </Box>
+
       <Modal
         id='edit'
+        className={classes.modal}
+        open={edit}
+        onClose={handleEditClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500
+        }}
+      >
+        <Fade in={edit}>
+          <div className={classes.paper}>
+            <Box width={1}>
+              <Grid>
+                <TextField
+                  className={classes.textFieldWide}
+                  multiline={true}
+                  variant='outlined'
+                  name='customerName'
+                  label='Name'
+                  defaultValue={order.customerName ? order.customerName : ''}
+                  onBlur={changeField}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  className={classes.textFieldWide}
+                  multiline={true}
+                  variant='outlined'
+                  name='customerStreet'
+                  label='Street Address'
+                  defaultValue={
+                    order.customerStreet ? order.customerStreet : ''
+                  }
+                  onBlur={changeField}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  className={classes.textFieldWide}
+                  multiline={true}
+                  variant='outlined'
+                  name='customerCity'
+                  label='City'
+                  defaultValue={order.customerCity ? order.customerCity : ''}
+                  onBlur={changeField}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  className={classes.textField}
+                  multiline={true}
+                  variant='outlined'
+                  name='customerState'
+                  label='State'
+                  defaultValue={order.customerState ? order.customerState : ''}
+                  onBlur={changeField}
+                />
+                <TextField
+                  className={classes.textField}
+                  multiline={true}
+                  variant='outlined'
+                  name='customerZip'
+                  label='Zip'
+                  defaultValue={order.customerZip ? order.customerZip : ''}
+                  onBlur={changeField}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  className={classes.textFieldWide}
+                  multiline={true}
+                  variant='outlined'
+                  name='customerPhone'
+                  label='Phone'
+                  defaultValue={order.customerPhone ? order.customerPhone : ''}
+                  onBlur={changeField}
+                />
+              </Grid>
+              <Grid>
+                <TextField
+                  className={classes.textFieldWide}
+                  multiline={true}
+                  variant='outlined'
+                  name='customerEmail'
+                  label='Email'
+                  defaultValue={order.customerEmail ? order.customerEmail : ''}
+                  onBlur={changeField}
+                />
+              </Grid>
+            </Box>
+            <Grid
+              container
+              direction='row'
+              justify='flex-end'
+              alignItems='flex-start'
+            >
+              <Button
+                variant='contained'
+                color='secondary'
+                style={{ margin: 20 }}
+                onClick={handleEditCancel}
+                startIcon={<CancelIcon />}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant='contained'
+                color='primary'
+                style={{ margin: 20 }}
+                onClick={handleEditSubmit}
+                startIcon={<SaveIcon />}
+              >
+                Save
+              </Button>
+            </Grid>
+          </div>
+        </Fade>
+      </Modal>
+
+      <Modal
+        id='notes'
         className={classes.modal}
         open={open}
         onClose={handleClose}

@@ -34,7 +34,7 @@ const BlockDisplay = ({ blocks, category }) => {
     return (
       <Card className={classes.root}>
         <div className={classes.details}>
-          <CardContent className={classes.content}>
+          <CardContent >
             <Box width={1}>
               <Grid>
                 {blocks.map(block => {
