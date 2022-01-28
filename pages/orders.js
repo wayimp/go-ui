@@ -351,6 +351,7 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
           (orderInfo.customerCity ? orderInfo.customerCity.trim() : '') +
           ',' +
           (orderInfo.customerState ? orderInfo.customerState.trim() : '') +
+          ' ' +
           (orderInfo.customerZip ? orderInfo.customerZip.trim() : ''),
         Line4: ''
       },
@@ -480,6 +481,7 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
           (orderInfo.customerCity ? orderInfo.customerCity.trim() : '') +
           ', ' +
           (orderInfo.customerState ? orderInfo.customerState.trim() : '') +
+          ' ' +
           (orderInfo.customerZip ? orderInfo.customerZip.trim() : ''),
         Line4: ''
       },
