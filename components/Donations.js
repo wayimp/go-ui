@@ -130,7 +130,7 @@ export default function Pricing () {
 
     await axiosClient.post('/orders', {
       cart: {},
-      donation: intPrice,
+      donation: intPrice / 100,
       customerName: 'Direct Donor'
     })
 
