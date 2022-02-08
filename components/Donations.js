@@ -127,6 +127,13 @@ export default function Pricing () {
 
   const createDonation = async price => {
     const intPrice = parseInt(Math.floor(price * 100))
+
+    await axiosClient.post('/orders', {
+      cart: {},
+      donation: intPrice,
+      customerName: 'Direct Donor'
+    })
+
     await axiosClient({
       method: 'post',
       url: '/donation',

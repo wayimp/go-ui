@@ -501,10 +501,19 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
       Line: []
     }
 
-    Object.entries(orderInfo.cart).forEach(([key, value]) =>
+    // Count the total number of Bibles to assign an arbitrary rate to match the donation amount
+    let totalQty = 0
+    Object.entries(orderInfo.cart).forEach(([key, value]) => {
+      totalQty += value.quantity
+    })
+    if (totalQty > 0) {
+      const rate = Number(orderInfo.donation) / totalQty || 0.0
+    }
+
+    Object.entries(orderInfo.cart).forEach(([key, value]) => {
       newInvoice.Line.push({
         Description: value.title,
-        Amount: 0.0,
+        Amount: rate,
         DetailType: 'SalesItemLineDetail',
         SalesItemLineDetail: {
           ItemRef: {
@@ -514,7 +523,7 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
           Qty: value.quantity
         }
       })
-    )
+    })
 
     axiosClient({
       method: 'patch',
