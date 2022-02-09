@@ -62,7 +62,7 @@ import { green } from '@material-ui/core/colors'
 
 const formatDate = date => {
   var d = new Date(date),
-    month = '' + d.getMonth(),
+    month = '' + d.getMonth() + 1,
     day = '' + d.getDate(),
     year = d.getFullYear()
 
@@ -513,13 +513,14 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
     Object.entries(orderInfo.cart).forEach(([key, value]) => {
       newInvoice.Line.push({
         Description: value.title,
-        Amount: rate,
+        Amount: value.quantity * rate,
         DetailType: 'SalesItemLineDetail',
         SalesItemLineDetail: {
           ItemRef: {
             value: value.qbId,
             name: value.qbName
           },
+          UnitPrice: rate,
           Qty: value.quantity
         }
       })
