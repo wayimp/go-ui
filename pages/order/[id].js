@@ -274,6 +274,14 @@ const Order = ({ propsOrder, dispatch, token }) => {
                 </TableRow>
                 <TableRow>
                   <TableCell align='right' component='th' scope='row'>
+                    Referral:
+                  </TableCell>
+                  <TableCell align='left'>
+                    {order.referral ? order.referral : ''}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align='right' component='th' scope='row'>
                     Ministry or Company:
                   </TableCell>
                   <TableCell align='left'>

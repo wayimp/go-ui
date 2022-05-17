@@ -126,6 +126,13 @@ export default function SearchAppBar () {
                   </Link>
                 </Typography>
               </Grid>
+              <Grid item xs={1}>
+                <Typography noWrap>
+                  <Link href='/stories' className={classes.title}>
+                    Stories
+                  </Link>
+                </Typography>
+              </Grid>
             </Grid>
           </Box>
         </Toolbar>

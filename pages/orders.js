@@ -15,7 +15,7 @@ import OrderCard from '../components/OrderCard'
 import { flatten } from 'lodash'
 import moment from 'moment'
 const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
-const dateDisplay = 'dddd MMMM DD'
+const dateDisplay = 'dddd, MMMM DD, YYYY'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Card from '@material-ui/core/Card'
@@ -58,11 +58,12 @@ import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 import MenuOpenIcon from '@material-ui/icons/MenuOpen'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
+import Pagination from '@material-ui/lab/Pagination'
 import { green } from '@material-ui/core/colors'
 
 const formatDate = date => {
   var d = new Date(date),
-    month = '' + d.getMonth() + 1,
+    month = '' + (d.getMonth() + 1),
     day = '' + d.getDate(),
     year = d.getFullYear()
 
@@ -180,14 +181,23 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
   const [search, setSearch] = React.useState('')
   const [confirmUseQuickBooks, setConfirmUseQuickBooks] = React.useState(false)
   const [confirmUseOrder, setConfirmUseOrder] = React.useState(false)
+  const [page, setPage] = React.useState(1)
 
   const changeShowInactive = event => {
     if (event && event.target) {
       const { checked } = event.target
-      getOrders(checked)
       setShowInactive(checked)
+      setPage(1)
     }
   }
+
+  const handlePageChange = (event, value) => {
+    setPage(value)
+  }
+
+  useEffect(() => {
+    getOrders()
+  }, [showInactive, page])
 
   const handleOpenDialog = order => {
     setOrderInfo(order)
@@ -210,10 +220,11 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
     getCustomers()
   }
 
-  const getOrders = inactive => {
-    let url = inactive ? '/orders?showInactive=true' : '/orders'
+  const getOrders = () => {
+    let url = showInactive ? '/orders?showInactive=true' : '/orders'
+    url += showInactive ? `&pageNo=${page}` : `?pageNo=${page}`
     if (search && search.length > 0) {
-      url += inactive ? `&search=${search}` : `?search=${search}`
+      url += `&search=${search}`
     }
 
     axiosClient({
@@ -589,9 +600,12 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
               label='Show Archived'
             />
           </Grid>
+          <Grid container direction='row' justify='center' alignItems='center'>
+            <Pagination count={10} page={page} onChange={handlePageChange} />
+          </Grid>
           <Box width={1}>
             {ordersSorted.length === 0 ? (
-              <h2>No Open Orders</h2>
+              <h2>Nothing Here</h2>
             ) : (
               days.map(day => (
                 <Card key={day} className={classes.section}>
@@ -624,7 +638,6 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
       </main>
       <Dialog
         id='selectCustomer'
-        fullWidth={true}
         maxWidth={'md'}
         fullHeight={true}
         maxHeight={'md'}

@@ -488,6 +488,21 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
       })
   }
 
+  const handleStory = async () => {
+    await axiosClient
+      .post('/stories', form)
+      .then(res => {
+        enqueueSnackbar('Your story has been sent.', {
+          variant: 'success'
+        })
+      })
+      .catch(err => {
+        enqueueSnackbar('There was a problem sending your story ' + err, {
+          variant: 'error'
+        })
+      })
+  }
+
   const handleSubmit = async () => {
     const isValid = formIsValid()
     if (isValid) {
@@ -857,17 +872,18 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                       error={form.customerEmail ? false : true}
                     />
                   </FormControl>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        className={classes.checkbox}
-                        checked={form.newsletter}
-                        onChange={changeCheckbox}
-                        name='newsletter'
-                        color='secondary'
-                      />
-                    }
-                    label='Receive Occasional Newsletter'
+                </Grid>
+
+                <Grid item>
+                  <TextField
+                    className={classes.textField}
+                    variant='outlined'
+                    name='referral'
+                    label='How did you find us?'
+                    defaultValue={form.referral ? form.referral : ''}
+                    onChange={changeField}
+                    onBlur={blurField}
+                    disabled={readOnly}
                   />
                 </Grid>
 
@@ -880,6 +896,19 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     defaultValue={
                       form.customerCompany ? form.customerCompany : ''
                     }
+                    onChange={changeField}
+                    onBlur={blurField}
+                    disabled={readOnly}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    className={classes.textField}
+                    variant='outlined'
+                    name='instructions'
+                    label='Leave us a note'
+                    defaultValue={form.instructions ? form.instructions : ''}
+                    multiline={true}
                     onChange={changeField}
                     onBlur={blurField}
                     disabled={readOnly}
@@ -935,20 +964,20 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     }
                     label='Cover Transaction Fee'
                   />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    className={classes.textField}
-                    variant='outlined'
-                    name='instructions'
-                    label='Leave us a note'
-                    defaultValue={form.instructions ? form.instructions : ''}
-                    multiline={true}
-                    onChange={changeField}
-                    onBlur={blurField}
-                    disabled={readOnly}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        className={classes.checkbox}
+                        checked={form.newsletter}
+                        onChange={changeCheckbox}
+                        name='newsletter'
+                        color='secondary'
+                      />
+                    }
+                    label='Receive Occasional Newsletter'
                   />
                 </Grid>
+
                 <Grid item>
                   <Button
                     variant='contained'
@@ -993,7 +1022,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <Donations />
         </TabPanel>
         <TabPanel value={selectedTab} index={4} className={classes.tabPanel}>
-          <Card>
+          <Card style={{ marginLeft: '10%' }}>
             <CardContent>
               <Box width={1}>
                 <TextField
@@ -1031,6 +1060,67 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           </Card>
 
           <BlockListSegmented blocks={blocks} category='stories' />
+
+          <Card style={{ marginLeft: '10%' }}>
+            <CardContent>
+              <Box width={1}>
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
+                  name='customerEmail'
+                  label='Email'
+                  defaultValue={form.customerEmail ? form.customerEmail : ''}
+                  onChange={changeField}
+                  onBlur={blurField}
+                  disabled={readOnly}
+                />
+
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
+                  name='customerName'
+                  label='Name'
+                  defaultValue={form.customerName ? form.customerName : ''}
+                  onChange={changeField}
+                  onBlur={blurField}
+                  disabled={readOnly}
+                />
+
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
+                  name='location'
+                  label='Location'
+                  defaultValue={form.location ? form.location : ''}
+                  onChange={changeField}
+                  onBlur={blurField}
+                  disabled={readOnly}
+                />
+
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
+                  name='story'
+                  label='Story'
+                  defaultValue={form.story ? form.story : ''}
+                  onChange={changeField}
+                  onBlur={blurField}
+                  disabled={readOnly}
+                />
+
+                <Button
+                  variant='contained'
+                  color='primary'
+                  style={{ margin: 20 }}
+                  onClick={handleStory}
+                  startIcon={<SendIcon />}
+                  disabled={leavingPage}
+                >
+                  Submit Testimony
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
         </TabPanel>
       </Box>
       <Modal
