@@ -172,6 +172,11 @@ const useStyles = makeStyles(theme => ({
     border: 1,
     margin: 10
   },
+  frontPanel: {
+    margin: 0,
+    flexGrow: 1,
+    background: "url('https://files.lifereferencemanual.net/go/gobanner.jpg')"
+  },
   img: {
     border: 1,
     margin: 5
@@ -288,6 +293,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const [addFee, setAddFee] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
+  useEffect(() => {
+    document.body.className = selectedTab == 0 ? 'front' : '';
+  });
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
@@ -362,7 +371,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
     changeValue(fieldName, fieldValue)
   }
 
-  const blurField = event => {}
+  const blurField = event => { }
 
   const changeAddFee = event => {
     let updateDonation = Number(0 + form.donation)
@@ -615,7 +624,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <Badge badgeContent={quantity ? quantity : 0} color='error'>
             <Typography style={{ marginTop: 7 }}>
               Suggested Donation:&nbsp;
-              {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per Bible)
+              {numeral(quantity * 4).format(priceFormat)}&nbsp;($4 per Bible)
             </Typography>
           </Badge>
         </Fab>
@@ -892,7 +901,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     className={classes.textField}
                     variant='outlined'
                     name='customerCompany'
-                    label='Ministry or Company'
+                    label='Name of Ministry or Company'
                     defaultValue={
                       form.customerCompany ? form.customerCompany : ''
                     }
@@ -948,7 +957,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                       Your donation helps us to distribute more Bibles
                       <br />
                       Suggested donation:
-                      {numeral(quantity * 3).format(priceFormat)}&nbsp;($3 per
+                      {numeral(quantity * 4).format(priceFormat)}&nbsp;($4 per
                       Bible)
                     </FormHelperText>
                   </FormControl>
@@ -1144,7 +1153,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   )
 }
 
-export async function getServerSideProps (context) {
+export async function getServerSideProps(context) {
   let defaultTab = 0
   if (context.query) {
     const { t } = context.query

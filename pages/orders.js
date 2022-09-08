@@ -163,7 +163,8 @@ const useStyles = makeStyles(theme => ({
     minWidth: 600
   },
   dialogPaper: {
-    overflowY: 'visible'
+    overflowY: 'visible',
+    minHeight: '55vh'
   }
 }))
 
@@ -640,7 +641,6 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
         id='selectCustomer'
         maxWidth={'md'}
         fullHeight={true}
-        maxHeight={'md'}
         open={customerDialog}
         onClose={handleCloseDialog}
         classes={{
