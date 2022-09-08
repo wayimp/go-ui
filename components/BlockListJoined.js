@@ -11,19 +11,7 @@ import BlockText from './BlockText'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    overflow: 'visible'
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
-  },
-  content: {
-    display: 'flex'
-  },
-  mirror: {
-    transform: [{ scaleX: -1 }]
+    backgroundColor: 'rgba(0,0,0,0.0)'
   }
 }))
 
@@ -32,23 +20,17 @@ const BlockDisplay = ({ blocks, category }) => {
     const classes = useStyles()
 
     return (
-      <Card className={classes.root}>
-        <div className={classes.details}>
-          <CardContent >
-            <Box width={1}>
-              <Grid>
-                {blocks.map(block => {
-                  if (block.category === category) {
-                    if (block.type === 'video')
-                      return <BlockVideo key={block._id} block={block} />
-                    else return <BlockText key={block._id} block={block} />
-                  } else return ''
-                })}
-              </Grid>
-            </Box>
-          </CardContent>
-        </div>
-      </Card>
+      <Box width={1} className={classes.root}>
+        <Grid>
+          {blocks.map(block => {
+            if (block.category === category) {
+              if (block.type === 'video')
+                return <BlockVideo key={block._id} block={block} />
+              else return <BlockText key={block._id} block={block} />
+            } else return ''
+          })}
+        </Grid>
+      </Box>
     )
   }
 }

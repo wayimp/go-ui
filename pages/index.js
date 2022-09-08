@@ -109,9 +109,6 @@ const useStyles = makeStyles(theme => ({
     margin: 20,
     padding: 20
   },
-  center: {
-    textAlign: 'center'
-  },
   content: {
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
@@ -125,6 +122,12 @@ const useStyles = makeStyles(theme => ({
   center: {
     textAlign: 'center',
     flexGrow: 1
+  },
+  mainlogo: {
+    display: 'block',
+    width: '40%',
+    marginLeft: 'auto',
+    marginRight: 'auto'
   },
   lines: {
     display: 'flex',
@@ -657,7 +660,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             scrollButtons='auto'
           >
             <img
-              src='https://files.lifereferencemanual.net/go/logo.png'
+              src='https://files.lifereferencemanual.net/go/barlogo.png'
               style={{ maxHeight: 60, margin: 10 }}
             />
             <Tab label='About' value={0} />
@@ -731,7 +734,13 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <MenuIcon />
         </Fab>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
-          <BlockListJoined blocks={blocks} category='frontPage' />
+          <div style={{ marginTop: '40%' }}>
+            <img
+              src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
+              className={classes.mainlogo}
+            />
+            <BlockListJoined blocks={blocks} category='frontPage' />
+          </div>
         </TabPanel>
         <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
           <FormControl variant='outlined'>

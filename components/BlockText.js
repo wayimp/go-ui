@@ -5,7 +5,8 @@ import Box from '@material-ui/core/Box'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%'
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.0)'
   }
 }))
 
