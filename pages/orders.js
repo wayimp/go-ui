@@ -515,11 +515,12 @@ const Page = ({ dispatch, token, workflows, products, settings }) => {
 
     // Count the total number of Bibles to assign an arbitrary rate to match the donation amount
     let totalQty = 0
+    let rate = 0
     Object.entries(orderInfo.cart).forEach(([key, value]) => {
       totalQty += value.quantity
     })
     if (totalQty > 0) {
-      const rate = Number(orderInfo.donation) / totalQty || 0.0
+      rate = Number(orderInfo.donation) / totalQty || 0.0
     }
 
     Object.entries(orderInfo.cart).forEach(([key, value]) => {
