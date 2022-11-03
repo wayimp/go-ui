@@ -11,7 +11,7 @@ import BlockText from './BlockText'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: 'rgba(0,0,0,0.0)'
+    backgroundColor: 'transparent'
   }
 }))
 

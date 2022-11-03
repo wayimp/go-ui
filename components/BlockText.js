@@ -15,7 +15,7 @@ const BlockDisplay = ({ block }) => {
     const classes = useStyles()
 
     return (
-      <div style={{marginLeft: '10%'}} className='se-wrapper-inner se-wrapper-wysiwyg sun-editor-editable'>
+      <div style={{margin: 'auto', width: '80%'}} className='se-wrapper-inner se-wrapper-wysiwyg sun-editor-editable'>
         {parse(block.html)}
       </div>
     )

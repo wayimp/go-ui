@@ -3,6 +3,13 @@ import { red } from '@material-ui/core/colors';
 
 // Create a theme instance.
 const theme = createMuiTheme({
+  typography: {
+    "fontFamily": `"Calibri", "Open Sans", sans-serif`,
+    "fontSize": 'medium',
+    "fontWeightLight": 300,
+    "fontWeightRegular": 400,
+    "fontWeightMedium": 500
+  },
   palette: {
     primary: {
       main: '#2B4168'
@@ -11,7 +18,7 @@ const theme = createMuiTheme({
       main: '#736441'
     },
     action: {
-      main: '#FFFFFF', 
+      main: '#FFFFFF',
     },
     error: {
       main: red.A400,

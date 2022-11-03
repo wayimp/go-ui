@@ -2,7 +2,7 @@
   width: auto;
   height: auto;
   box-sizing: border-box;
-  font-family: Helvetica Neue, sans-serif;
+  font-family: Calibri, 'Open Sans', sans-serif;
   border: 1px solid #dadada;
   background-color: #fff;
   color: #000;
@@ -2017,11 +2017,11 @@
   }
 }
 .sun-editor-editable {
-  font-family: Helvetica Neue, sans-serif;
+  font-family: Calibri, 'Open Sans', sans-serif;
   font-size: 13px;
   color: #333;
   line-height: 1.5;
-  background-color: #fff;
+  background-color: transparent;
   word-break: normal;
   word-wrap: break-word;
   padding: 16px;

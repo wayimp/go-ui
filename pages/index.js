@@ -125,7 +125,15 @@ const useStyles = makeStyles(theme => ({
   },
   mainlogo: {
     display: 'block',
-    width: '40%',
+    width: '80%',
+    padding: '10%',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  footerlogo: {
+    marginTop: '40px',
+    display: 'block',
+    maxWidth: '300px',
     marginLeft: 'auto',
     marginRight: 'auto'
   },
@@ -661,7 +669,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           >
             <img
               src='https://files.lifereferencemanual.net/go/barlogo.png'
-              style={{ maxHeight: 60, margin: 10 }}
+              style={{ maxHeight: 60, margin: 10, paddingLeft: 20 }}
             />
             <Tab label='About' value={0} />
             <Tab label='Catalog' value={1} />
@@ -734,13 +742,77 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <MenuIcon />
         </Fab>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
-          <div style={{ marginTop: '40%' }}>
+          <div style={{ marginTop: '25%' }}>
             <img
               src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
               className={classes.mainlogo}
             />
             <BlockListJoined blocks={blocks} category='frontPage' />
           </div>
+          <Container style={{ maxWidth: '80vw', overflowX: 'scroll', overflowY: 'hidden' }}>
+            <List style={{ display: 'flex', flexDirection: 'row', padding: 0 }}>
+              <ListItem>
+                <img
+                  style={{ maxHeight: 100 }}
+                  src={`/partners/compassion-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+              <ListItem>
+                <img
+                style={{ maxHeight: 100 }}
+                  src={`/partners/crowes-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+              <ListItem>
+                <img
+                style={{ maxHeight: 100 }}
+                  src={`/partners/flashpoint-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+              <ListItem>
+                <img
+                style={{ maxHeight: 100 }}
+                  src={`/partners/kickingbear-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+              <ListItem>
+                <img
+                style={{ maxHeight: 100 }}
+                  src={`/partners/maf-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+              <ListItem>
+                <img
+                style={{ maxHeight: 100 }}
+                  src={`/partners/mario-murillo-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+              <ListItem>
+                <img
+                style={{ maxHeight: 100 }}
+                  src={`/partners/mercy-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+              <ListItem>
+                <img
+                style={{ maxHeight: 100 }}
+                  src={`/partners/raceway-logo-sm.png`}
+                  loading="lazy"
+                />
+              </ListItem>
+            </List>
+          </Container>
+          <img
+              src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
+              className={classes.footerlogo}
+            />
         </TabPanel>
         <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
           <FormControl variant='outlined'>
