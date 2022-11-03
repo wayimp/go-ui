@@ -1208,48 +1208,48 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <BlockListJoined blocks={blocks} category='faq' />
         </TabPanel>
       </Box>
-      {selectedTab !== 0 ? '' :
-        <Toolbar style={{ color: 'lightgrey', backgroundColor: '#2B4168' }}>
-          <Grid>
-            <Tabs
-              value={selectedTab}
-              onChange={(event, newValue) => {
-                setSelectedTab(newValue)
-              }}
-              indicatorColor='primary'
-              variant='scrollable'
-              scrollButtons='auto'
-            >
-              <Tab label='Catalog' value={1} />
-              <Tab label='Order' value={2} />
-              <Tab label='Donate' value={3} />
-              <Tab label='Stories' value={4} />
-              <Tab label='FAQs' value={5} />
-            </Tabs>
-            <div style={{ textAlign: 'center' }}>
-              <Typography>
-                <CallIcon
-                  color='secondary'
-                  style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-                />
-                {settings.business_phone}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <MenuBookIcon
-                  onClick={() => setShowPrivacy(!showPrivacy)}
-                  color='secondary'
-                  style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-                />
-                Privacy Policy
-                <MailOutlineIcon
-                  color='secondary'
-                  style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-                />
-                {settings.business_address}
-              </Typography>
-            </div>
-          </Grid>
+      <AppBar position='sticky' style={{ color: 'lightgrey', backgroundColor: '#2B4168', margin: '0px' }}>
+        <Grid>
+          <Tabs
+            value={selectedTab}
+            onChange={(event, newValue) => {
+              setSelectedTab(newValue)
+            }}
+            indicatorColor='primary'
+            variant='scrollable'
+            scrollButtons='auto'
+          >
+            <Tab label='About' value={0} />
+            <Tab label='Catalog' value={1} />
+            <Tab label='Order' value={2} />
+            <Tab label='Donate' value={3} />
+            <Tab label='Stories' value={4} />
+            <Tab label='FAQs' value={5} />
+          </Tabs>
+          <div style={{ textAlign: 'center' }}>
+            <Typography>
+              <CallIcon
+                color='secondary'
+                style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+              />
+              {settings.business_phone}
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <MenuBookIcon
+                onClick={() => setShowPrivacy(!showPrivacy)}
+                color='secondary'
+                style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+              />
+              Privacy Policy
+              <MailOutlineIcon
+                color='secondary'
+                style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+              />
+              {settings.business_address}
+            </Typography>
+          </div>
+        </Grid>
 
-        </Toolbar>}
+      </AppBar>
       <Modal
         id='items'
         className={classes.modalScroll}
