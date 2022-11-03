@@ -4,6 +4,40 @@ body {
   font-family: Calibri, 'Open Sans', sans-serif;
 }
 
+.front-header {
+  font-family: 'Trebuchet MS';
+  font-weight: 800;
+  font-size: 36px;
+  color: rgb(43, 65, 104);
+  box-sizing: border-box;
+  overflow: visible;
+  display: inline;
+  vertical-align: baseline;
+}
+
+.front-sub {
+  font-family: 'Trebuchet MS';
+  font-weight: 800;
+  box-sizing: border-box;
+  overflow: visible;
+  display: inline; 
+  vertical-align: baseline; 
+  color: rgb(0, 0, 0); 
+  font-size: 22px;
+}
+
+.front-text {
+  font-family: 'Georgia';
+  font-size: 22px;
+  box-sizing: border-box;
+  overflow: visible;
+  color: inherit;
+  display: inline;
+  vertical-align: baseline;
+  margin: 0px;
+  padding: 0px;
+}
+
 .front {
   margin: 0;
   background-image: url(https://files.lifereferencemanual.net/go/gobanner.jpg);

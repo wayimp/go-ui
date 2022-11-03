@@ -3,11 +3,12 @@ import Router from 'next/router'
 import { axiosClient } from '../src/axiosClient'
 import { useSnackbar } from 'notistack'
 import { connect } from 'react-redux'
-import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../src/Link'
 import TabPanel from '../components/TabPanel'
 import Subscriptions from '../components/Subscriptions'
 import Donations from '../components/Donations'
+import BlockFirst from '../components/BlockFirst'
 import BlockListJoined from '../components/BlockListJoined'
 import BlockListSegmented from '../components/BlockListSegmented'
 import numeral from 'numeral'
@@ -53,6 +54,7 @@ import WarningIcon from '@material-ui/icons/Warning'
 import { red } from '@material-ui/core/colors'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import SendIcon from '@material-ui/icons/Send'
+import QuestionIcon from '@material-ui/icons/QuestionAnswer';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 import Fab from '@material-ui/core/Fab'
 import CallIcon from '@material-ui/icons/Call'
@@ -317,7 +319,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['About', 'Catalog', 'Order', 'Donate', 'Stories'].map(
+        {['About', 'Catalog', 'Order', 'Donate', 'Stories', 'FAQs'].map(
           (text, index) => (
             <ListItem
               button
@@ -676,43 +678,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             <Tab label='Order' value={2} />
             <Tab label='Donate' value={3} />
             <Tab label='Stories' value={4} />
-            <Grid>
-              <Typography style={{ margin: 10 }}>
-                <CallIcon
-                  color='secondary'
-                  style={{
-                    marginTop: 10,
-                    marginLeft: 10,
-                    marginRight: 10,
-                    marginBottom: -8
-                  }}
-                />
-                {settings.business_phone}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <MenuBookIcon
-                  onClick={() => setShowPrivacy(!showPrivacy)}
-                  color='secondary'
-                  style={{
-                    marginTop: 10,
-                    marginLeft: 10,
-                    marginRight: 10,
-                    marginBottom: -8
-                  }}
-                />
-                Privacy Policy
-                <br />
-                <MailOutlineIcon
-                  color='secondary'
-                  style={{
-                    marginTop: 10,
-                    marginLeft: 10,
-                    marginRight: 10,
-                    marginBottom: -8
-                  }}
-                />
-                {settings.business_address}
-              </Typography>
-            </Grid>
+            <Tab label='FAQs' value={5} />
           </Tabs>
         </Grid>
         <Grid className={classes.chips} onClick={() => setSelectedTab(2)}>
@@ -749,6 +715,31 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             />
             <BlockListJoined blocks={blocks} category='frontPage' />
           </div>
+          <div style={{ margin: 'auto', width: '80%' }}>
+            <p />
+            <Divider />
+            <p />
+            <span className={'front-header'}>Frequently Asked Questions</span><br />
+            <BlockFirst blocks={blocks} category='faq' />
+            <Button
+              variant='contained'
+              color='primary'
+              style={{ margin: 20 }}
+              onClick={() => setSelectedTab(5)}
+              startIcon={<QuestionIcon />}
+            >
+              More FAQs
+            </Button>
+            <p />
+            <span className={'front-sub'}>Have any other questions?</span><br />
+            <span className={'front-text'}>&nbsp;&nbsp;&nbsp;&nbsp;Give us a call at (615) 773-1963 or send us an email at gothereforeministries@gmail.com</span>
+            <p />
+            <Divider />
+            <p />
+            <span className={'front-header'}>Our Partners</span><br />
+            <span className={'front-text'}>&nbsp;&nbsp;&nbsp;&nbsp;We're deeply thankful for our committed partners who have distributed hundreds of thousands of Life Reference Manuals over the past few decades.</span>
+          </div>
+          <p />
           <Container style={{ maxWidth: '80vw', overflowX: 'scroll', overflowY: 'hidden' }}>
             <List style={{ display: 'flex', flexDirection: 'row', padding: 0 }}>
               <ListItem>
@@ -760,49 +751,49 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               </ListItem>
               <ListItem>
                 <img
-                style={{ maxHeight: 100 }}
+                  style={{ maxHeight: 100 }}
                   src={`/partners/crowes-logo-sm.png`}
                   loading="lazy"
                 />
               </ListItem>
               <ListItem>
                 <img
-                style={{ maxHeight: 100 }}
+                  style={{ maxHeight: 100 }}
                   src={`/partners/flashpoint-logo-sm.png`}
                   loading="lazy"
                 />
               </ListItem>
               <ListItem>
                 <img
-                style={{ maxHeight: 100 }}
+                  style={{ maxHeight: 100 }}
                   src={`/partners/kickingbear-logo-sm.png`}
                   loading="lazy"
                 />
               </ListItem>
               <ListItem>
                 <img
-                style={{ maxHeight: 100 }}
+                  style={{ maxHeight: 100 }}
                   src={`/partners/maf-logo-sm.png`}
                   loading="lazy"
                 />
               </ListItem>
               <ListItem>
                 <img
-                style={{ maxHeight: 100 }}
+                  style={{ maxHeight: 100 }}
                   src={`/partners/mario-murillo-logo-sm.png`}
                   loading="lazy"
                 />
               </ListItem>
               <ListItem>
                 <img
-                style={{ maxHeight: 100 }}
+                  style={{ maxHeight: 100 }}
                   src={`/partners/mercy-logo-sm.png`}
                   loading="lazy"
                 />
               </ListItem>
               <ListItem>
                 <img
-                style={{ maxHeight: 100 }}
+                  style={{ maxHeight: 100 }}
                   src={`/partners/raceway-logo-sm.png`}
                   loading="lazy"
                 />
@@ -810,9 +801,9 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             </List>
           </Container>
           <img
-              src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
-              className={classes.footerlogo}
-            />
+            src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
+            className={classes.footerlogo}
+          />
         </TabPanel>
         <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
           <FormControl variant='outlined'>
@@ -1212,7 +1203,53 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             </CardContent>
           </Card>
         </TabPanel>
+        <TabPanel value={selectedTab} index={5} className={classes.tabPanel}>
+          <span className={'front-header'}>Frequently Asked Questions</span><p />
+          <BlockListJoined blocks={blocks} category='faq' />
+        </TabPanel>
       </Box>
+      {selectedTab !== 0 ? '' :
+        <Toolbar style={{ color: 'lightgrey', backgroundColor: '#2B4168' }}>
+          <Grid>
+            <Tabs
+              value={selectedTab}
+              onChange={(event, newValue) => {
+                setSelectedTab(newValue)
+              }}
+              indicatorColor='primary'
+              variant='scrollable'
+              scrollButtons='auto'
+            >
+              <Tab label='Catalog' value={1} />
+              <Tab label='Order' value={2} />
+              <Tab label='Donate' value={3} />
+              <Tab label='Stories' value={4} />
+              <Tab label='FAQs' value={5} />
+            </Tabs>
+            <div style={{ textAlign: 'center' }}>
+              <Typography>
+                <CallIcon
+                  color='secondary'
+                  style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+                />
+                {settings.business_phone}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <MenuBookIcon
+                  onClick={() => setShowPrivacy(!showPrivacy)}
+                  color='secondary'
+                  style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+                />
+                Privacy Policy
+                <MailOutlineIcon
+                  color='secondary'
+                  style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+                />
+                {settings.business_address}
+              </Typography>
+            </div>
+          </Grid>
+
+        </Toolbar>}
       <Modal
         id='items'
         className={classes.modalScroll}

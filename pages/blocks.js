@@ -167,6 +167,7 @@ const Page = ({ dispatch, token }) => {
 
   const categoryOptions = [
     { value: 'frontPage', label: 'Front Page' },
+    { value: 'faq', label: 'FAQ' },
     { value: 'donate', label: 'Donate' },
     { value: 'stories', label: 'Stories' }
   ]
