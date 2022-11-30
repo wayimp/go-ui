@@ -4,7 +4,7 @@ import { axiosClient } from '../../src/axiosClient'
 import { useSnackbar } from 'notistack'
 import { connect } from 'react-redux'
 import { flatten } from 'lodash'
-import { fade, makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Link from '../../src/Link'
 import TabPanel from '../../components/TabPanel'
 import numeral from 'numeral'
@@ -12,6 +12,7 @@ const priceFormat = '$0.00'
 import moment from 'moment-timezone'
 const dateFormat = 'YYYY-MM-DDTHH:mm:SS'
 const dateDisplay = 'dddd MMM DD hh:mm a'
+import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
 import Container from '@material-ui/core/Container'
@@ -22,6 +23,7 @@ import TextField from '@material-ui/core/TextField'
 import TableContainer from '@material-ui/core/TableContainer'
 import Tooltip from '@material-ui/core/Tooltip'
 import Table from '@material-ui/core/Table'
+import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
@@ -47,14 +49,17 @@ import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent'
 import { green, yellow, orange } from '@material-ui/core/colors'
 import CallIcon from '@material-ui/icons/Call'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
+import MenuBookIcon from '@material-ui/icons/MenuBook'
+import EmailIcon from '@material-ui/icons/Email'
 
 const useStyles = makeStyles(theme => ({
   toolbar: {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
+    marginTop: theme.spacing(18),
+    // necessary for content to be below app bar (doesn't work)
     ...theme.mixins.toolbar
   },
   formGroup: {
@@ -179,7 +184,7 @@ const useStyles = makeStyles(theme => ({
   logo: { height: 80, margin: 20 }
 }))
 
-const Order = ({ propsOrder, dispatch, token }) => {
+const Order = ({ propsOrder, dispatch, token, settings }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [order, setOrder] = React.useState(propsOrder)
@@ -200,189 +205,195 @@ const Order = ({ propsOrder, dispatch, token }) => {
   })
 
   return (
-    <Box width={1}>
-      <Grid container direction='row' alignItems='flex-start'>
-        <Grid container direction='row' alignItems='center' item xs={12}>
-          <Link href='/' className={classes.title}>
-            <img
-              src='https://files.lifereferencemanual.net/go/logo.png'
-              alt='Go Therefore Ministries'
-              className={classes.logo}
-            />
-          </Link>
-          <Typography style={{ marginTop: 10 }}>
-            <a target='_top' rel='noopener noreferrer' href='tel:615.773.1963'>
-              <IconButton color='primary'>
-                <CallIcon />
-              </IconButton>
-            </a>
-            615.773.1963
-          </Typography>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <Typography>
-            <MailOutlineIcon
-              color='primary'
-              style={{
-                marginTop: 10,
-                marginLeft: 10,
-                marginRight: 10,
-                marginBottom: -8
-              }}
-            />
-            P.O. Box 2135 Mount Juliet, TN 37121
-          </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <TableContainer component={Paper}>
-            <Table className={classes.table}>
-              <TableBody>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Name:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.customerName ? order.customerName : ''}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Address:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.customerStreet ? order.customerStreet : ''}
-                    <br />
-                    {order.customerCity ? order.customerCity : ''},&nbsp;
-                    {order.customerState ? order.customerState : ''}&nbsp;
-                    {order.customerZip ? order.customerZip : ''}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Phone:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.customerPhone ? order.customerPhone : ''}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Email:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.customerEmail ? order.customerEmail : ''}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Referral:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.referral ? order.referral : ''}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Ministry or Company:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.customerCompany ? order.customerCompany : ''}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Donation:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.donation ? numeral(order.donation).format('$0') : ''}
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Total Bibles:
-                  </TableCell>
-                  <TableCell align='left'>{quantity}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Total Cases:
-                  </TableCell>
-                  <TableCell align='left'>{cases}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Remainder:
-                  </TableCell>
-                  <TableCell align='left'>{items}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align='right' component='th' scope='row'>
-                    Order Note:
-                  </TableCell>
-                  <TableCell align='left'>
-                    {order.instructions ? order.instructions : ''}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
+    <Container className={classes.root}>
+      <AppBar position='fixed'>
         <Grid
-          item
-          xs={4}
           container
-          justify='flex-start'
-          alignItems='flex-start'
-          alignContent='flex-start'
+          direction="row"
         >
-          {Object.entries(order.cart).map(([k, v], i) => {
-            return <ProductCard key={k} product={v} />
-          })}
+          <Grid item xs={12} sm={3} justifyContent='left'>
+            <Link href='/' className={classes.title}>
+              <img
+                className={classes.barLogo}
+                src='https://files.lifereferencemanual.net/go/barlogo.png'
+                style={{ maxHeight: 60, margin: 10, paddingLeft: 20 }}
+              />
+            </Link>
+          </Grid>
+          <Grid item xs={12} sm={8}
+            container
+            direction='row'
+            alignItems='flex-end'
+            justifyContent='flex-end'
+            style={{ paddingBottom: 10 }}
+          ><EmailIcon color='secondary'
+            style={{ marginLeft: '3px', marginRight: '3px', marginBottom: '4px' }}
+            />
+            {settings.business_email}
+            <CallIcon
+              color='secondary'
+              style={{ marginLeft: '3px', marginRight: '3px', marginBottom: '4px' }}
+            />
+            {settings.business_phone}
+            <MailOutlineIcon
+              color='secondary'
+              style={{ marginLeft: '6px', marginRight: '3px', marginBottom: '4px' }}
+            />
+            {settings.business_address}
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Timeline>
-            {order.timeline.map((workflow, index) => (
-              <TimelineItem key={index}>
-                <TimelineSeparator>
-                  <TimelineDot />
-                  {index < order.timeline.length - 1 ? (
-                    <TimelineConnector />
-                  ) : (
-                    ''
-                  )}
-                </TimelineSeparator>
-                <TimelineContent>
-                  <Typography>{workflow.action}</Typography>
-                  <Typography
-                    className={
-                      workflow.status === 1
-                        ? classes.green
+      </AppBar>
+      <Box width={1} className={classes.toolbar}>
+        <Grid container>
+          <Grid item xs={12}>
+            <div style={{ textAlign: 'center' }}>
+              <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
+                Order Confirmation & Summary
+              </Typography>
+              <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h4" component="h4" style={{ fontSize: '1.5rem', fontFamily: 'Verdana', textAlign: 'center' }}>
+              Customer Information
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table className={classes.table}>
+                <TableBody>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Name:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.customerName ? order.customerName : ''}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Address:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.customerStreet ? order.customerStreet : ''}
+                      <br />
+                      {order.customerCity ? order.customerCity : ''},&nbsp;
+                      {order.customerState ? order.customerState : ''}&nbsp;
+                      {order.customerZip ? order.customerZip : ''}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Phone:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.customerPhone ? order.customerPhone : ''}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Email:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.customerEmail ? order.customerEmail : ''}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Referral:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.referral ? order.referral : ''}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Ministry or Company:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.customerCompany ? order.customerCompany : ''}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Donation:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.donation ? numeral(order.donation).format('$0') : ''}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Total Bibles:
+                    </TableCell>
+                    <TableCell align='left'>{quantity}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell align='right' component='th' scope='row'>
+                      Order Note:
+                    </TableCell>
+                    <TableCell align='left'>
+                      {order.instructions ? order.instructions : ''}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+          <Grid
+            item xs={12} sm={4}
+          >
+            <Typography variant="h4" component="h4" style={{ fontSize: '1.5rem', fontFamily: 'Verdana', textAlign: 'center' }}>
+              Products Ordered
+            </Typography>
+            {Object.entries(order.cart).map(([k, v], i) => {
+              return <ProductCard key={k} product={v} />
+            })}
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Timeline>
+              {order.timeline.map((workflow, index) => (
+                <TimelineItem key={index}>
+                  <TimelineSeparator>
+                    <TimelineDot />
+                    {index < order.timeline.length - 1 ? (
+                      <TimelineConnector />
+                    ) : (
+                      ''
+                    )}
+                  </TimelineSeparator>
+                  <TimelineContent>
+                    <Typography>{workflow.action}</Typography>
+                    <Typography
+                      className={
+                        workflow.status === 1
+                          ? classes.green
+                          : workflow.status === 2
+                            ? classes.orange
+                            : ''
+                      }
+                    >
+                      {workflow.status === 1
+                        ? 'Completed'
                         : workflow.status === 2
-                        ? classes.orange
-                        : ''
-                    }
-                  >
-                    {workflow.status === 1
-                      ? 'Completed'
-                      : workflow.status === 2
-                      ? 'Needs Attention'
-                      : ''}
-                  </Typography>
-                </TimelineContent>
-                <TimelineOppositeContent>
-                  <Typography color='textSecondary'>
-                    {moment(workflow.timestamp, dateFormat).format(dateDisplay)}
-                  </Typography>
-                </TimelineOppositeContent>
-              </TimelineItem>
-            ))}
-          </Timeline>
+                          ? 'Needs Attention'
+                          : ''}
+                    </Typography>
+                  </TimelineContent>
+                  <TimelineOppositeContent>
+                    <Typography color='textSecondary'>
+                      {moment(workflow.timestamp, dateFormat).format(dateDisplay)}
+                    </Typography>
+                  </TimelineOppositeContent>
+                </TimelineItem>
+              ))}
+            </Timeline>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </Container>
   )
 }
 
-export async function getServerSideProps (context) {
+export async function getServerSideProps(context) {
   const { id } = context.params
   let propsOrder = await axiosClient
     .get('/orders/' + id)
@@ -433,9 +444,18 @@ export async function getServerSideProps (context) {
     }
   }
 
+  const settings = {}
+  const settingsArray = await axiosClient
+    .get('/settingsPublic')
+    .then(response => response.data)
+  settingsArray.map(setting => {
+    settings[setting.name] = setting.value
+  })
+
   return {
     props: {
-      propsOrder
+      propsOrder,
+      settings
     }
   }
 }

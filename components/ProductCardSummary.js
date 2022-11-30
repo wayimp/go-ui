@@ -89,7 +89,8 @@ const useStyles = makeStyles(theme => ({
     flex: '1 0 auto'
   },
   cover: {
-    width: 151
+    width: 151,
+    padding: '6rem'
   },
   controls: {
     display: 'flex',
@@ -131,19 +132,19 @@ const ProductDisplay = ({ product }) => {
 
     return (
       <Card className={classes.root}>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography component='h5' variant='h5'>
-              {product.title}
-            </Typography>
-            <div className={classes.chips}>{caseDisplay}</div>
-          </CardContent>
-        </div>
         <CardMedia
           className={classes.cover}
           image={product.image || ''}
           title={product.title || ''}
         />
+        <div className={classes.details}>
+          <CardContent className={classes.content}>
+            <div className={classes.chips}>{caseDisplay}</div>
+            <Typography component='h3' variant='h3'>
+              {product.title}
+            </Typography>
+          </CardContent>
+        </div>
       </Card>
     )
   }

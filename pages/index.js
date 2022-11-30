@@ -73,6 +73,7 @@ import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
+import EmailIcon from '@material-ui/icons/Email'
 import Toolbar from '@material-ui/core/Toolbar'
 
 Array.prototype.sum = function (prop) {
@@ -108,7 +109,7 @@ const useStyles = makeStyles(theme => ({
     left: '0px',
     right: '0px',
     width: '100%',
-    minHeight: '80px',
+    minHeight: '74px',
     color: 'lightgrey',
     backgroundColor: '#2B4168'
   },
@@ -875,7 +876,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           ) : (
             <>
               <div style={{ paddingLeft: '40px', textAlign: 'center' }}>
-                <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '4rem', fontFamily: 'Georgia' }}>
+                <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
                   Order Life Reference Manuals
                 </Typography>
                 <hr style={{ height: '3px', backgroundColor: 'navy', }} />
@@ -1135,14 +1136,14 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
           <div style={{ padding: '40px', textAlign: 'center' }}>
-            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '4rem', fontFamily: 'Georgia' }}>
+            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Partner with Go Therefore
             </Typography>
             <hr style={{ height: '3px', backgroundColor: 'navy', }} />
             <Typography variant="h4" component="h4" color="secondary" style={{ fontFamily: 'Verdana' }}>
-              Your donations help to place the Word of God with precious souls,<br/>
-              Please consider partnering with us to further this meaningful work.<br/>
-              All donations go towards helping to cover our costs, such as printing, packing, shipping, etc.. 
+              Your donations help to place the Word of God with precious souls,<br />
+              Please consider partnering with us to further this meaningful work.<br />
+              All donations go towards helping to cover our costs, such as printing, packing, shipping, etc..
             </Typography>
           </div>
           <Subscriptions />
@@ -1298,6 +1299,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             justifyContent="center"
             alignItems="center"
           >
+            <EmailIcon color='secondary'
+              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+            />
+            {settings.business_email}
             <CallIcon
               color='secondary'
               style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
