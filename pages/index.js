@@ -31,6 +31,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import AppBar from '@material-ui/core/AppBar'
+import BottomNavigation from '@material-ui/core/BottomNavigation'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Box from '@material-ui/core/Box'
@@ -95,11 +96,21 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     padding: theme.spacing(0, 1),
     marginTop: theme.spacing(16),
     // necessary for content to be below app bar (doesn't work)
     ...theme.mixins.toolbar
+  },
+  bottomNav: {
+    position: 'fixed',
+    bottom: '0px',
+    left: '0px',
+    right: '0px',
+    width: '100%',
+    minHeight: '80px',
+    color: 'lightgrey',
+    backgroundColor: '#2B4168'
   },
   formGroup: {
     margin: 20,
@@ -128,7 +139,9 @@ const useStyles = makeStyles(theme => ({
   mainlogo: {
     display: 'block',
     width: '80%',
-    padding: '10%',
+    paddingLeft: '10%',
+    paddingTop: '10%',
+    paddingRight: '10%',
     marginLeft: 'auto',
     marginRight: 'auto'
   },
@@ -270,6 +283,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth
+    }
+  },
+  barLogo: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
     }
   },
   menuButton: {
@@ -659,27 +677,39 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   return (
     <Container className={classes.root}>
       <AppBar position='fixed'>
-        <Grid>
-          <Tabs
-            value={selectedTab}
-            onChange={(event, newValue) => {
-              setSelectedTab(newValue)
-            }}
-            indicatorColor='primary'
-            variant='scrollable'
-            scrollButtons='auto'
-          >
+        <Grid
+          container
+          direction="row"
+        >
+          <Grid item xs={1}>
             <img
+              className={classes.barLogo}
               src='https://files.lifereferencemanual.net/go/barlogo.png'
-              style={{ maxHeight: 60, margin: 10, paddingLeft: 20 }}
+              onClick={() => setSelectedTab(0)}
+              style={{ maxHeight: 60, margin: 10, paddingLeft: 20, cursor: 'pointer' }}
             />
-            <Tab label='About' value={0} />
-            <Tab label='Catalog' value={1} />
-            <Tab label='Order' value={2} />
-            <Tab label='Donate' value={3} />
-            <Tab label='Stories' value={4} />
-            <Tab label='FAQs' value={5} />
-          </Tabs>
+          </Grid>
+          <Grid container item xs={11} justifyContent="center"
+            alignItems="center">
+            <Tabs
+              value={selectedTab}
+              onChange={(event, newValue) => {
+                setSelectedTab(newValue)
+              }}
+              indicatorColor='secondary'
+              scrollButtons='auto'
+              fullWidth={true}
+              centered={true}
+              variant='scrollable'
+            >
+              <Tab label='About' value={0} />
+              <Tab label='Catalog' value={1} />
+              <Tab label='Order' value={2} />
+              <Tab label='Donate' value={3} />
+              <Tab label='Stories' value={4} />
+              <Tab label='FAQs' value={5} />
+            </Tabs>
+          </Grid>
         </Grid>
         <Grid className={classes.chips} onClick={() => setSelectedTab(2)}>
           {cartDisplay}
@@ -844,6 +874,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             <CircularProgress />
           ) : (
             <>
+              <div style={{ paddingLeft: '40px', textAlign: 'center' }}>
+                <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '4rem', fontFamily: 'Georgia' }}>
+                  Order Life Reference Manuals
+                </Typography>
+                <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+              </div>
               <Grid
                 container
                 direction='row'
@@ -1098,7 +1134,17 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
-          <BlockListJoined blocks={blocks} category='donate' />
+          <div style={{ padding: '40px', textAlign: 'center' }}>
+            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '4rem', fontFamily: 'Georgia' }}>
+              Partner with Go Therefore
+            </Typography>
+            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+            <Typography variant="h4" component="h4" color="secondary" style={{ fontFamily: 'Verdana' }}>
+              Your donations help to place the Word of God with precious souls,<br/>
+              Please consider partnering with us to further this meaningful work.<br/>
+              All donations go towards helping to cover our costs, such as printing, packing, shipping, etc.. 
+            </Typography>
+          </div>
           <Subscriptions />
           <Donations />
         </TabPanel>
@@ -1208,48 +1254,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <BlockListJoined blocks={blocks} category='faq' />
         </TabPanel>
       </Box>
-      <AppBar position='sticky' style={{ color: 'lightgrey', backgroundColor: '#2B4168', margin: '0px' }}>
-        <Grid>
-          <Tabs
-            value={selectedTab}
-            onChange={(event, newValue) => {
-              setSelectedTab(newValue)
-            }}
-            indicatorColor='primary'
-            variant='scrollable'
-            scrollButtons='auto'
-          >
-            <Tab label='About' value={0} />
-            <Tab label='Catalog' value={1} />
-            <Tab label='Order' value={2} />
-            <Tab label='Donate' value={3} />
-            <Tab label='Stories' value={4} />
-            <Tab label='FAQs' value={5} />
-          </Tabs>
-          <div style={{ textAlign: 'center' }}>
-            <Typography>
-              <CallIcon
-                color='secondary'
-                style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-              />
-              {settings.business_phone}
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <MenuBookIcon
-                onClick={() => setShowPrivacy(!showPrivacy)}
-                color='secondary'
-                style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-              />
-              Privacy Policy
-              <MailOutlineIcon
-                color='secondary'
-                style={{ marginTop: '8px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-              />
-              {settings.business_address}
-            </Typography>
-          </div>
-        </Grid>
-
-      </AppBar>
       <Modal
         id='items'
         className={classes.modalScroll}
@@ -1267,6 +1271,54 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           </div>
         </Fade>
       </Modal>
+      <BottomNavigation position='sticky' className={classes.bottomNav}>
+        <Grid>
+          <Tabs
+            value={selectedTab}
+            onChange={(event, newValue) => {
+              setSelectedTab(newValue)
+            }}
+            indicatorColor='secondary'
+            scrollButtons='auto'
+            fullWidth={true}
+            centered={true}
+            variant='scrollable'
+
+          >
+            <Tab label='About' value={0} />
+            <Tab label='Catalog' value={1} />
+            <Tab label='Order' value={2} />
+            <Tab label='Donate' value={3} />
+            <Tab label='Stories' value={4} />
+            <Tab label='FAQs' value={5} />
+          </Tabs>
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CallIcon
+              color='secondary'
+              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+            />
+            {settings.business_phone}
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <MenuBookIcon
+              onClick={() => setShowPrivacy(!showPrivacy)}
+              color='secondary'
+              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+            />
+            Privacy Policy
+            <MailOutlineIcon
+              color='secondary'
+              style={{ marginTop: '0px', marginLeft: '6px', marginRight: '3px', marginBottom: '0px' }}
+            />
+            {settings.business_address}
+          </Grid>
+        </Grid>
+      </BottomNavigation>
+      <p>&nbsp;</p><p>&nbsp;</p>
     </Container>
   )
 }

@@ -49,6 +49,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(8, 0, 6)
   },
   cardHeader: {
+    fontFamily: 'Georgia',
     backgroundColor:
       theme.palette.type === 'light'
         ? theme.palette.grey[200]

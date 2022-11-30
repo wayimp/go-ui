@@ -5,7 +5,7 @@ body {
 }
 
 .front-header {
-  font-family: 'Trebuchet MS';
+  font-family: 'Georgia';
   font-weight: 800;
   font-size: 36px;
   color: rgb(43, 65, 104);
@@ -16,7 +16,7 @@ body {
 }
 
 .front-sub {
-  font-family: 'Trebuchet MS';
+  font-family: 'Georgia';
   font-weight: 800;
   box-sizing: border-box;
   overflow: visible;
@@ -27,7 +27,7 @@ body {
 }
 
 .front-text {
-  font-family: 'Georgia';
+  font-family: 'Verdana';
   font-size: 22px;
   box-sizing: border-box;
   overflow: visible;
