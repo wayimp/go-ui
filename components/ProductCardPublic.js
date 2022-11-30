@@ -100,7 +100,7 @@ const useStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto'
   },
- newIcon: {
+  newIcon: {
     position: 'absolute',
     top: 6,
     left: 6,
@@ -136,20 +136,21 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
     let items = 0
     let modulo = 0
     let keyIndex = 0
+    let caseDivisor = product.title.includes('Vida') ? 22 : 24
 
     if (inCart) {
       quantity = inCart.quantity
-      modulo = quantity % 24
-      cases = Math.floor(quantity / 24)
-      items = quantity % 24
+      modulo = quantity % caseDivisor
+      cases = Math.floor(quantity / caseDivisor)
+      items = quantity % caseDivisor
     }
     for (let c = 0; c < cases; c++) {
       caseDisplay.push(
         <Chip
           key={keyIndex++}
           variant='outlined'
-          label='24'
-          onDelete={() => addToCart(product, -24)}
+          label={caseDivisor}
+          onDelete={() => addToCart(product, -caseDivisor)}
           color='primary'
         />
       )
@@ -207,8 +208,8 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
         <CardActions className={classes.cardActions}>
           <Tooltip
             title={
-              quantity >= 48
-                ? 'Please order an even number of cases (multiples of 48)'
+              quantity >= (caseDivisor * 2)
+                ? `Please order an even number of cases (multiples of ${caseDivisor * 2})`
                 : ''
             }
           >
@@ -221,7 +222,7 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
                   e.preventDefault
                   addToCart(product, 1)
                 }}
-                disabled={quantity >= 48 ? true : false}
+                disabled={quantity >= (caseDivisor * 2) ? true : false}
               >
                 Add One
               </Button>
@@ -233,10 +234,10 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
             color='primary'
             onClick={e => {
               e.preventDefault
-              addToCart(product, 24 - modulo)
+              addToCart(product, caseDivisor - modulo)
             }}
           >
-            Add Case of 24
+            {`Add Case of ${caseDivisor}`}
           </Button>
         </CardActions>
       </Card>

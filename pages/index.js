@@ -603,17 +603,25 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   let quantity = 0
   let cases = 0
   let items = 0
+  let quantitySP = 0
+  let casesSP = 0
+  let itemsSP = 0
   let keyIndex = 0
   Object.entries(form.cart).map(([k, v], i) => {
     if (v && v.quantity) {
-      quantity += v.quantity
+      if (v.title.includes('Vida')) {
+        quantitySP += v.quantity
+      }
+      else {
+        quantity += v.quantity
+      }
     }
   })
   const modulo = quantity % 48
   cases = Math.floor(quantity / 48)
   items = quantity % 48
   for (let c = 0; c < cases; c++) {
-    chips.push(<Chip key={keyIndex++} variant='outlined' label='48' />)
+    chips.push(<Chip key={keyIndex++} variant='outlined' label='48' color='secondary' />)
   }
   if (items > 0) {
     if (cases > 1) {
@@ -622,11 +630,32 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           key={keyIndex++}
           variant='outlined'
           label={items}
+          color='error'
           style={{ backgroundColor: red[500] }}
         />
       )
     } else {
-      chips.push(<Chip key={keyIndex++} variant='outlined' label={items} />)
+      chips.push(<Chip key={keyIndex++} variant='outlined' color='secondary' label={items} />)
+    }
+  }
+  const moduloSP = quantitySP % 44
+  casesSP = Math.floor(quantitySP / 44)
+  itemsSP = quantitySP % 44
+  for (let c = 0; c < casesSP; c++) {
+    chips.push(<Chip key={keyIndex++} variant='outlined' color='secondary' label='44' />)
+  }
+  if (itemsSP > 0) {
+    if (casesSP > 1) {
+      chips.push(
+        <Chip
+          key={keyIndex++}
+          variant='outlined' color='error'
+          label={itemsSP}
+          style={{ backgroundColor: red[500] }}
+        />
+      )
+    } else {
+      chips.push(<Chip key={keyIndex++} variant='outlined' color='secondary' label={itemsSP} />)
     }
   }
   if (chips.length > 0) {
@@ -640,8 +669,8 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           color='secondary'
         >
           Confirm Order&nbsp;&nbsp;
-          <Badge badgeContent={quantity ? quantity : 0} color='error'>
-            <ShoppingCartIcon fontSize='large' />
+          <Badge badgeContent={quantity + quantitySP} color='error'>
+            <ShoppingCartIcon fontSize='large' style={{ marginTop: 4 }} />&nbsp;&nbsp;&nbsp;&nbsp;
           </Badge>
         </Fab>
       )
@@ -653,10 +682,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           variant='extended'
           color='secondary'
         >
-          <Badge badgeContent={quantity ? quantity : 0} color='error'>
+          <Badge badgeContent={quantity + quantitySP} color='error'>
             <Typography style={{ marginTop: 7 }}>
               Suggested Donation:&nbsp;
-              {numeral(quantity * 4).format(priceFormat)}&nbsp;($4 per Bible)
+              {numeral((quantity + quantitySP) * 4).format(priceFormat)}&nbsp;($4 per Bible)
             </Typography>
           </Badge>
         </Fab>
@@ -1065,8 +1094,8 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     <FormHelperText>
                       Your donation helps us to distribute more Bibles
                       <br />
-                      Suggested donation:
-                      {numeral(quantity * 4).format(priceFormat)}&nbsp;($4 per
+                      Suggested donation:&nbsp;
+                      {numeral((quantity + quantitySP) * 4).format(priceFormat)}&nbsp;($4 per
                       Bible)
                     </FormHelperText>
                   </FormControl>

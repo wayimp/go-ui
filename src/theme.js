@@ -17,6 +17,9 @@ const theme = createTheme({
     secondary: {
       main: '#736441'
     },
+    warning: {
+      main: '#FFFF00',
+    },
     action: {
       main: '#FFFFFF',
     },
