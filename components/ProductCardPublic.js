@@ -39,9 +39,6 @@ const useStyles = makeStyles(theme => ({
     margin: 10,
     overflow: 'visible'
   },
-  media: {
-    height: 300
-  },
   expand: {
     transform: 'rotate(0deg)',
     marginLeft: 'auto',
@@ -90,7 +87,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row'
   },
   media: {
-    position: 'relative'
+    objectFit: 'cover'
   },
   limitedIcon: {
     position: 'absolute',
@@ -173,7 +170,7 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
           className={classes.media}
           image={product.image || ''}
           title={product.title || ''}
-          style={{ height: small ? 100 : 300 }}
+          style={{ height: small ? 100 : 300, width: small ? 100 : 300}}
         />
         {product.limited ? (
           <img

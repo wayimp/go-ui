@@ -23,12 +23,12 @@ body {
   display: inline; 
   vertical-align: baseline; 
   color: rgb(0, 0, 0); 
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .front-text {
   font-family: 'Verdana';
-  font-size: 22px;
+  font-size: 20px;
   box-sizing: border-box;
   overflow: visible;
   color: inherit;

@@ -99,7 +99,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing(0, 1),
-    marginTop: theme.spacing(16),
+    marginTop: theme.spacing(18),
     // necessary for content to be below app bar (doesn't work)
     ...theme.mixins.toolbar
   },
@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
     left: '0px',
     right: '0px',
     width: '100%',
-    minHeight: '74px',
+    minHeight: '82px',
     color: 'lightgrey',
     backgroundColor: '#2B4168'
   },
@@ -141,8 +141,9 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     width: '80%',
     paddingLeft: '10%',
-    paddingTop: '10%',
+    paddingTop: '16%',
     paddingRight: '10%',
+    paddingBottom: '2%',
     marginLeft: 'auto',
     marginRight: 'auto'
   },
@@ -533,12 +534,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
     await axiosClient
       .post('/stories', form)
       .then(res => {
-        enqueueSnackbar('Your story has been sent.', {
+        enqueueSnackbar('Your testimony has been submitted.', {
           variant: 'success'
         })
       })
       .catch(err => {
-        enqueueSnackbar('There was a problem sending your story ' + err, {
+        enqueueSnackbar('There was a problem submitting your testimony ' + err, {
           variant: 'error'
         })
       })
@@ -711,7 +712,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           container
           direction="row"
         >
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <img
               className={classes.barLogo}
               src='https://files.lifereferencemanual.net/go/barlogo.png'
@@ -719,7 +720,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               style={{ maxHeight: 60, margin: 10, paddingLeft: 20, cursor: 'pointer' }}
             />
           </Grid>
-          <Grid container item xs={11} justifyContent="center"
+          <Grid container item xs={10} justifyContent="left"
             alignItems="center">
             <Tabs
               value={selectedTab}
@@ -736,7 +737,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               <Tab label='Catalog' value={1} />
               <Tab label='Order' value={2} />
               <Tab label='Donate' value={3} />
-              <Tab label='Stories' value={4} />
+              <Tab label='Testimonies' value={4} />
               <Tab label='FAQs' value={5} />
             </Tabs>
           </Grid>
@@ -775,10 +776,11 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             />
             <BlockListJoined blocks={blocks} category='frontPage' />
           </div>
-          <div style={{ margin: 'auto', width: '80%' }}>
-            <p />
-            <Divider />
-            <p />
+          <div style={{ margin: 'auto', width: '100%' }}>
+            <div style={{ marginTop: 0, marginBottom: 10 }}>
+              <Divider />
+            </div>
+
             <span className={'front-header'}>Frequently Asked Questions</span><br />
             <BlockFirst blocks={blocks} category='faq' />
             <Button
@@ -790,16 +792,15 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             >
               More FAQs
             </Button>
-            <p />
-            <span className={'front-sub'}>Have any other questions?</span><br />
-            <span className={'front-text'}>&nbsp;&nbsp;&nbsp;&nbsp;Give us a call at (615) 773-1963 or send us an email at gothereforeministries@gmail.com</span>
-            <p />
-            <Divider />
-            <p />
+            <br />
+            <span className={'front-header'}>Have any other questions?</span><br />
+            <span className={'front-text'}>Give us a call at (615) 773-1963 or send us an email at gothereforeministries@gmail.com</span>
+            <div style={{ marginTop: 20, marginBottom: 10 }}>
+              <Divider />
+            </div>
             <span className={'front-header'}>Our Partners</span><br />
-            <span className={'front-text'}>&nbsp;&nbsp;&nbsp;&nbsp;We're deeply thankful for our committed partners who have distributed hundreds of thousands of Life Reference Manuals over the past few decades.</span>
+            <span className={'front-text'}>We're deeply thankful for our committed partners who have distributed hundreds of thousands of Life Reference Manuals over the past few decades.</span>
           </div>
-          <p />
           <Container style={{ maxWidth: '80vw', overflowX: 'scroll', overflowY: 'hidden' }}>
             <List style={{ display: 'flex', flexDirection: 'row', padding: 0 }}>
               <ListItem>
@@ -866,6 +867,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           />
         </TabPanel>
         <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
+              Catalog
+            </Typography>
+            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+          </div>
           <FormControl variant='outlined'>
             <InputLabel>Search</InputLabel>
             <OutlinedInput
@@ -1164,7 +1171,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
-          <div style={{ padding: '40px', textAlign: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Partner with Go Therefore
             </Typography>
@@ -1179,6 +1186,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <Donations />
         </TabPanel>
         <TabPanel value={selectedTab} index={4} className={classes.tabPanel}>
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
+              Partner Testimonies
+            </Typography>
+            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+          </div>
           <Card style={{ marginLeft: '10%' }}>
             <CardContent>
               <Box width={1}>
@@ -1280,7 +1293,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           </Card>
         </TabPanel>
         <TabPanel value={selectedTab} index={5} className={classes.tabPanel}>
-          <span className={'front-header'}>Frequently Asked Questions</span><p />
+        <div style={{ textAlign: 'center' }}>
+            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
+              Frequently Asked Questions
+            </Typography>
+            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+          </div>
           <BlockListJoined blocks={blocks} category='faq' />
         </TabPanel>
       </Box>
@@ -1319,7 +1337,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             <Tab label='Catalog' value={1} />
             <Tab label='Order' value={2} />
             <Tab label='Donate' value={3} />
-            <Tab label='Stories' value={4} />
+            <Tab label='Testimonies' value={4} />
             <Tab label='FAQs' value={5} />
           </Tabs>
           <Grid

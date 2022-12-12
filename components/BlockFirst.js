@@ -29,13 +29,11 @@ const BlockDisplay = ({ blocks, category }) => {
 
         return (
             <Box width={1} className={classes.root}>
-                <Grid>
                     {(block)
                         ?
                         (block.type === 'video') ? <BlockVideo key={block._id} block={block} /> : <BlockText key={block._id} block={block} />
                         : ''
                     }
-                </Grid>
             </Box>
         )
     }
