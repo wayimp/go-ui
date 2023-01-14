@@ -7,7 +7,7 @@ body {
 .front-header {
   font-family: 'Georgia';
   font-weight: 800;
-  font-size: 36px;
+  font-size: 22px;
   color: rgb(43, 65, 104);
   box-sizing: border-box;
   overflow: visible;
@@ -23,12 +23,12 @@ body {
   display: inline; 
   vertical-align: baseline; 
   color: rgb(0, 0, 0); 
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .front-text {
-  font-family: 'Verdana';
-  font-size: 20px;
+  font-family: 'Georgia';
+  font-size: 22px;
   box-sizing: border-box;
   overflow: visible;
   color: inherit;

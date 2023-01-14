@@ -22,7 +22,7 @@
 .sun-editor-common input,
 .sun-editor-common select,
 .sun-editor-common textarea {
-  font-size: 14px;
+  font-size: medium;
   line-height: 1.5;
 }
 .sun-editor-common blockquote,
@@ -140,11 +140,11 @@
   font-style: normal;
   font-variant: normal;
   text-rendering: auto;
-  font-size: 15px;
+  font-size: medium;
   line-height: 2;
 }
 .sun-editor button > [class='se-icon-text'] {
-  font-size: 20px;
+  font-size: large;
   line-height: 1;
 }
 .sun-editor .se-arrow,
@@ -205,7 +205,7 @@
   border-radius: 4px;
   margin: 1px !important;
   padding: 0;
-  font-size: 12px;
+  font-size: small;
   line-height: 27px;
 }
 .sun-editor .se-btn:enabled:focus,
@@ -378,7 +378,7 @@
 .sun-editor .se-toolbar-cover {
   position: absolute;
   display: none;
-  font-size: 36px;
+  font-size: large;
   width: 100%;
   height: 100%;
   top: 0;
@@ -597,7 +597,7 @@
   min-height: 32px;
   padding: 0 14px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: small;
   line-height: normal;
   text-indent: 0;
   text-decoration: none;
@@ -654,10 +654,10 @@
   height: 34px;
 }
 .sun-editor .se-list-layer.se-list-format ul p {
-  font-size: 13px;
+  font-size: small;
 }
 .sun-editor .se-list-layer.se-list-format ul div {
-  font-size: 13px;
+  font-size: small;
   padding: 4px 2px;
 }
 .sun-editor .se-list-layer.se-list-format ul h1 {
@@ -691,7 +691,7 @@
   color: #333;
 }
 .sun-editor .se-list-layer.se-list-format ul blockquote {
-  font-size: 13px;
+  font-size: small;
   color: #999;
   height: 22px;
   margin: 0;
@@ -703,7 +703,7 @@
   border-style: solid;
 }
 .sun-editor .se-list-layer.se-list-format ul pre {
-  font-size: 13px;
+  font-size: small;
   color: #666;
   padding: 4px 11px;
   margin: 0;
@@ -720,7 +720,7 @@
   padding: 5px 0;
   float: left;
   margin: 2px 0 0;
-  font-size: 14px;
+  font-size: small;
   text-align: left;
   list-style: none;
   background-color: #fff;
@@ -732,13 +732,13 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 .sun-editor .se-selector-table .se-table-size {
-  font-size: 18px;
+  font-size: medium;
   padding: 0 5px;
 }
 .sun-editor .se-selector-table .se-table-size-picker {
   position: absolute !important;
   z-index: 3;
-  font-size: 18px;
+  font-size: medium;
   width: 10em;
   height: 10em;
   cursor: pointer;
@@ -746,7 +746,7 @@
 .sun-editor .se-selector-table .se-table-size-highlighted {
   position: absolute !important;
   z-index: 2;
-  font-size: 18px;
+  font-size: medium;
   width: 1em;
   height: 1em;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAADJmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo4QTZCNzMzN0I3RUYxMUU4ODcwQ0QwMjM1NTgzRTJDNyIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4QTZCNzMzNkI3RUYxMUU4ODcwQ0QwMjM1NTgzRTJDNyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0MzYyNEUxRUI3RUUxMUU4ODZGQzgwRjNBODgyNTdFOSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0MzYyNEUxRkI3RUUxMUU4ODZGQzgwRjNBODgyNTdFOSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pl0yAuwAAABBSURBVDhPY/wPBAxUAGCDGvdBeWSAeicIDTfIXREiQArYeR9hEBOEohyMGkQYjBpEGAxjg6ib+yFMygCVvMbAAABj0hwMTNeKJwAAAABJRU5ErkJggg==')
@@ -755,7 +755,7 @@
 .sun-editor .se-selector-table .se-table-size-unhighlighted {
   position: relative !important;
   z-index: 1;
-  font-size: 18px;
+  font-size: medium;
   width: 10em;
   height: 10em;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASAgMAAAAroGbEAAAACVBMVEUAAIj4+Pjp6ekKlAqjAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfYAR0BKhmnaJzPAAAAG0lEQVQI12NgAAOtVatWMTCohoaGUY+EmIkEAEruEzK2J7tvAAAAAElFTkSuQmCC')
@@ -810,7 +810,7 @@
   display: inline-block;
   width: auto;
   height: 33px;
-  font-size: 12px;
+  font-size: small;
   margin: 1px 0;
   padding: 0;
   border-radius: 0.25rem;
@@ -841,7 +841,7 @@
   padding: 0 4px;
 }
 .sun-editor .se-form-group-label label {
-  font-size: 13px;
+  font-size: small;
   font-weight: 700;
 }
 .sun-editor .se-submenu .se-form-group input {
@@ -866,6 +866,12 @@
   overflow: hidden;
   z-index: 1;
 }
+
+em .se-wrapper {
+  font-size: 22px;
+  color: rgb(43, 65, 104);
+}
+
 .sun-editor .se-wrapper .se-wrapper-inner {
   width: 100%;
   height: 100%;
@@ -886,7 +892,7 @@
 .sun-editor .se-wrapper .se-wrapper-code {
   background-color: #191919;
   color: #fff;
-  font-size: 13px;
+  font-size: small;
   word-break: break-all;
   padding: 4px;
   margin: 0;
@@ -897,7 +903,7 @@
   display: block;
 }
 .sun-editor .se-wrapper .se-wrapper-code-mirror {
-  font-size: 13px;
+  font-size: small;
 }
 .sun-editor .se-wrapper .se-placeholder {
   position: absolute;
@@ -906,7 +912,7 @@
   text-overflow: ellipsis;
   z-index: 1;
   color: #b1b1b1;
-  font-size: 13px;
+  font-size: small;
   line-height: 1.5;
   top: 0;
   left: 0;
@@ -954,7 +960,7 @@
   color: #666;
   margin: 0;
   padding: 0;
-  font-size: 10px;
+  font-size: small;
   font-weight: 700;
   line-height: 1.5;
   background: transparent;
@@ -968,7 +974,7 @@
   margin: 0;
   padding: 0;
   color: #999;
-  font-size: 13px;
+  font-size: small;
   background: transparent;
 }
 .sun-editor .se-resizing-bar .se-char-counter-wrapper.se-blink {
@@ -1549,7 +1555,7 @@
   bottom: 0;
   padding: 5px;
   margin: 5px;
-  font-size: 12px;
+  font-size: small;
   color: #fff;
   background-color: #333;
   border-radius: 4px;
@@ -1562,7 +1568,7 @@
 .sun-editor .se-controller-table,
 .sun-editor .se-controller-table-cell {
   padding: 0;
-  font-size: 14px;
+  font-size: small;
   font-style: normal;
   font-weight: 400;
   line-height: 1.42857143;
@@ -1599,7 +1605,7 @@
 .sun-editor .se-file-browser button,
 .sun-editor .se-file-browser input,
 .sun-editor .se-file-browser label {
-  font-size: 14px;
+  font-size: small;
   line-height: 1.5;
   color: #111;
   margin: 0;
@@ -1654,7 +1660,7 @@
   height: 12px;
 }
 .sun-editor .se-file-browser .se-file-browser-header .se-file-browser-title {
-  font-size: 16px;
+  font-size: medium;
   font-weight: 700;
   margin: 0;
   padding: 0;
@@ -1788,7 +1794,7 @@
   > .se-file-img-name {
   position: absolute;
   z-index: 1;
-  font-size: 13px;
+  font-size: small;
   color: #fff;
   left: 0;
   bottom: 0;
@@ -1815,7 +1821,7 @@
   width: 100%;
   height: auto;
   word-break: break-all;
-  font-size: 13px;
+  font-size: small;
   color: #b94a48;
   background-color: #f2dede;
   padding: 15px;

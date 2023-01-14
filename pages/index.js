@@ -198,7 +198,9 @@ const useStyles = makeStyles(theme => ({
   },
   tabPanel: {
     border: 1,
-    margin: 10
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10
   },
   frontPanel: {
     margin: 0,
@@ -276,7 +278,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3)
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('lg')]: {
       width: drawerWidth,
       flexShrink: 0
     }
@@ -339,7 +341,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['About', 'Catalog', 'Order', 'Donate', 'Stories', 'FAQs'].map(
+        {['About', 'Products', 'Cart', 'Donate', 'Testimonies', 'FAQs'].map(
           (text, index) => (
             <ListItem
               button
@@ -717,7 +719,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               className={classes.barLogo}
               src='https://files.lifereferencemanual.net/go/barlogo.png'
               onClick={() => setSelectedTab(0)}
-              style={{ maxHeight: 60, margin: 10, paddingLeft: 20, cursor: 'pointer' }}
+              style={{ maxHeight: 50, margin: 10, paddingLeft: 20, cursor: 'pointer' }}
             />
           </Grid>
           <Grid container item xs={10} justifyContent="left"
@@ -731,11 +733,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               scrollButtons='auto'
               fullWidth={true}
               centered={true}
-              variant='scrollable'
             >
               <Tab label='About' value={0} />
-              <Tab label='Catalog' value={1} />
-              <Tab label='Order' value={2} />
+              <Tab label='Products' value={1} />
+              <Tab label='Cart' value={2} />
               <Tab label='Donate' value={3} />
               <Tab label='Testimonies' value={4} />
               <Tab label='FAQs' value={5} />
@@ -777,10 +778,9 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             <BlockListJoined blocks={blocks} category='frontPage' />
           </div>
           <div style={{ margin: 'auto', width: '100%' }}>
-            <div style={{ marginTop: 0, marginBottom: 10 }}>
+            <div style={{ marginTop: 20, marginBottom: 10 }}>
               <Divider />
             </div>
-
             <span className={'front-header'}>Frequently Asked Questions</span><br />
             <BlockFirst blocks={blocks} category='faq' />
             <Button
@@ -867,9 +867,9 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           />
         </TabPanel>
         <TabPanel value={selectedTab} index={1} className={classes.tabPanel}>
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
-              Catalog
+              Products
             </Typography>
             <hr style={{ height: '3px', backgroundColor: 'navy', }} />
           </div>
@@ -911,7 +911,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             <CircularProgress />
           ) : (
             <>
-              <div style={{ paddingLeft: '40px', textAlign: 'center' }}>
+              <div style={{ paddingLeft: '40px', textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
                 <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
                   Order Life Reference Manuals
                 </Typography>
@@ -1046,7 +1046,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     className={classes.textField}
                     variant='outlined'
                     name='customerCompany'
-                    label='Name of Ministry or Company'
+                    label='Company/Ministry Name'
                     defaultValue={
                       form.customerCompany ? form.customerCompany : ''
                     }
@@ -1152,31 +1152,36 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                 alignItems='flex-start'
                 alignContent='flex-start'
               >
-                {filtered
-                  .filter(product =>
-                    Object.keys(form.cart).includes(product._id)
-                  )
-                  .map(product => (
-                    <Grid item lg={3} md={4} sm={5} xs={12}>
-                      <ProductCard
-                        key={product._id}
-                        product={product}
-                        addToCart={addToCart}
-                        inCart={form.cart[product._id]}
-                      />
-                    </Grid>
-                  ))}
+                {form.cart && Object.keys(form.cart).length === 0 ?
+                  <Typography style={{ marginLeft: 30, color: red[500] }}>
+                    <WarningIcon style={{ color: red[500] }} />&nbsp;Your Cart is Empty
+                  </Typography>
+                  :
+                  filtered
+                    .filter(product =>
+                      Object.keys(form.cart).includes(product._id)
+                    )
+                    .map(product => (
+                      <Grid item lg={3} md={4} sm={5} xs={12}>
+                        <ProductCard
+                          key={product._id}
+                          product={product}
+                          addToCart={addToCart}
+                          inCart={form.cart[product._id]}
+                        />
+                      </Grid>
+                    ))}
               </Grid>
             </>
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 20 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Partner with Go Therefore
             </Typography>
             <hr style={{ height: '3px', backgroundColor: 'navy', }} />
-            <Typography variant="h4" component="h4" color="secondary" style={{ fontFamily: 'Verdana' }}>
+            <Typography variant="h2" component="h2" color="secondary" style={{ fontFamily: 'Georgia' }}>
               Your donations help to place the Word of God with precious souls,<br />
               Please consider partnering with us to further this meaningful work.<br />
               All donations go towards helping to cover our costs, such as printing, packing, shipping, etc..
@@ -1186,7 +1191,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <Donations />
         </TabPanel>
         <TabPanel value={selectedTab} index={4} className={classes.tabPanel}>
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Partner Testimonies
             </Typography>
@@ -1293,7 +1298,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           </Card>
         </TabPanel>
         <TabPanel value={selectedTab} index={5} className={classes.tabPanel}>
-        <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Frequently Asked Questions
             </Typography>
@@ -1334,8 +1339,8 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
 
           >
             <Tab label='About' value={0} />
-            <Tab label='Catalog' value={1} />
-            <Tab label='Order' value={2} />
+            <Tab label='Products' value={1} />
+            <Tab label='Cart' value={2} />
             <Tab label='Donate' value={3} />
             <Tab label='Testimonies' value={4} />
             <Tab label='FAQs' value={5} />

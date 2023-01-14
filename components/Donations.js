@@ -156,7 +156,7 @@ export default function Pricing () {
   return (
     <React.Fragment>
       <Container maxWidth='md' component='main'>
-        <Grid container spacing={5} alignItems='flex-end'>
+        <Grid container spacing={5} alignItems='flex-start'>
           {tiers.map((tier, ti) => (
             <Grid item key={ti} xs={12} sm={6} md={3}>
               <Card>
@@ -211,8 +211,7 @@ export default function Pricing () {
               </Card>
             </Grid>
           ))}
-
-          <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardHeader
                 title='One-Time Donation'
