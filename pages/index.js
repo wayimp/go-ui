@@ -74,6 +74,7 @@ import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import EmailIcon from '@material-ui/icons/Email'
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import Toolbar from '@material-ui/core/Toolbar'
 
 Array.prototype.sum = function (prop) {
@@ -271,6 +272,13 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     display: 'block'
   },
+  modalDonate: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 480,
+  },
   paper: {
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
@@ -325,6 +333,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const [search, setSearch] = React.useState('')
   const [progress, setProgress] = React.useState(false)
   const [showPrivacy, setShowPrivacy] = React.useState(false)
+  const [showDonate, setShowDonate] = React.useState(false)
   const [addFee, setAddFee] = React.useState(false)
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
@@ -547,37 +556,46 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
       })
   }
 
-  const handleSubmit = async () => {
+  const requestShipment = async () => {
     const isValid = formIsValid()
     if (isValid) {
-      setProgress(true)
-      setLeavingPage(true)
-      await axiosClient
-        .post('/orders', form)
-        .then(res => {
-          dispatch({ type: 'FORM_CLEAR', payload: '' })
-          enqueueSnackbar('Your order has been submitted', {
-            variant: 'success'
-          })
-          setForm({ cart: {} })
-          setProgress(false)
-          if (form.donation > 0) {
-            createDonation(
-              form.donation,
-              res.data.ops[0]._id,
-              form.customerEmail
-            )
-          } else {
-            Router.push('/order/' + res.data.ops[0]._id)
-          }
-        })
-        .catch(err => {
-          setProgress(false)
-          enqueueSnackbar('There was a problem submitting the order' + err, {
-            variant: 'error'
-          })
-        })
+      if (form.donation > 0) {
+        handleSubmit();
+      }
+      else {
+        setShowDonate(true)
+      }
     }
+  }
+
+  const handleSubmit = async () => {
+    setProgress(true)
+    setLeavingPage(true)
+    await axiosClient
+      .post('/orders', form)
+      .then(res => {
+        dispatch({ type: 'FORM_CLEAR', payload: '' })
+        enqueueSnackbar('Your order has been submitted', {
+          variant: 'success'
+        })
+        setForm({ cart: {} })
+        setProgress(false)
+        if (form.donation > 0) {
+          createDonation(
+            form.donation,
+            res.data.ops[0]._id,
+            form.customerEmail
+          )
+        } else {
+          Router.push('/order/' + res.data.ops[0]._id)
+        }
+      })
+      .catch(err => {
+        setProgress(false)
+        enqueueSnackbar('There was a problem submitting the order' + err, {
+          variant: 'error'
+        })
+      })
   }
 
   const createDonation = async (price, orderId, email) => {
@@ -1137,7 +1155,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                     variant='contained'
                     color='primary'
                     style={{ margin: 20 }}
-                    onClick={handleSubmit}
+                    onClick={requestShipment}
                     startIcon={<SendIcon />}
                     disabled={leavingPage}
                   >
@@ -1324,6 +1342,51 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           </div>
         </Fade>
       </Modal>
+      <Modal
+        id='donate'
+        open={showDonate}
+        onClose={() => setShowDonate(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500
+        }}
+      >
+        <Fade in={showDonate}>
+          <Box className={classes.modalDonate}>
+            <div className={classes.paper} onClick={() => setShowDonate(false)}>
+              <div style={{ paddingLeft: '20px', textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
+                <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '2rem', fontFamily: 'Georgia' }}>
+                  Become a Partner Today!
+                </Typography>
+                <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+              </div>
+              <p>Go Therefore Ministries relies on the generous donations of our partners to produce and distribute the Life Reference Manual.</p>
+              <p>Would you consider partnering with us in the form of a donation to help us continue fulfilling the Great Commission?</p>
+              <p>All donations go directly to the printing, packing, and distribution of more Bibles to more people!</p>
+              <Box width={1}>
+                <Button
+                  variant='contained'
+                  color='secondary'
+                  style={{ margin: 20 }}
+                  onClick={() => setShowDonate(false)}
+                  startIcon={<AttachMoneyIcon />}
+                >
+                  Make a Donation
+                </Button>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  style={{ margin: 20 }}
+                  onClick={handleSubmit}
+                >
+                  Not at this time
+                </Button>
+              </Box>
+            </div>
+          </Box>
+        </Fade>
+      </Modal>
       <BottomNavigation position='sticky' className={classes.bottomNav}>
         <Grid>
           <Tabs
@@ -1372,6 +1435,11 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               style={{ marginTop: '0px', marginLeft: '6px', marginRight: '3px', marginBottom: '0px' }}
             />
             {settings.business_address}
+            <MenuBookIcon
+              onClick={() => setShowDonate(!showDonate)}
+              color='secondary'
+              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+            />
           </Grid>
         </Grid>
       </BottomNavigation>

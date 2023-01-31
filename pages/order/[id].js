@@ -339,53 +339,20 @@ const Order = ({ propsOrder, dispatch, token, settings }) => {
             </TableContainer>
           </Grid>
           <Grid
-            item xs={12} sm={4}
+            item xs={12} sm={8}
           >
             <Typography variant="h4" component="h4" style={{ fontSize: '1.5rem', fontFamily: 'Verdana', textAlign: 'center' }}>
               Products Ordered
             </Typography>
-            {Object.entries(order.cart).map(([k, v], i) => {
-              return <ProductCard key={k} product={v} />
-            })}
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Timeline>
-              {order.timeline.map((workflow, index) => (
-                <TimelineItem key={index}>
-                  <TimelineSeparator>
-                    <TimelineDot />
-                    {index < order.timeline.length - 1 ? (
-                      <TimelineConnector />
-                    ) : (
-                      ''
-                    )}
-                  </TimelineSeparator>
-                  <TimelineContent>
-                    <Typography>{workflow.action}</Typography>
-                    <Typography
-                      className={
-                        workflow.status === 1
-                          ? classes.green
-                          : workflow.status === 2
-                            ? classes.orange
-                            : ''
-                      }
-                    >
-                      {workflow.status === 1
-                        ? 'Completed'
-                        : workflow.status === 2
-                          ? 'Needs Attention'
-                          : ''}
-                    </Typography>
-                  </TimelineContent>
-                  <TimelineOppositeContent>
-                    <Typography color='textSecondary'>
-                      {moment(workflow.timestamp, dateFormat).format(dateDisplay)}
-                    </Typography>
-                  </TimelineOppositeContent>
-                </TimelineItem>
-              ))}
-            </Timeline>
+            <Grid container
+              direction='row'
+              alignItems='flex-start'
+              alignContent='flex-start'
+            >
+              {Object.entries(order.cart).map(([k, v], i) => {
+                return <ProductCard key={k} product={v} />
+              })}
+            </Grid>
           </Grid>
         </Grid>
       </Box>

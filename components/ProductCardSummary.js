@@ -131,7 +131,7 @@ const ProductDisplay = ({ product }) => {
     }
 
     return (
-      <Card className={classes.root}>
+      <Card className={classes.root} style={{ maxWidth: 400 }}>
         <CardMedia
           className={classes.cover}
           image={product.image || ''}
