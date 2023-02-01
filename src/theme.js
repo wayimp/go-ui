@@ -5,7 +5,7 @@ import { red } from '@material-ui/core/colors';
 const theme = createTheme({
   typography: {
     "fontFamily": `"Calibri", "Open Sans", sans-serif`,
-    "fontSize": 'medium',
+    "fontSize": 16,
     "fontWeightLight": 300,
     "fontWeightRegular": 400,
     "fontWeightMedium": 500

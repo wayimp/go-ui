@@ -278,6 +278,9 @@ const useStyles = makeStyles(theme => ({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 480,
+    borderRadius: 16,
+    backgroundColor: theme.palette.background.paper,
+    padding: 30
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -1353,17 +1356,19 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
         }}
       >
         <Fade in={showDonate}>
-          <Box className={classes.modalDonate}>
-            <div className={classes.paper} onClick={() => setShowDonate(false)}>
-              <div style={{ paddingLeft: '20px', textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
+          <Box >
+            <div className={classes.modalDonate} onClick={() => setShowDonate(false)}>
+              <div style={{ paddingLeft: '20px', paddingTop: '10px', textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
                 <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '2rem', fontFamily: 'Georgia' }}>
                   Become a Partner Today!
                 </Typography>
-                <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+                <hr style={{ height: '3px', backgroundColor: 'navy' }} />
               </div>
-              <p>Go Therefore Ministries relies on the generous donations of our partners to produce and distribute the Life Reference Manual.</p>
-              <p>Would you consider partnering with us in the form of a donation to help us continue fulfilling the Great Commission?</p>
-              <p>All donations go directly to the printing, packing, and distribution of more Bibles to more people!</p>
+              <div style={{ textAlign: 'center', paddingTop:'10px', paddingLeft: '30px', paddingRight: '30px' }}>
+                <p>Go Therefore Ministries relies on the generous donations of our partners to produce and distribute the Life Reference Manual.</p>
+                <p>Would you consider partnering with us in the form of a donation to help us continue fulfilling the Great Commission?</p>
+                <p>All donations go directly to the printing, packing, and distribution of more Bibles to more people!</p>
+              </div>
               <Box width={1}>
                 <Button
                   variant='contained'
@@ -1383,7 +1388,14 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                   Not at this time
                 </Button>
               </Box>
+              <div style={{ marginLeft: '-30px', marginRight: '-30px', marginBottom: '-30px', marginTop: '10px', textAlign: 'center', backgroundColor: '#2B4168', borderBottomLeftRadius: '14px', borderBottomRightRadius: '14px' }}>
+                <img
+                  src='https://files.lifereferencemanual.net/go/barlogo.png'
+                  style={{ maxHeight: 60, padding: 10 }}
+                />
+              </div>
             </div>
+
           </Box>
         </Fade>
       </Modal>
@@ -1397,9 +1409,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             indicatorColor='secondary'
             scrollButtons='auto'
             fullWidth={true}
-            centered={true}
             variant='scrollable'
-
           >
             <Tab label='About' value={0} />
             <Tab label='Products' value={1} />
@@ -1435,11 +1445,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               style={{ marginTop: '0px', marginLeft: '6px', marginRight: '3px', marginBottom: '0px' }}
             />
             {settings.business_address}
-            <MenuBookIcon
-              onClick={() => setShowDonate(!showDonate)}
-              color='secondary'
-              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-            />
           </Grid>
         </Grid>
       </BottomNavigation>
