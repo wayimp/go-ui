@@ -140,7 +140,7 @@ const ProductDisplay = ({ product }) => {
         <div className={classes.details}>
           <CardContent className={classes.content}>
             <div className={classes.chips}>{caseDisplay}</div>
-            <Typography component='h3' variant='h3'>
+            <Typography component='h6' variant='h6'>
               {product.title}
             </Typography>
           </CardContent>

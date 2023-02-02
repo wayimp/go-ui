@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import YouTube from 'react-youtube'
+import Typography from '@material-ui/core/Typography'
 
 const BlockDisplay = ({ block }) => {
   const opts = {
-    height: '390',
-    width: '640',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1
-    }
+    width: '400',
+    height: '225'
   }
 
   const onReady = event => {
@@ -17,7 +14,12 @@ const BlockDisplay = ({ block }) => {
     event.target.pauseVideo()
   }
 
-  return <YouTube videoId={block.html} onReady={onReady} />
+  return <div style={{textAlign: 'center'}}>
+    <Typography variant="h6" component="h6" color="secondary" style={{ fontFamily: 'Georgia' }}>
+        {block.description}          
+    </Typography>
+    <YouTube videoId={block.html} opts={opts} onReady={onReady} />
+  </div>
 }
 
 export default BlockDisplay

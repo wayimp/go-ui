@@ -1169,7 +1169,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               <Grid
                 container
                 direction='row'
-                justify='flex-start'
+                justifyContent='flex-start'
                 alignItems='flex-start'
                 alignContent='flex-start'
               >
@@ -1202,7 +1202,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               Partner with Go Therefore
             </Typography>
             <hr style={{ height: '3px', backgroundColor: 'navy', }} />
-            <Typography variant="h2" component="h2" color="secondary" style={{ fontFamily: 'Georgia' }}>
+            <Typography variant="h6" component="h6" color="secondary" style={{ fontFamily: 'Georgia' }}>
               Your donations help to place the Word of God with precious souls,<br />
               Please consider partnering with us to further this meaningful work.<br />
               All donations go towards helping to cover our costs, such as printing, packing, shipping, etc..
