@@ -367,6 +367,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             </ListItem>
           )
         )}
+        <Button variant="text" onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
       </List>
     </div>
   )
@@ -762,6 +763,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
               <Tab label='Testimonies' value={4} />
               <Tab label='FAQs' value={5} />
             </Tabs>
+            <Button variant="text" style={{ color: '#c0c6d2' }} onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
           </Grid>
         </Grid>
         <Grid className={classes.chips} onClick={() => setSelectedTab(2)}>
@@ -791,7 +793,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <MenuIcon />
         </Fab>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
-          <div style={{ marginTop: '25%' }}>
+          <div style={{ marginTop: '20%' }}>
             <img
               src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
               className={classes.mainlogo}
@@ -1364,7 +1366,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                 </Typography>
                 <hr style={{ height: '3px', backgroundColor: 'navy' }} />
               </div>
-              <div style={{ textAlign: 'center', paddingTop:'10px', paddingLeft: '30px', paddingRight: '30px' }}>
+              <div style={{ textAlign: 'center', paddingTop: '10px', paddingLeft: '30px', paddingRight: '30px' }}>
                 <p>Go Therefore Ministries relies on the generous donations of our partners to produce and distribute the Life Reference Manual.</p>
                 <p>Would you consider partnering with us in the form of a donation to help us continue fulfilling the Great Commission?</p>
                 <p>All donations go directly to the printing, packing, and distribution of more Bibles to more people!</p>
@@ -1399,7 +1401,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           </Box>
         </Fade>
       </Modal>
-      <BottomNavigation position='sticky' className={classes.bottomNav}>
+      <BottomNavigation className={classes.bottomNav}>
         <Grid>
           <Tabs
             value={selectedTab}
@@ -1417,6 +1419,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             <Tab label='Donate' value={3} />
             <Tab label='Testimonies' value={4} />
             <Tab label='FAQs' value={5} />
+            <Button variant="text" style={{ color: '#c0c6d2' }} onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
           </Tabs>
           <Grid
             container
