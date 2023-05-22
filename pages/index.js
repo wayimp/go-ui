@@ -142,7 +142,7 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     width: '80%',
     paddingLeft: '10%',
-    paddingTop: '16%',
+    paddingTop: '13%',
     paddingRight: '10%',
     paddingBottom: '2%',
     marginLeft: 'auto',
