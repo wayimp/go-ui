@@ -279,7 +279,7 @@ export default function Pricing () {
             />
             <CardContent>
               <div className={classes.cardPricing}>
-                <Typography component='h2' variant='h3' color='textPrimary'>
+                <Typography component='h4' variant='h4' color='textPrimary'>
                   Monthly Supporter
                 </Typography>
               </div>
@@ -313,7 +313,7 @@ export default function Pricing () {
             />
             <CardContent>
               <div className={classes.cardPricing}>
-                <Typography component='h2' variant='h3' color='textPrimary'>
+                <Typography component='h4' variant='h4' color='textPrimary'>
                   Quarterly Supporter
                 </Typography>
               </div>
@@ -347,7 +347,7 @@ export default function Pricing () {
             />
             <CardContent>
               <div className={classes.cardPricing}>
-                <Typography component='h2' variant='h3' color='textPrimary'>
+                <Typography component='h4' variant='h4' color='textPrimary'>
                   Annual Supporter
                 </Typography>
               </div>
