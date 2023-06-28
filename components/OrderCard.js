@@ -429,6 +429,8 @@ const OrderCard = ({
       cart[product._id] = {
         title: product.title,
         image: product.image,
+        qbId: product.qbId,
+        qbName: product.qbName,
         quantity
       }
     }
@@ -819,6 +821,7 @@ const OrderCard = ({
           </div>
         </Fade>
       </Modal>
+
       <Modal
         id='items'
         className={classes.modalScroll}
@@ -835,7 +838,7 @@ const OrderCard = ({
             <Grid
               container
               direction='row'
-              justify='flex-start'
+              justifyContent='flex-start'
               alignItems='flex-start'
               alignContent='flex-start'
             >
@@ -854,6 +857,7 @@ const OrderCard = ({
           </div>
         </Fade>
       </Modal>
+      
       <Dialog open={confirmDelete} onClose={handleConfirmDeleteClose}>
         <DialogTitle id='alert-dialog-title'>
           Are you sure you want to delete this order?
