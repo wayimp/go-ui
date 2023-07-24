@@ -112,7 +112,8 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     minHeight: '82px',
     color: 'lightgrey',
-    backgroundColor: '#2B4168'
+    backgroundColor: '#2B4168',
+    zIndex: 1101
   },
   formGroup: {
     margin: 20,
@@ -752,9 +753,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                 setSelectedTab(newValue)
               }}
               indicatorColor='secondary'
-              scrollButtons='auto'
+              variant='scrollable'
+              scrollButtons
+              allowScrollButtonsMobile
               fullWidth={true}
-              centered={true}
             >
               <Tab label='About' value={0} />
               <Tab label='Products' value={1} />
@@ -1402,16 +1404,18 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
         </Fade>
       </Modal>
       <BottomNavigation className={classes.bottomNav}>
-        <Grid>
+        <Grid container item xs={10} justifyContent="left"
+          alignItems="center">
           <Tabs
             value={selectedTab}
             onChange={(event, newValue) => {
               setSelectedTab(newValue)
             }}
             indicatorColor='secondary'
-            scrollButtons='auto'
-            fullWidth={true}
             variant='scrollable'
+            scrollButtons
+            allowScrollButtonsMobile
+            fullWidth={true}
           >
             <Tab label='About' value={0} />
             <Tab label='Products' value={1} />
@@ -1427,16 +1431,16 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
             justifyContent="center"
             alignItems="center"
           >
-            <EmailIcon color='secondary'
-              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-            />
-            {settings.business_email}
             <CallIcon
               color='secondary'
               style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
             />
             {settings.business_phone}
             &nbsp;&nbsp;&nbsp;&nbsp;
+            <EmailIcon color='secondary'
+              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
+            />
+            {settings.business_email}
             <MenuBookIcon
               onClick={() => setShowPrivacy(!showPrivacy)}
               color='secondary'
