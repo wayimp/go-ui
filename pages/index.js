@@ -1264,16 +1264,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
           <Card style={{ marginLeft: '10%' }}>
             <CardContent>
               <Box width={1}>
-                <TextField
-                  className={classes.textField}
-                  variant='outlined'
-                  name='customerEmail'
-                  label='Email'
-                  defaultValue={form.customerEmail ? form.customerEmail : ''}
-                  onChange={changeField}
-                  onBlur={blurField}
-                  disabled={readOnly}
-                />
 
                 <TextField
                   className={classes.textField}
@@ -1300,8 +1290,21 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
                 <TextField
                   className={classes.textField}
                   variant='outlined'
+                  name='customerEmail'
+                  label='Email'
+                  defaultValue={form.customerEmail ? form.customerEmail : ''}
+                  onChange={changeField}
+                  onBlur={blurField}
+                  disabled={readOnly}
+                />
+                <br />
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
                   name='story'
                   label='Story'
+                  fullWidth
+                  multiline
                   defaultValue={form.story ? form.story : ''}
                   onChange={changeField}
                   onBlur={blurField}

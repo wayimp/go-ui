@@ -326,14 +326,6 @@ const Page = ({ dispatch, token }) => {
           <div className={classes.paper}>
             <Grid container spacing={1} justify='space-between'>
               <Grid item xs={12}>
-                <TextField
-                  className={classes.textField}
-                  variant='outlined'
-                  name='customerEmail'
-                  label='Email'
-                  defaultValue={story.customerEmail ? story.customerEmail : ''}
-                  onChange={changeField}
-                />
 
                 <TextField
                   className={classes.textField}
@@ -356,11 +348,25 @@ const Page = ({ dispatch, token }) => {
                 <TextField
                   className={classes.textField}
                   variant='outlined'
+                  name='customerEmail'
+                  label='Email'
+                  defaultValue={story.customerEmail ? story.customerEmail : ''}
+                  onChange={changeField}
+                />
+
+                <br />
+                <TextField
+                  className={classes.textField}
+                  variant='outlined'
                   name='story'
                   label='Story'
+                  fullWidth
+                  multiline
                   defaultValue={story.story ? story.story : ''}
                   onChange={changeField}
                 />
+
+
               </Grid>
               <Grid
                 container

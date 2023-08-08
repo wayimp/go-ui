@@ -11,6 +11,7 @@ import TopBar from '../components/AdminTopBar'
 import DeleteIcon from '@material-ui/icons/Delete'
 import SaveIcon from '@material-ui/icons/Save'
 import EditIcon from '@material-ui/icons/Edit'
+import EmailIcon from '@material-ui/icons/Email'
 import CancelIcon from '@material-ui/icons/Cancel'
 import numeral from 'numeral'
 const priceFormat = '$0.00'
@@ -173,6 +174,7 @@ const Page = ({ dispatch, token }) => {
   const [settings, setSettings] = React.useState([])
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const [connectUri, setConnectUri] = React.useState('')
+  const [emails, setEmails] = React.useState('')
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
@@ -190,6 +192,24 @@ const Page = ({ dispatch, token }) => {
   const buttonClassname = clsx({
     [classes.buttonSuccess]: success
   })
+
+  const downloadEmails = async () => {
+
+    await axiosClient({
+      method: 'get',
+      url: '/emails',
+      data: {},
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(response => {
+        setEmails(response.data)
+      })
+      .catch(error => {
+        enqueueSnackbar('Sync Error:' + error, {
+          variant: 'error'
+        })
+      })
+  }
 
   const syncCustomers = async () => {
     if (!loading) {
@@ -483,6 +503,21 @@ const Page = ({ dispatch, token }) => {
           >
             Backup Open Orders
           </Button>
+          &nbsp;&nbsp;
+          <Button
+            variant='contained'
+            color='secondary'
+            className={buttonClassname}
+            onClick={downloadEmails}
+            startIcon={<EmailIcon />}
+          >
+            Show Newsletter Signups
+          </Button>
+        </div>
+        <div>
+          {emails.split("\n").map((i, key) => {
+            return <div key={key}>{i}</div>;
+          })}
         </div>
       </main>
       <Modal
