@@ -202,13 +202,30 @@ const Page = ({ dispatch, token }) => {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => {
-        setEmails(response.data)
+        // Create a blob with the data we want to download as a file
+        const blob = new Blob([response.data], { type: 'text/csv' })
+        // Create an anchor element and dispatch a click event on it
+        // to trigger a download
+        const a = document.createElement('a')
+        a.download = 'emails.csv'
+        a.href = window.URL.createObjectURL(blob)
+        const clickEvt = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+        })
+        a.dispatchEvent(clickEvt)
+        a.remove()
       })
       .catch(error => {
         enqueueSnackbar('Sync Error:' + error, {
           variant: 'error'
         })
       })
+  }
+
+  const downloadFile = ({ data, fileName, fileType }) => {
+
   }
 
   const syncCustomers = async () => {
@@ -511,7 +528,7 @@ const Page = ({ dispatch, token }) => {
             onClick={downloadEmails}
             startIcon={<EmailIcon />}
           >
-            Show Newsletter Signups
+            Download Emails
           </Button>
         </div>
         <div>
