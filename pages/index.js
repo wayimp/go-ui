@@ -588,11 +588,11 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
         if (form.donation > 0) {
           createDonation(
             form.donation,
-            res.data.ops[0]._id,
+            res.data.id,
             form.customerEmail
           )
         } else {
-          Router.push('/order/' + res.data.ops[0]._id)
+          Router.push('/order/' + res.data.id)
         }
       })
       .catch(err => {
