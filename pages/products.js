@@ -210,7 +210,8 @@ const Page = ({ dispatch, token }) => {
   }
 
   useEffect(() => {
-    if (token && token.length > 0) {
+    const roles = cookie.get('roles')
+    if (token && token.length > 0 && roles && roles.includes('admin')) {
       getData(showInactive)
     } else {
       Router.push('/admin')
