@@ -189,8 +189,8 @@ const Page = ({ dispatch, token }) => {
       renderCell: params =>
         numeral(
           params.row.totalDonations -
-            params.row.totalBibles -
-            params.row.totalCoffee * 6.5
+          params.row.totalBibles -
+          params.row.totalCoffee * 6.5
         ).format('$0')
     },
     {
@@ -203,9 +203,8 @@ const Page = ({ dispatch, token }) => {
           <Tooltip title='Generate PDF'>
             <IconButton color='primary'>
               <Link
-                href={`${baseURL}/pdf/${params.row.customerId}/${year}/${
-                  params.row.totalDonations
-                }/${params.row.totalBibles + params.row.totalCoffee * 6.5}`}
+                href={`${baseURL}/pdf/${params.row.customerId}/${year}/${params.row.totalDonations
+                  }/${params.row.totalBibles + params.row.totalCoffee * 6.5}`}
                 target='_blank'
               >
                 <PictureAsPdfIcon />
@@ -230,9 +229,35 @@ const Page = ({ dispatch, token }) => {
     })
   }
 
-  const getCsv = () => {
-    let url = `/csv/${year}/${minValue}`
-    window.open(url)
+  const getCsv = async () => {
+
+    await axiosClient({
+      method: 'get',
+      url: `/csv/${year}/${minValue}`,
+      data: {},
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(response => {
+        // Create a blob with the data we want to download as a file
+        const blob = new Blob([response.data], { type: 'text/csv' })
+        // Create an anchor element and dispatch a click event on it
+        // to trigger a download
+        const a = document.createElement('a')
+        a.download = `${year}.csv`
+        a.href = window.URL.createObjectURL(blob)
+        const clickEvt = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+        })
+        a.dispatchEvent(clickEvt)
+        a.remove()
+      })
+      .catch(error => {
+        enqueueSnackbar('Sync Error:' + error, {
+          variant: 'error'
+        })
+      })
   }
 
   useEffect(() => {
@@ -309,9 +334,7 @@ const Page = ({ dispatch, token }) => {
           </div>
           <Tooltip title='Download Addresses'>
             <IconButton color='primary'>
-              <Link href={`${baseURL}/csv/${year}/${minValue}`} target='_blank'>
-                <ContactMailIcon />
-              </Link>
+              <ContactMailIcon onClick={getCsv} />
             </IconButton>
           </Tooltip>
         </div>

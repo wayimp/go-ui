@@ -164,6 +164,8 @@ const Page = ({ dispatch, token }) => {
     [classes.buttonSuccess]: success
   })
 
+
+
   const getData = inactive => {
     const url = inactive ? '/products?showInactive=true' : '/products'
     axiosClient({
