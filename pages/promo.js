@@ -17,23 +17,21 @@ const Promo = () => {
     const classes = useStyles()
 
     return (
-        <Container >
-            <div style={{
-                backgroundImage: 'url(/promo.png)',
-                backgroundColor: '#325e9a',
-                backgroundPosition: 'center',
-                backgroundSize: 'auto 98%',
-                backgroundRepeat: 'no-repeat',
-                width: '100vw',
-                height: '100vh',
-                cursor: 'pointer'
-            }} 
+        <div style={{
+            backgroundImage: 'url(/promo.png)',
+            backgroundColor: '#325e9a',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            width: '100vw',
+            height: '100vh',
+            cursor: 'pointer'
+        }}
             onClick={(e) => {
                 e.preventDefault();
-                window.location.href='/?t=1';
-                }}
-            />
-        </Container>
+                window.location.href = '/?t=1';
+            }}
+        />
     )
 }
 
