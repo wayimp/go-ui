@@ -33,7 +33,7 @@ const Promo = () => {
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '2%' }}>
-                <img src="/Beacon.png" style={{ width: '60%' }}
+                <img src="/Beacon.png" style={{ width: '50%' }}
                 />
             </div>
 
