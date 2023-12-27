@@ -18,20 +18,46 @@ const Promo = () => {
 
     return (
         <div style={{
-            backgroundImage: 'url(/promo.png)',
-            backgroundColor: '#325e9a',
+            backgroundImage: 'url(/Capitol.png)',
+            backgroundColor: '#345e9a',
             backgroundPosition: 'center',
-            backgroundSize: 'contain',
+            backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             width: '100vw',
-            height: '100vh',
-            cursor: 'pointer'
+            height: '100vh'
         }}
-            onClick={(e) => {
-                e.preventDefault();
-                window.location.href = '/?t=1';
-            }}
-        />
+        >
+            <div style={{ textAlign: 'center', paddingTop: '2%' }}>
+                <img src="/Influencer.png" style={{ width: '50%' }}
+                />
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: '2%' }}>
+                <img src="/Beacon.png" style={{ width: '60%' }}
+                />
+            </div>
+
+            <img src="/Anniversary.png" style={{ float: 'left', marginLeft: '10%', width: '20%', cursor: 'pointer' }}
+                onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = '/?t=1';
+                }} />
+
+            <img src="/Cover.png" style={{ float: 'right', marginRight: '10%', width: '20%', cursor: 'pointer' }}
+                onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = '/?t=1';
+                }}
+            />
+
+            <img src="/Logo.png" style={{ float: 'center', width: '40%', cursor: 'pointer', marginTop: 50 }}
+                onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = '/?t=1';
+                }}
+            />
+
+        </div>
     )
 }
 
