@@ -22,7 +22,6 @@
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
-    "mui-label-divider": "^1.0.2",
     "next": "latest",
     "next-cookies": "^2.0.3",
     "next-redux-wrapper": "^6.0.2",
@@ -43,8 +42,7 @@
   "scripts": {
     "dev": "next -p 8045",
     "build": "next build",
-    "start": "next start -p 8045",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+    "start": "next start -p 8045"
   },
   "devDependencies": {
     "@types/node": "^14.0.23",
