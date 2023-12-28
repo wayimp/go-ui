@@ -1,24 +1,86 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { axiosClient } from '../src/axiosClient'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
-import parse from 'html-react-parser'
-import Container from '@material-ui/core/Container'
+import { useState, useEffect } from 'react'
 
-const useStyles = makeStyles(() => ({
-    frontPanel: {
-        margin: 0,
-        flexGrow: 1,
-        background: "url('https://files.lifereferencemanual.net/go/gobanner.jpg')"
+export default function Promo() {
+
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    const checkWindowSize = () => {
+        let windowWidth;
+        if (typeof window !== 'undefined') {
+            windowWidth = window.innerWidth;
+        }
+        if (windowWidth >= 1024) {
+            setIsDesktop(true)
+        }
+        else {
+            setIsDesktop(false)
+        }
     }
-}))
 
-const Promo = () => {
-    const classes = useStyles()
+    useEffect(() => {
+        checkWindowSize()
+    }, [isDesktop])
 
+    if (typeof window !== 'undefined') {
+        window.addEventListener('resize', checkWindowSize);
+    }
+
+    if (isDesktop) {
+        return (
+            <div style={{
+                backgroundImage: 'url(/Capitol.png)',
+                backgroundColor: '#345e9a',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                width: '100vw',
+                height: '100vh'
+            }}
+            >
+                <div style={{ textAlign: 'center', paddingTop: '2%' }}>
+                    <img src="/Influencer.png" style={{ width: '50%' }}
+                    />
+                </div>
+
+                <div style={{ textAlign: 'center', marginTop: '2%' }}>
+                    <img src="/Beacon.png" style={{ width: '50%' }}
+                    />
+                </div>
+
+                <img src="/Anniversary.png" style={{ float: 'left', marginLeft: '10%', width: '20%', cursor: 'pointer' }}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = '/?t=1';
+                    }} />
+
+                <img src="/Cover.png" style={{ float: 'right', marginRight: '10%', width: '20%', cursor: 'pointer' }}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = '/?t=1';
+                    }}
+                />
+
+                <img src="/Logo.png" style={{
+                    position: 'fixed',
+                    left: '30%',
+                    bottom: '5px',
+                    transform: 'translate(0%, 0%)',
+                    width: '40%',
+                    margin: '0 auto',
+                    cursor: 'pointer'
+                }}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        window.location.href = '/?t=1';
+                    }}
+                />
+
+            </div>
+        )
+    }
     return (
         <div style={{
-            backgroundImage: 'url(/Capitol.png)',
+            backgroundImage: 'url(/CapitolMobile.png)',
             backgroundColor: '#345e9a',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
@@ -28,29 +90,37 @@ const Promo = () => {
         }}
         >
             <div style={{ textAlign: 'center', paddingTop: '2%' }}>
-                <img src="/Influencer.png" style={{ width: '50%' }}
+                <img src="/Influencer.png" style={{ width: '90%' }}
                 />
             </div>
 
-            <div style={{ textAlign: 'center', marginTop: '2%' }}>
-                <img src="/Beacon.png" style={{ width: '50%' }}
+            <div style={{ textAlign: 'center', marginTop: '2%', marginBottom: '5%' }}>
+                <img src="/Beacon.png" style={{ width: '90%' }}
                 />
             </div>
 
-            <img src="/Anniversary.png" style={{ float: 'left', marginLeft: '10%', width: '20%', cursor: 'pointer' }}
+            <img src="/Anniversary.png" style={{ float: 'left', marginLeft: '3%', width: '47%', cursor: 'pointer' }}
                 onClick={(e) => {
                     e.preventDefault();
                     window.location.href = '/?t=1';
                 }} />
 
-            <img src="/Cover.png" style={{ float: 'right', marginRight: '10%', width: '20%', cursor: 'pointer' }}
+            <img src="/Cover.png" style={{ float: 'right', marginRight: '3%', width: '47%', cursor: 'pointer' }}
                 onClick={(e) => {
                     e.preventDefault();
                     window.location.href = '/?t=1';
                 }}
             />
 
-            <img src="/Logo.png" style={{ float: 'center', width: '40%', cursor: 'pointer', marginTop: 50 }}
+            <img src="/Logo.png" style={{
+                position: 'fixed',
+                left: '20%',
+                bottom: '5px',
+                transform: 'translate(0%, 0%)',
+                width: '60%',
+                margin: '0 auto',
+                cursor: 'pointer'
+            }}
                 onClick={(e) => {
                     e.preventDefault();
                     window.location.href = '/?t=1';
@@ -60,5 +130,3 @@ const Promo = () => {
         </div>
     )
 }
-
-export default connect(state => state)(Promo)
