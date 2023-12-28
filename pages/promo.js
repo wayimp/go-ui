@@ -89,12 +89,12 @@ export default function Promo() {
             height: '100vh'
         }}
         >
-            <div style={{ textAlign: 'center', paddingTop: '2%' }}>
+            <div style={{ textAlign: 'center', paddingTop: '6%' }}>
                 <img src="/Influencer.png" style={{ width: '90%' }}
                 />
             </div>
 
-            <div style={{ textAlign: 'center', marginTop: '2%', marginBottom: '15%' }}>
+            <div style={{ textAlign: 'center', marginTop: '6%', marginBottom: '16%' }}>
                 <img src="/Beacon.png" style={{ width: '90%' }}
                 />
             </div>
@@ -114,10 +114,10 @@ export default function Promo() {
 
             <img src="/Logo.png" style={{
                 position: 'fixed',
-                left: '20%',
+                left: '30%',
                 bottom: '5px',
                 transform: 'translate(0%, 0%)',
-                width: '60%',
+                width: '40%',
                 margin: '0 auto',
                 cursor: 'pointer'
             }}
