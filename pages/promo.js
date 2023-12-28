@@ -42,7 +42,7 @@ export default function Promo() {
                     />
                 </div>
 
-                <div style={{ textAlign: 'center', marginTop: '2%' }}>
+                <div style={{ textAlign: 'center', marginTop: '2%'}}>
                     <img src="/Beacon.png" style={{ width: '50%' }}
                     />
                 </div>
@@ -94,7 +94,7 @@ export default function Promo() {
                 />
             </div>
 
-            <div style={{ textAlign: 'center', marginTop: '2%', marginBottom: '5%' }}>
+            <div style={{ textAlign: 'center', marginTop: '2%', marginBottom: '15%' }}>
                 <img src="/Beacon.png" style={{ width: '90%' }}
                 />
             </div>
