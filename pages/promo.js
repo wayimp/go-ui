@@ -101,7 +101,7 @@ export default function Promo() {
 
             <img src="/Anniversary.png" style={{
                 position: 'fixed',
-                top: '40%',
+                top: '44%',
                 left: '10%',
                 transform: 'translateY(50%)',
                 width: '40%',
@@ -109,12 +109,12 @@ export default function Promo() {
             }}
                 onClick={(e) => {
                     e.preventDefault();
-                    window.location.href = '/?t=1';
+                    window.location.href = '/?t=1&s=america';
                 }} />
 
             <img src="/Cover.png" style={{
                 position: 'fixed',
-                top: '40%',
+                top: '44%',
                 left: '60%',
                 transform: 'translateY(50%)',
                 width: '40%',
@@ -122,7 +122,7 @@ export default function Promo() {
             }}
                 onClick={(e) => {
                     e.preventDefault();
-                    window.location.href = '/?t=1';
+                    window.location.href = '/?t=1&s=america';
                 }}
             />
 
@@ -137,7 +137,7 @@ export default function Promo() {
             }}
                 onClick={(e) => {
                     e.preventDefault();
-                    window.location.href = '/?t=1';
+                    window.location.href = '/?t=1&s=america';
                 }}
             />
 

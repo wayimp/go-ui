@@ -325,7 +325,7 @@ const useStyles = makeStyles(theme => ({
 
 const drawerWidth = 240
 
-const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
+const Form = ({ products, blocks, settings, dispatch, token, defaultTab, defaultSearch }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [leavingPage, setLeavingPage] = React.useState(false)
@@ -334,7 +334,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
   const [selectedTab, setSelectedTab] = React.useState(defaultTab)
   const [readOnly, setReadOnly] = React.useState(false)
   const [filtered, setFiltered] = React.useState(products)
-  const [search, setSearch] = React.useState('')
+  const [search, setSearch] = React.useState(defaultSearch)
   const [progress, setProgress] = React.useState(false)
   const [showPrivacy, setShowPrivacy] = React.useState(false)
   const [showDonate, setShowDonate] = React.useState(false)
@@ -343,6 +343,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
 
   useEffect(() => {
     document.body.className = selectedTab == 0 ? 'front' : '';
+    filterProducts(search)
   });
 
   const handleDrawerToggle = () => {
@@ -1465,10 +1466,15 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab }) => {
 
 export async function getServerSideProps(context) {
   let defaultTab = 0
+  let defaultSearch = ''
   if (context.query) {
     const { t } = context.query
     if (t) {
       defaultTab = Number(t)
+    }
+    const { s } = context.query
+    if (s) {
+      defaultSearch = s
     }
   }
   const products = await axiosClient
@@ -1490,7 +1496,8 @@ export async function getServerSideProps(context) {
       products,
       blocks,
       settings,
-      defaultTab
+      defaultTab,
+      defaultSearch
     }
   }
 }
