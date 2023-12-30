@@ -42,7 +42,7 @@ export default function Promo() {
                     />
                 </div>
 
-                <div style={{ textAlign: 'center', marginTop: '2%'}}>
+                <div style={{ textAlign: 'center', marginTop: '2%' }}>
                     <img src="/Beacon.png" style={{ width: '50%' }}
                     />
                 </div>
@@ -89,23 +89,37 @@ export default function Promo() {
             height: '100vh'
         }}
         >
-            <div style={{ textAlign: 'center', paddingTop: '6%' }}>
+            <div style={{ textAlign: 'center', paddingTop: '10%' }}>
                 <img src="/Influencer.png" style={{ width: '90%' }}
                 />
             </div>
 
-            <div style={{ textAlign: 'center', marginTop: '6%', marginBottom: '16%' }}>
+            <div style={{ textAlign: 'center', marginTop: '10%', marginBottom: '16%' }}>
                 <img src="/Beacon.png" style={{ width: '90%' }}
                 />
             </div>
 
-            <img src="/Anniversary.png" style={{ float: 'left', marginLeft: '3%', width: '47%', cursor: 'pointer' }}
+            <img src="/Anniversary.png" style={{
+                position: 'fixed',
+                top: '40%',
+                left: '10%',
+                transform: 'translateY(50%)',
+                width: '40%',
+                cursor: 'pointer'
+            }}
                 onClick={(e) => {
                     e.preventDefault();
                     window.location.href = '/?t=1';
                 }} />
 
-            <img src="/Cover.png" style={{ float: 'right', marginRight: '3%', width: '47%', cursor: 'pointer' }}
+            <img src="/Cover.png" style={{
+                position: 'fixed',
+                top: '40%',
+                left: '60%',
+                transform: 'translateY(50%)',
+                width: '40%',
+                cursor: 'pointer'
+            }}
                 onClick={(e) => {
                     e.preventDefault();
                     window.location.href = '/?t=1';
