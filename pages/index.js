@@ -334,7 +334,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
   const [selectedTab, setSelectedTab] = React.useState(defaultTab)
   const [readOnly, setReadOnly] = React.useState(false)
   const [filtered, setFiltered] = React.useState(products)
-  const [search, setSearch] = React.useState(defaultSearch)
+  const [search, setSearch] = React.useState('')
   const [progress, setProgress] = React.useState(false)
   const [showPrivacy, setShowPrivacy] = React.useState(false)
   const [showDonate, setShowDonate] = React.useState(false)
@@ -343,8 +343,12 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
 
   useEffect(() => {
     document.body.className = selectedTab == 0 ? 'front' : '';
-    filterProducts(search)
-  });
+  })
+
+  useEffect(() => {
+    setSearch(defaultSearch)
+    filterProducts(defaultSearch)
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)

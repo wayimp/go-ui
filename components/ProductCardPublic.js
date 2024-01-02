@@ -70,6 +70,7 @@ const useStyles = makeStyles(theme => ({
     margin: 20
   },
   card: {
+    minWidth: 300,
     maxWidth: 400,
     margin: 10,
     overflow: 'visible',
