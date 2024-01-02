@@ -104,6 +104,14 @@ const useStyles = makeStyles(theme => ({
     width: 'auto',
     height: 'auto'
   },
+  saleIcon: {
+    position: 'absolute',
+    top: 0,
+    right: 10,
+    display: 'block',
+    width: 'auto',
+    height: 'auto'
+  },
   constitutionIcon: {
     position: 'absolute',
     top: 250,
@@ -175,6 +183,14 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
           <img
             src={'https://files.lifereferencemanual.net/go/LimitedStock.png'}
             className={classes.limitedIcon}
+          />
+        ) : (
+          ''
+        )}
+         {product.title.includes("America") ? (
+          <img
+            src={'./sale.png'}
+            className={classes.saleIcon}
           />
         ) : (
           ''

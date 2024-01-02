@@ -628,9 +628,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
   let chips = []
   let cartDisplay = []
   let quantity = 0
+  let quantitySP = 0
+  let quantityAM = 0
   let cases = 0
   let items = 0
-  let quantitySP = 0
   let casesSP = 0
   let itemsSP = 0
   let keyIndex = 0
@@ -641,6 +642,10 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
       }
       else {
         quantity += v.quantity
+      }
+      // This will be subtracted for a discount
+      if (v.title.includes('America')) {
+        quantityAM += v.quantity
       }
     }
   })
@@ -712,7 +717,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
           <Badge badgeContent={quantity + quantitySP} color='error'>
             <Typography style={{ marginTop: 7 }}>
               Suggested Donation:&nbsp;
-              {numeral((quantity + quantitySP) * 4).format(priceFormat)}&nbsp;($4 per Bible)
+              {numeral((quantity + quantitySP) * 4 - quantityAM * 2).format(priceFormat)}&nbsp;($4 per Bible)
             </Typography>
           </Badge>
         </Fab>
@@ -1128,7 +1133,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
                       Your donation helps us to distribute more Bibles
                       <br />
                       Suggested donation:&nbsp;
-                      {numeral((quantity + quantitySP) * 4).format(priceFormat)}&nbsp;($4 per
+                      {numeral((quantity + quantitySP) * 4 - quantityAM * 2).format(priceFormat)}&nbsp;($4 per
                       Bible)
                     </FormHelperText>
                   </FormControl>
@@ -1435,12 +1440,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
             justifyContent="center"
             alignItems="center"
           >
-            <CallIcon
-              color='secondary'
-              style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
-            />
-            {settings.business_phone}
-            &nbsp;&nbsp;&nbsp;&nbsp;
             <EmailIcon color='secondary'
               style={{ marginTop: '0px', marginLeft: '3px', marginRight: '3px', marginBottom: '0px' }}
             />

@@ -50,13 +50,13 @@ export default function Promo() {
                 <img src="/Anniversary.png" style={{ float: 'left', marginLeft: '10%', width: '20%', cursor: 'pointer' }}
                     onClick={(e) => {
                         e.preventDefault();
-                        window.location.href = '/?t=1';
+                        window.location.href = '/?t=1&s=america';
                     }} />
 
                 <img src="/Cover.png" style={{ float: 'right', marginRight: '10%', width: '20%', cursor: 'pointer' }}
                     onClick={(e) => {
                         e.preventDefault();
-                        window.location.href = '/?t=1';
+                        window.location.href = '/?t=1&s=america';
                     }}
                 />
 
@@ -71,7 +71,7 @@ export default function Promo() {
                 }}
                     onClick={(e) => {
                         e.preventDefault();
-                        window.location.href = '/?t=1';
+                        window.location.href = '/?t=1&s=america';
                     }}
                 />
 
