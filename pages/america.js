@@ -53,7 +53,7 @@ export default function Promo() {
                         window.location.href = '/?t=1&s=america';
                     }} />
 
-                <img src="/Cover.png" style={{ float: 'right', marginRight: '10%', width: '20%', cursor: 'pointer' }}
+                <img src="/Cover2.png" style={{ float: 'right', marginRight: '10%', width: '20%', cursor: 'pointer' }}
                     onClick={(e) => {
                         e.preventDefault();
                         window.location.href = '/?t=1&s=america';
@@ -112,7 +112,7 @@ export default function Promo() {
                     window.location.href = '/?t=1&s=america';
                 }} />
 
-            <img src="/Cover.png" style={{
+            <img src="/Cover2.png" style={{
                 position: 'fixed',
                 top: '44%',
                 left: '60%',
