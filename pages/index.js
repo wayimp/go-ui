@@ -770,8 +770,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
               }}
               indicatorColor='secondary'
               variant='scrollable'
-              scrollButtons
-              allowScrollButtonsMobile
+              scrollButtons={true}
               fullWidth={true}
             >
               <Tab label='About' value={0} />
@@ -1383,7 +1382,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
         <TabPanel value={selectedTab} index={7} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
-              Israel
+              What Does God Say About Israel?
             </Typography>
             <hr style={{ height: '3px', backgroundColor: 'navy', }} />
           </div>
