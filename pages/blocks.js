@@ -169,7 +169,8 @@ const Page = ({ dispatch, token }) => {
     { value: 'frontPage', label: 'Front Page' },
     { value: 'faq', label: 'FAQ' },
     { value: 'donate', label: 'Donate' },
-    { value: 'stories', label: 'Testimonies' }
+    { value: 'stories', label: 'Testimonies' },
+    { value: 'israel', label: 'Israel' }
   ]
 
   const handleCategoryChange = option => {
