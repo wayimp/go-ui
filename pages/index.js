@@ -813,6 +813,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
         </Fab>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
           <div style={{ marginTop: '20%' }}>
+            <img src={'/Israel.png'} style={{float:'left', cursor:'pointer', width:'20%'}} onClick={()=> setSelectedTab(7)}/>
             <img
               src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
               className={classes.mainlogo}
@@ -1382,7 +1383,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
         <TabPanel value={selectedTab} index={7} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
-              What Does God Say About Israel?
+              What Does the Bible Say About Israel?
             </Typography>
             <hr style={{ height: '3px', backgroundColor: 'navy', }} />
           </div>
