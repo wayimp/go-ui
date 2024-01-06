@@ -359,7 +359,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['About', 'Products', 'Cart', 'Donate', 'Testimonies', 'FAQs', 'Media', 'Israel'].map(
+        {['About', 'Products', 'Cart', 'Israel', 'Donate', 'Testimonies', 'FAQs', 'Media'].map(
           (text, index) => (
             <ListItem
               button
@@ -776,11 +776,15 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
               <Tab label='About' value={0} />
               <Tab label='Products' value={1} />
               <Tab label='Cart' value={2} />
-              <Tab label='Donate' value={3} />
-              <Tab label='Testimonies' value={4} />
-              <Tab label='FAQs' value={5} />
-              <Tab label='Media' value={6} />
-              <Tab label='Israel' value={7} />
+              <Tab label={<img
+                src='/Flag.png'
+                onClick={() => setSelectedTab(3)}
+                style={{ maxHeight: 40, cursor: 'pointer' }}
+              />} value={3} />
+              <Tab label='Donate' value={4} />
+              <Tab label='Testimonies' value={5} />
+              <Tab label='FAQs' value={6} />
+              <Tab label='Media' value={7} />
             </Tabs>
             <Button variant="text" style={{ color: '#c0c6d2' }} onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
           </Grid>
@@ -813,7 +817,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
         </Fab>
         <TabPanel value={selectedTab} index={0} className={classes.tabPanel}>
           <div style={{ marginTop: '20%' }}>
-            <img src={'/Israel.png'} style={{float:'left', cursor:'pointer', width:'20%'}} onClick={()=> setSelectedTab(7)}/>
             <img
               src={'https://files.lifereferencemanual.net/go/mainlogo.png'}
               className={classes.mainlogo}
@@ -830,7 +833,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
               variant='contained'
               color='primary'
               style={{ margin: 20 }}
-              onClick={() => setSelectedTab(5)}
+              onClick={() => setSelectedTab(6)}
               startIcon={<QuestionIcon />}
             >
               More FAQs
@@ -1224,6 +1227,15 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
           )}
         </TabPanel>
         <TabPanel value={selectedTab} index={3} className={classes.tabPanel}>
+          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
+            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
+              What Does the Bible Say About Israel?
+            </Typography>
+            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+          </div>
+          <BlockListJoined blocks={blocks} category='israel' />
+        </TabPanel>
+        <TabPanel value={selectedTab} index={4} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 20 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Partner with Go Therefore
@@ -1238,7 +1250,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
           <Subscriptions />
           <Donations />
         </TabPanel>
-        <TabPanel value={selectedTab} index={4} className={classes.tabPanel}>
+        <TabPanel value={selectedTab} index={5} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Partner Testimonies
@@ -1348,7 +1360,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
             </CardContent>
           </Card>
         </TabPanel>
-        <TabPanel value={selectedTab} index={5} className={classes.tabPanel}>
+        <TabPanel value={selectedTab} index={6} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Frequently Asked Questions
@@ -1357,7 +1369,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
           </div>
           <BlockListJoined blocks={blocks} category='faq' />
         </TabPanel>
-        <TabPanel value={selectedTab} index={6} className={classes.tabPanel}>
+        <TabPanel value={selectedTab} index={7} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Media
@@ -1380,15 +1392,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
             </span>
           </div>
         </TabPanel>
-        <TabPanel value={selectedTab} index={7} className={classes.tabPanel}>
-          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
-            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
-              What Does the Bible Say About Israel?
-            </Typography>
-            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
-          </div>
-          <BlockListJoined blocks={blocks} category='israel' />
-        </TabPanel>
+
       </Box>
       <Modal
         id='items'
@@ -1477,11 +1481,11 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
             <Tab label='About' value={0} />
             <Tab label='Products' value={1} />
             <Tab label='Cart' value={2} />
-            <Tab label='Donate' value={3} />
-            <Tab label='Testimonies' value={4} />
-            <Tab label='FAQs' value={5} />
-            <Tab label='Media' value={6} />
-            <Tab label='Israel' value={7} />
+            <Tab label='Israel' value={3} />
+            <Tab label='Donate' value={4} />
+            <Tab label='Testimonies' value={5} />
+            <Tab label='FAQs' value={6} />
+            <Tab label='Media' value={7} />
             <Button variant="text" style={{ color: '#c0c6d2' }} onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
           </Tabs>
           <Grid
