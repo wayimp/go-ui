@@ -359,7 +359,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['About', 'Products', 'Cart', 'Israel', 'Donate', 'Testimonies', 'FAQs', 'Media'].map(
+        {['About', 'Products', 'Cart', 'Israel', 'Donate', 'Media', 'Testimonies', 'FAQs'].map(
           (text, index) => (
             <ListItem
               button
@@ -782,9 +782,9 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
                 style={{ maxHeight: 40, cursor: 'pointer' }}
               />} value={3} />
               <Tab label='Donate' value={4} />
-              <Tab label='Testimonies' value={5} />
-              <Tab label='FAQs' value={6} />
-              <Tab label='Media' value={7} />
+              <Tab label='Media' value={5} />
+              <Tab label='Testimonies' value={6} />
+              <Tab label='FAQs' value={7} />
             </Tabs>
             <Button variant="text" style={{ color: '#c0c6d2' }} onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
           </Grid>
@@ -1253,6 +1253,29 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
         <TabPanel value={selectedTab} index={5} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
+              Media
+            </Typography>
+            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
+            <img src="/influencer.jpeg" style={{
+              width: '100%',
+              height: 'auto',
+              objectFit: 'fill'
+            }} />
+            <h2>A Beacon for Change in this Election Year</h2>
+            <span style={{ textAlign: 'left' }}>
+              <p>On January 9th, 2024, Go Therefore Ministries released an America&apos;s Life Reference campaign, which includes a collection of texts critical to appreciating the Founding Fathers&apos; vision for the United States of America. The pocket size volume includes the New Testament, Psalms, Proverbs, the Declaration of Independence, and the Constitution of the United States of America. This special “Revival Awakening Edition” of their popular Life Reference series enjoyed a public debut at a session of the Legislative Prayer Caucus at the Tennessee state capital building in Nashville, TN. And the timing could not be better.</p>
+              <p>With the most important election in a generation in front of our nation, Go Therefore Ministries is offering America&apos;s Life Reference with time to get it in the hands of anyone who wants to make a difference in the next season of American leadership.</p>
+              <p>Designed as a beacon for change and carefully curated with the promise of a revitalized commitment to justice, transparency, and common sense, the publication brings both the inspiration and the values that compelled America&apos;s first generation back into the public conversation. And Go Therefore Ministries has made it easy for anyone to share these crucial documents with the people in their sphere of influence.</p>
+              <p>Patriots of all ages can order America&apos;s Life Reference from the Go Therefore Ministries&apos; website. There&apos;s even an option to get a case of 24 copies for a suggested donation of $48. That&apos;s a mere $2 per copy. This is a limited-time offer which represents a 50% savings! So, for the price of a cup of coffee, forward-looking influencers can put these life-changing writings in the hands of family, friends, neighbors, colleagues, or anyone else interested learning more about the roots of America&apos;s greatness.</p>
+              <p>The release of America&apos;s Life Reference also coincides with the 20th anniversary of Go Therefore Ministries – a monumental accomplishment by any standard. Over the past two decades, Go Therefore Ministries has distributed more than three million copies of books from its Life Reference Series, placing them in doctors&apos; offices, schools, businesses, and even prisons, across the United States. The various editions reach people from all walks of life with the truth of God&apos;s Word, the promises of liberty, and the value of every individual.</p>
+              <p>To learn more about Go Therefore Ministries and America&apos;s Life Reference, email: <a href='mailto:jeff@gothereforeministries.org'>jeff@gothereforeministries.org</a></p>
+              <p>and/or visit <a href='/'>www.gothereforeministries.org</a></p>
+            </span>
+          </div>
+        </TabPanel>
+        <TabPanel value={selectedTab} index={6} className={classes.tabPanel}>
+          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
+            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Partner Testimonies
             </Typography>
             <hr style={{ height: '3px', backgroundColor: 'navy', }} />
@@ -1360,7 +1383,7 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
             </CardContent>
           </Card>
         </TabPanel>
-        <TabPanel value={selectedTab} index={6} className={classes.tabPanel}>
+        <TabPanel value={selectedTab} index={7} className={classes.tabPanel}>
           <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
             <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
               Frequently Asked Questions
@@ -1369,30 +1392,6 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
           </div>
           <BlockListJoined blocks={blocks} category='faq' />
         </TabPanel>
-        <TabPanel value={selectedTab} index={7} className={classes.tabPanel}>
-          <div style={{ textAlign: 'center', marginTop: -10, marginBottom: 10 }}>
-            <Typography variant="h1" component="h1" color="secondary" style={{ fontSize: '3rem', fontFamily: 'Georgia' }}>
-              Media
-            </Typography>
-            <hr style={{ height: '3px', backgroundColor: 'navy', }} />
-            <img src="/influencer.jpeg" style={{
-              width: '100%',
-              height: 'auto',
-              objectFit: 'fill'
-            }} />
-            <h2>A Beacon for Change in this Election Year</h2>
-            <span style={{ textAlign: 'left' }}>
-              <p>On January 9th, 2024, Go Therefore Ministries released an America&apos;s Life Reference campaign, which includes a collection of texts critical to appreciating the Founding Fathers&apos; vision for the United States of America. The pocket size volume includes the New Testament, Psalms, Proverbs, the Declaration of Independence, and the Constitution of the United States of America. This special “Revival Awakening Edition” of their popular Life Reference series enjoyed a public debut at a session of the Legislative Prayer Caucus at the Tennessee state capital building in Nashville, TN. And the timing could not be better.</p>
-              <p>With the most important election in a generation in front of our nation, Go Therefore Ministries is offering America&apos;s Life Reference with time to get it in the hands of anyone who wants to make a difference in the next season of American leadership.</p>
-              <p>Designed as a beacon for change and carefully curated with the promise of a revitalized commitment to justice, transparency, and common sense, the publication brings both the inspiration and the values that compelled America&apos;s first generation back into the public conversation. And Go Therefore Ministries has made it easy for anyone to share these crucial documents with the people in their sphere of influence.</p>
-              <p>Patriots of all ages can order America&apos;s Life Reference from the Go Therefore Ministries&apos; website. There&apos;s even an option to get a case of 24 copies for a suggested donation of $48. That&apos;s a mere $2 per copy. This is a limited-time offer which represents a 50% savings! So, for the price of a cup of coffee, forward-looking influencers can put these life-changing writings in the hands of family, friends, neighbors, colleagues, or anyone else interested learning more about the roots of America&apos;s greatness.</p>
-              <p>The release of America&apos;s Life Reference also coincides with the 20th anniversary of Go Therefore Ministries – a monumental accomplishment by any standard. Over the past two decades, Go Therefore Ministries has distributed more than three million copies of books from its Life Reference Series, placing them in doctors&apos; offices, schools, businesses, and even prisons, across the United States. The various editions reach people from all walks of life with the truth of God&apos;s Word, the promises of liberty, and the value of every individual.</p>
-              <p>To learn more about Go Therefore Ministries and America&apos;s Life Reference, email: <a href='mailto:jeff@gothereforeministries.org'>jeff@gothereforeministries.org</a></p>
-              <p>and/or visit <a href='/'>www.gothereforeministries.org</a></p>
-            </span>
-          </div>
-        </TabPanel>
-
       </Box>
       <Modal
         id='items'
@@ -1483,9 +1482,9 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
             <Tab label='Cart' value={2} />
             <Tab label='Israel' value={3} />
             <Tab label='Donate' value={4} />
-            <Tab label='Testimonies' value={5} />
-            <Tab label='FAQs' value={6} />
-            <Tab label='Media' value={7} />
+            <Tab label='Media' value={5} />
+            <Tab label='Testimonies' value={6} />
+            <Tab label='FAQs' value={7} />
             <Button variant="text" style={{ color: '#c0c6d2' }} onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
           </Tabs>
           <Grid
