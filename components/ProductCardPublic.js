@@ -141,7 +141,7 @@ const ProductDisplay = ({ product, addToCart, inCart, small }) => {
     let items = 0
     let modulo = 0
     let keyIndex = 0
-    let caseDivisor = product.title.includes('Vida') ? 22 : 24
+    let caseDivisor = product.title.includes('Vida') ? 20 : 24
 
     if (inCart) {
       quantity = inCart.quantity
