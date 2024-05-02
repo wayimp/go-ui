@@ -787,6 +787,16 @@ const Form = ({ products, blocks, settings, dispatch, token, defaultTab, default
               <Tab label='FAQs' value={7} />
             </Tabs>
             <Button variant="text" style={{ color: '#c0c6d2' }} onClick={() => window.open('https://lifereferencemanual.net/')}>Read</Button>
+            <img
+              src='/YouTube.png'
+              onClick={() => window.open('https://www.youtube.com/@gothereforeministries')}
+              style={{ marginLeft: 48, maxHeight: 48, cursor: 'pointer' }}
+            />
+            <img
+              src='/Facebook.png'
+              onClick={() => window.open('https://www.facebook.com/gothereforeministries')}
+              style={{ marginLeft: 48, maxHeight: 48, cursor: 'pointer' }}
+            />
           </Grid>
         </Grid>
         <Grid className={classes.chips} onClick={() => setSelectedTab(2)}>
